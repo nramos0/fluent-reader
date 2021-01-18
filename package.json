@@ -91,7 +91,7 @@
       "eslint --fix"
     ],
     "*.{ts,tsx}": [
-      "node src/scripts/compile-ts-lint.js"
+      "node src/scripts/compile-ts-lint.js src/react-app-env.d.ts"
     ]
   },
   "browserslist": {
