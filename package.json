@@ -31,12 +31,12 @@
   "scripts": {
     "build": "react-scripts build",
     "check-tsc": "node src/scripts/compile-ts-lint.js --allFiles",
-    "deploy": "git pull; yarn build; yarn docker-build; yarn docker-run;",
+    "deploy": "yarn git-pull; yarn build; yarn docker-build; yarn docker-run;",
     "docker-build": "docker build -f Dockerfile -t web:latest .",
     "docker-run": "docker run -d -p 80:80 web:latest",
     "eject": "react-scripts eject",
     "git-clone": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/fr-web; git clone git@github.com:nramos0/fluent-reader.git'",
-    "git-pull": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/fr-web; git pull",
+    "git-pull": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/fr-web; git pull'",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
