@@ -31,7 +31,7 @@
   "scripts": {
     "build": "react-scripts build",
     "check-tsc": "node src/scripts/compile-ts-lint.js --allFiles",
-    "deploy": "yarn git-pull; yarn build; yarn docker-build; yarn docker-run;",
+    "deploy": "yarn git-pull; yarn build; yarn docker-build; yarn docker-stop; yarn docker-run;",
     "docker-build": "docker build -f Dockerfile -t web:latest .",
     "docker-run": "docker run --name web -d -p 80:80 web:latest",
     "docker-stop": "docker stop web",
