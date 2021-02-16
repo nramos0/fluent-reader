@@ -1,3 +1,4 @@
 {
-  "Welcome to React": "欢迎来使用React和react-i18next"
+  "welcome": "你好！",
+  "how-are-you": "你今天怎么样？"
 }

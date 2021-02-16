@@ -1,25 +1,43 @@
 import { useTranslation } from 'react-i18next';
+import { Button } from '@chakra-ui/react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const isEnglish = i18n.language === 'en';
     return (
         <div className="App">
             <header className="App-header">
-                <h1>{t('Welcome to React')}</h1>
+                <h1>{t('welcome')}</h1>
                 <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <p>{t('how-are-you')}</p>
+                <br />
+                <Button
+                    fontSize={{ lg: 25 }}
+                    bgColor="whiteAlpha.200"
+                    _hover={{
+                        backgroundColor: 'whiteAlpha.400',
+                    }}
+                    _active={{
+                        backgroundColor: 'whiteAlpha.600',
+                    }}
+                    onClick={() => {
+                        if (isEnglish) {
+                            i18n.changeLanguage('zh-CN');
+                        } else {
+                            i18n.changeLanguage('en');
+                        }
+                    }}
                 >
-                    Learn React
-                </a>
+                    {isEnglish ? '中文' : 'English'}
+                </Button>
+                <br />
+                <img
+                    className="cat"
+                    src={process.env.PUBLIC_URL + '/assets/cat.jpg'}
+                    alt="cat"
+                />
             </header>
         </div>
     );

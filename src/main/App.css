@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-    height: 40vmin;
+    height: 25vmin;
     pointer-events: none;
 }
 
@@ -35,4 +35,9 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+img.cat {
+    height: 250px;
+    width: 350px;
 }
