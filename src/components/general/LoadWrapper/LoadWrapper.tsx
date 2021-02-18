@@ -30,7 +30,7 @@ const LoadWrapper: React.FC = (props) => {
     const loadUntilResolve: LoadUntilResolve = useCallback((promise) => {
         setIsLoading(true);
         promise.then(() => {
-            // setIsLoading(false);
+            setIsLoading(false);
         });
     }, []);
 
