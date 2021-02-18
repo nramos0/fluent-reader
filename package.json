@@ -47,6 +47,9 @@
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
+  "resolutions": {
+    "eslint-webpack-plugin": "2.4.3"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
