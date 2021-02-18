@@ -182,7 +182,7 @@ const CreateAccountPage: React.FC<Props> = () => {
             direction="column"
             justify="center"
             align="center"
-            p={10}
+            p={{ base: 2, md: 5, lg: 10 }}
             h="100vh"
         >
             <Heading color="white" mb="5" fontSize="4xl">
@@ -193,7 +193,7 @@ const CreateAccountPage: React.FC<Props> = () => {
                 bgColor="white"
                 p={5}
                 borderRadius="lg"
-                w={{ base: '90%', sm: '85%', md: '80%', lg: '40%' }}
+                w={{ base: '100%', md: '85%', lg: '50%' }}
             >
                 <CreateAccountForm {...initialValues} />
             </Flex>
