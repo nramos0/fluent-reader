@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import {
     Flex,
     Button,
@@ -18,6 +18,7 @@ import {
     FieldHookConfig,
 } from 'formik';
 import { useTranslation } from 'react-i18next';
+import { LoadContext } from '../general/LoadWrapper/LoadWrapper';
 
 interface Props {}
 
@@ -95,13 +96,17 @@ const StudyLangField = (props: FieldHookConfig<string>) => {
 const DisplayLangField = (props: FieldHookConfig<string>) => {
     const [field] = useField(props);
     const { t, i18n } = useTranslation('account');
+    const loadUntilResolve = useContext(LoadContext);
 
     const onChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {
-            i18n.changeLanguage(event.currentTarget.value);
+            const langChangePromise = i18n.changeLanguage(
+                event.currentTarget.value
+            );
+            loadUntilResolve(langChangePromise);
             field.onChange(event);
         },
-        [field, i18n]
+        [field, i18n, loadUntilResolve]
     );
 
     return (
