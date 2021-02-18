@@ -32,7 +32,7 @@
   "scripts": {
     "build": "react-scripts build",
     "check-tsc": "node src/scripts/compile-ts-lint.js --allFiles",
-    "deploy": "yarn git-pull; yarn install; yarn build; yarn docker-build; yarn docker-stop; yarn docker-rm; yarn docker-run;",
+    "deploy": "yarn git-pull; yarn install; yarn build; yarn docker-stop; yarn docker-rm; yarn docker-build; yarn docker-run;",
     "docker-build": "docker build -f Dockerfile -t web:latest .",
     "docker-rm": "docker rm web",
     "docker-run": "docker run --name web -d -p 80:80 web:latest",
