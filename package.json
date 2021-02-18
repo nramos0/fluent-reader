@@ -25,7 +25,9 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-i18next": "^11.8.6",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "replace": "^1.2.0",
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4"
   },
@@ -38,6 +40,7 @@
     "docker-run": "docker run --name web -d -p 80:80 web:latest",
     "docker-stop": "docker stop web",
     "eject": "react-scripts eject",
+    "gen:comp": "node ./src/scripts/generate-react.js component",
     "git-clone": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/fr-web; git clone git@github.com:nramos0/fluent-reader.git'",
     "git-pull": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/fr-web; git pull'",
     "start": "react-scripts start",
