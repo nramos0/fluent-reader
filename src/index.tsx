@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Box } from '@chakra-ui/react';
 import './index.css';
 import './i18n';
 import App from './main/App';
@@ -10,9 +10,15 @@ import reportWebVitals from './reportWebVitals';
 ReactDOM.render(
     <StrictMode>
         <ChakraProvider>
-            <LoadWrapper>
-                <App />
-            </LoadWrapper>
+            <Box
+                w="100%"
+                h="100vh"
+                bgGradient="linear(to-b, #c16161, #c70505, #b82e2e, #902323, #661919)"
+            >
+                <LoadWrapper>
+                    <App />
+                </LoadWrapper>
+            </Box>
         </ChakraProvider>
     </StrictMode>,
     document.getElementById('root')

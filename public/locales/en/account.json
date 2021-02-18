@@ -1,0 +1,17 @@
+{
+  "app-heading": "Fluent Reader",
+  "login": "Login",
+  "create-account": "Create Account",
+  "create-an-account": "Create an Account",
+  "username": "Username",
+  "username-info": "The unique ID you'll use to log in. Must be at least 2 characters long.",
+  "password": "Password",
+  "password-info": "The password you'll use to log in. Must be at least 8 characters long.",
+  "password-confirm": "Confirm Password",
+  "password-confirm-info": "Please retype the same password for confirmation.",
+  "next": "Next",
+  "study-lang": "Study Language",
+  "study-lang-info": "Select the language you want to study",
+  "display-lang": "Display Language",
+  "display-lang-info": "Select the app's display language"
+}
