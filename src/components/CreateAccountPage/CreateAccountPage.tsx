@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     Flex,
     Button,
@@ -94,16 +94,25 @@ const StudyLangField = (props: FieldHookConfig<string>) => {
 
 const DisplayLangField = (props: FieldHookConfig<string>) => {
     const [field] = useField(props);
-    const { t } = useTranslation('account');
+    const { t, i18n } = useTranslation('account');
+
+    const onChange = useCallback(
+        (event: React.ChangeEvent<HTMLSelectElement>) => {
+            i18n.changeLanguage(event.currentTarget.value);
+            field.onChange(event);
+        },
+        [field, i18n]
+    );
+
     return (
         <FormControl id="displayLang" mb={5}>
             <FormLabel>{t('display-lang')}</FormLabel>
-            <Select defaultValue="default" {...field}>
+            <Select defaultValue="default" {...field} onChange={onChange}>
                 <option value="default" disabled={true}>
                     {t('display-lang-info')}
                 </option>
-                <option value="en">{t('common:en')}</option>
                 <option value="zh-CN">{t('common:zh-CN')}</option>
+                <option value="en">{t('common:en')}</option>
             </Select>
         </FormControl>
     );
