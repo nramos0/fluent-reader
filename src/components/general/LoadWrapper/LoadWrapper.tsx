@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n, { initPromise } from '../../../i18n';
-import { Center } from '@chakra-ui/react';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { Center, Spinner } from '@chakra-ui/react';
 
 const getInitialLoadingState = () => {
     return !i18n.isInitialized;
@@ -25,8 +24,8 @@ const LoadWrapper: React.FC = (props) => {
 
     if (isLoading || !ready) {
         return (
-            <Center h="100vh">
-                <LoadingSpinner size="large" />
+            <Center h="inherit">
+                <Spinner color="white" size="xl" thickness="5px" />
             </Center>
         );
     }
