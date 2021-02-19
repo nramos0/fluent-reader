@@ -12,5 +12,9 @@
   "study-lang": "学习语言",
   "study-lang-info": "请选择你想学习的语言",
   "display-lang": "显示语言",
-  "display-lang-info": "请选择网站的显示语言"
+  "display-lang-info": "请选择网站的显示语言",
+  "to-login-prompt": "已有账号?",
+  "to-login": "点此登入。",
+  "to-register-prompt": "没有账号？",
+  "to-register": "点此注册。"
 }

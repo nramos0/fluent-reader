@@ -13,5 +13,9 @@
   "study-lang": "Study Language",
   "study-lang-info": "Select the language you want to study",
   "display-lang": "Display Language",
-  "display-lang-info": "Select the app's display language"
+  "display-lang-info": "Select the app's display language",
+  "to-login-prompt": "Already have an account?",
+  "to-login": "Click here to login.",
+  "to-register-prompt": "Don't have an account?",
+  "to-register": "Click here to sign up."
 }

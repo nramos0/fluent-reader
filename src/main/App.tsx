@@ -1,10 +1,10 @@
-import CreateAccountPage from '../components/CreateAccountPage/CreateAccountPage';
+import AccountPage from '../components/account/AccountPage/AccountPage';
 import './App.css';
 
 function App() {
     return (
         <div className="App">
-            <CreateAccountPage />
+            <AccountPage />
         </div>
     );
 }
