@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Flex, Heading, Text, Link } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import LoginForm, { LoginFormValues } from '../LoginForm/LoginForm';
 import CreateAccountForm, {
     CreateAccountFormValues,
 } from '../CreateAccountForm/CreateAccountForm';
+import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
 
 const AccountPage: React.FC<{}> = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -23,9 +24,14 @@ const AccountPage: React.FC<{}> = () => {
         displayLang: undefined,
     };
 
+    const { loadUntilResolve } = useContext(LoadContext);
+
     const outerForm = isLogin ? (
         <>
-            <LoginForm {...loginFormInitialValues} />
+            <LoginForm
+                values={loginFormInitialValues}
+                loadUntilResolve={loadUntilResolve}
+            />
             <Text mt={3}>
                 {t('to-register-prompt')}&nbsp;
                 <Link
@@ -39,7 +45,10 @@ const AccountPage: React.FC<{}> = () => {
         </>
     ) : (
         <>
-            <CreateAccountForm {...createAccountFormInitialValues} />
+            <CreateAccountForm
+                values={createAccountFormInitialValues}
+                loadUntilResolve={loadUntilResolve}
+            />
             <Text mt={3}>
                 {t('to-login-prompt')}&nbsp;
                 <Link

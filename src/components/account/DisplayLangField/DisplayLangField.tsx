@@ -7,7 +7,7 @@ import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
 const DisplayLangField = (props: FieldHookConfig<string>) => {
     const [field] = useField(props);
     const { t, i18n } = useTranslation('account');
-    const loadUntilResolve = useContext(LoadContext);
+    const { loadUntilResolve } = useContext(LoadContext);
 
     const onChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {

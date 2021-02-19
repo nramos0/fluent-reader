@@ -7,6 +7,8 @@ import PasswordField from '../PasswordField/PasswordField';
 import PasswordConfirmField from '../PasswordConfirmField/PasswordConfirmField';
 import StudyLangField from '../StudyLangField/StudyLangField';
 import DisplayLangField from '../DisplayLangField/DisplayLangField';
+import { LoadUntilResolve } from '../../general/LoadWrapper/LoadWrapper';
+import { register } from '../../../net/requests/register';
 
 export interface CreateAccountFormValues {
     username: string;
@@ -16,11 +18,15 @@ export interface CreateAccountFormValues {
     displayLang: string | undefined;
 }
 
-type CreateAccountFormProps = CreateAccountFormValues;
+type CreateAccountFormProps = {
+    values: CreateAccountFormValues;
+    loadUntilResolve: LoadUntilResolve;
+};
 
 const InnerForm = (props: FormikProps<CreateAccountFormValues>) => {
     const { t } = useTranslation('account');
     const { isSubmitting } = props;
+
     return (
         <Form>
             <Heading fontSize="2xl" mb="5">
@@ -49,11 +55,24 @@ const CreateAccountForm = withFormik<
     CreateAccountFormValues
 >({
     handleSubmit: (values, actions) => {
-        console.log(values);
-        actions.setSubmitting(false);
+        const promise = register({
+            username: values.username,
+            password: values.password,
+            study_lang: values.studyLang!,
+            display_lang: values.displayLang!,
+        })
+            .then(() => {
+                actions.setSubmitting(false);
+                actions.resetForm();
+            })
+            .catch(() => {
+                actions.setSubmitting(false);
+            });
+
+        actions.props.loadUntilResolve(promise);
     },
     mapPropsToValues: (props) => {
-        return props;
+        return props.values;
     },
 })(InnerForm);
 

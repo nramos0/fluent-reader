@@ -7,9 +7,14 @@ const getInitialLoadingState = () => {
     return !i18n.isInitialized;
 };
 
-type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
+export type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
 
-export const LoadContext = React.createContext<LoadUntilResolve>(undefined!);
+interface LoadInfo {
+    loadUntilResolve: LoadUntilResolve;
+    isLoading: boolean;
+}
+
+export const LoadContext = React.createContext<LoadInfo>(undefined!);
 
 const LoadWrapper: React.FC = (props) => {
     const { ready } = useTranslation();
@@ -46,7 +51,12 @@ const LoadWrapper: React.FC = (props) => {
     }
 
     return (
-        <LoadContext.Provider value={loadUntilResolve}>
+        <LoadContext.Provider
+            value={{
+                loadUntilResolve: loadUntilResolve,
+                isLoading: isLoading,
+            }}
+        >
             {isLoading ? (
                 <Flex
                     pos="absolute"

@@ -4,13 +4,18 @@ import { Form, withFormik, FormikProps } from 'formik';
 import { useTranslation } from 'react-i18next';
 import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
+import { LoadUntilResolve } from '../../general/LoadWrapper/LoadWrapper';
+import { login } from '../../../net/requests/login';
 
 export interface LoginFormValues {
     username: string;
     password: string;
 }
 
-type LoginFormProps = LoginFormValues;
+type LoginFormProps = {
+    values: LoginFormValues;
+    loadUntilResolve: LoadUntilResolve;
+};
 
 const InnerForm = (props: FormikProps<LoginFormValues>) => {
     const { t } = useTranslation('account');
@@ -33,11 +38,22 @@ const InnerForm = (props: FormikProps<LoginFormValues>) => {
 
 const LoginForm = withFormik<LoginFormProps, LoginFormValues>({
     handleSubmit: (values, actions) => {
-        console.log(values);
-        actions.setSubmitting(false);
+        const promise = login({
+            username: values.username,
+            password: values.password,
+        })
+            .then(() => {
+                actions.resetForm();
+                actions.setSubmitting(false);
+            })
+            .catch(() => {
+                actions.setSubmitting(false);
+            });
+
+        actions.props.loadUntilResolve(promise);
     },
     mapPropsToValues: (props) => {
-        return props;
+        return props.values;
     },
 })(InnerForm);
 
