@@ -15,7 +15,7 @@ export const initPromise = i18n
         lng: 'en',
         fallbackLng: 'en',
         defaultNS: 'common',
-        ns: ['common'],
+        ns: ['common', 'account'],
 
         debug: process.env.NODE_ENV === 'development',
 
