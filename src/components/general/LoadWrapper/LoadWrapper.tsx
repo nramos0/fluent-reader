@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n, { initPromise } from '../../../i18n';
-import { Center, Spinner, Flex } from '@chakra-ui/react';
+import { Center, Spinner, Flex, Heading } from '@chakra-ui/react';
 
 const getInitialLoadingState = () => {
     return !i18n.isInitialized;
@@ -36,7 +36,10 @@ const LoadWrapper: React.FC = (props) => {
 
     if (isInitialLoad || !ready) {
         return (
-            <Center h="inherit">
+            <Center h="inherit" display="flex" flexDir="column">
+                <Heading mb={10} color="white">
+                    Fluent Reader
+                </Heading>
                 <Spinner color="white" size="xl" thickness="5px" />
             </Center>
         );
