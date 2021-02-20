@@ -14,12 +14,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": [
-      "src/types/global.d.ts",
-      "src/types/models.d.ts",
-      "src/types/net.d.ts"
-    ]
+    "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/types/global.d.ts",
+    "src/types/models.d.ts",
+    "src/types/net.d.ts"
+  ]
 }

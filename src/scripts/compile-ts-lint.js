@@ -43,9 +43,13 @@ const getConfig = async () => {
 
     if (includeFiles.length === 0) return;
 
+    const baseIncludeFiles = baseConfig.include.types.filter((element) => {
+        return element.includes('.d.ts');
+    });
+
     const newConfig = {
         ...baseConfig,
-        include: [...includeFiles, ...baseConfig.compilerOptions.types],
+        include: [...includeFiles, ...baseIncludeFiles],
     };
 
     delete newConfig.compilerOptions.types;
