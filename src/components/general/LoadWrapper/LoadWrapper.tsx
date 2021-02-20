@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import to from 'await-to-js';
 import i18n, { initPromise } from '../../../i18n';
 import { Center, Spinner, Flex, Heading } from '@chakra-ui/react';
 
@@ -32,11 +33,10 @@ const LoadWrapper: React.FC = (props) => {
         }
     }, [isInitialLoad]);
 
-    const loadUntilResolve: LoadUntilResolve = useCallback((promise) => {
+    const loadUntilResolve: LoadUntilResolve = useCallback(async (promise) => {
         setIsLoading(true);
-        promise.then(() => {
-            setIsLoading(false);
-        });
+        await to(promise);
+        setIsLoading(false);
     }, []);
 
     if (isInitialLoad || !ready) {

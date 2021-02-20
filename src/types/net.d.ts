@@ -4,9 +4,6 @@ declare global {
     namespace API {
         type Request<ReqProps, ResData> = (data: ReqProps) => Response<ResData>;
 
-        // type Response<SuccessData> = Promise<
-        //     [Error | null, AxiosResponse<SuccessData> | undefined]
-        // >;
         type Response<ResData> = Promise<AxiosResponse<ResData>>;
 
         type OnSuccessFunction<T> = (data: AxiosResponse<T>) => void;

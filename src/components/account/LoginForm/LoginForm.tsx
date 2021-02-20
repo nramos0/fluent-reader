@@ -1,60 +1,88 @@
-import React from 'react';
-import { Button, Heading } from '@chakra-ui/react';
-import { Form, withFormik, FormikProps } from 'formik';
+import React, { useCallback, useContext } from 'react';
+import { Button, Heading, useToast } from '@chakra-ui/react';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
+import to from 'await-to-js';
 import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
-import { LoadUntilResolve } from '../../general/LoadWrapper/LoadWrapper';
+import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
 import { login } from '../../../net/requests/login';
 
-export interface LoginFormValues {
+interface LoginFormValues {
     username: string;
     password: string;
 }
 
-type LoginFormProps = {
-    values: LoginFormValues;
-    loadUntilResolve: LoadUntilResolve;
+const loginFormInitialValues: LoginFormValues = {
+    username: '',
+    password: '',
 };
 
-const InnerForm = (props: FormikProps<LoginFormValues>) => {
+const LoginForm = () => {
     const { t } = useTranslation('account');
-    const { isSubmitting } = props;
+    const { loadUntilResolve } = useContext(LoadContext);
+    const showToast = useToast();
+
+    const onSubmit = useCallback(
+        async (
+            values: LoginFormValues,
+            actions: FormikHelpers<LoginFormValues>
+        ) => {
+            const promise = login({
+                username: values.username,
+                password: values.password,
+            });
+            loadUntilResolve(promise);
+
+            const [err, data] = await to(promise);
+
+            actions.setSubmitting(false);
+
+            if (err !== null) {
+                // error case
+                showToast({
+                    title: t('login-fail-title'),
+                    description: t('login-fail-desc'),
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                });
+            } else if (data !== undefined) {
+                // good case
+                showToast({
+                    title: t('login-success-title'),
+                    description: t('login-success-desc'),
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                });
+                actions.resetForm();
+            }
+        },
+        [loadUntilResolve, showToast, t]
+    );
     return (
-        <Form>
-            <Heading fontSize="2xl" mb="5">
-                {t('login')}
-            </Heading>
+        <Formik initialValues={loginFormInitialValues} onSubmit={onSubmit}>
+            {(props) => (
+                <Form>
+                    <Heading fontSize="2xl" mb="5">
+                        {t('login')}
+                    </Heading>
 
-            <UsernameField name="username" hasInfo={false} />
-            <PasswordField name="password" hasInfo={false} />
+                    <UsernameField name="username" hasInfo={false} />
+                    <PasswordField name="password" hasInfo={false} />
 
-            <Button disabled={isSubmitting} w="100%" type="submit">
-                {t('login')}
-            </Button>
-        </Form>
+                    <Button
+                        disabled={props.isSubmitting}
+                        w="100%"
+                        type="submit"
+                    >
+                        {t('login')}
+                    </Button>
+                </Form>
+            )}
+        </Formik>
     );
 };
-
-const LoginForm = withFormik<LoginFormProps, LoginFormValues>({
-    handleSubmit: (values, actions) => {
-        const promise = login({
-            username: values.username,
-            password: values.password,
-        })
-            .then(() => {
-                actions.resetForm();
-                actions.setSubmitting(false);
-            })
-            .catch(() => {
-                actions.setSubmitting(false);
-            });
-
-        actions.props.loadUntilResolve(promise);
-    },
-    mapPropsToValues: (props) => {
-        return props.values;
-    },
-})(InnerForm);
 
 export default LoginForm;

@@ -17,5 +17,13 @@
   "to-login-prompt": "Already have an account?",
   "to-login": "Click here to login.",
   "to-register-prompt": "Don't have an account?",
-  "to-register": "Click here to sign up."
+  "to-register": "Click here to sign up.",
+  "register-success-title": "Account created.",
+  "register-success-desc": "Your account has been created. You can now login.",
+  "register-fail-title": "Account was not created successfully.",
+  "register-fail-desc": "There was an error creating your account. Please try again.",
+  "login-success-title": "Login success.",
+  "login-success-desc": "You've successfully logged into Fluent Reader.",
+  "login-fail-title": "Login failed.",
+  "login-fail-desc": "There was an error while logging in. Your password may be incorrect, or an account with that username may not exist."
 }
