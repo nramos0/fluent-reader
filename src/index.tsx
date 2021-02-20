@@ -4,7 +4,8 @@ import { ChakraProvider, Box } from '@chakra-ui/react';
 import './index.css';
 import './i18n';
 import App from './main/App';
-import LoadWrapper from './components/general/LoadWrapper/LoadWrapper';
+import { BrowserRouter } from 'react-router-dom';
+import AuthProvider from './components/general/AuthWrapper/AuthWrapper';
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from './net/queryClient';
 import reportWebVitals from './reportWebVitals';
@@ -13,15 +14,17 @@ ReactDOM.render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
             <ChakraProvider>
-                <Box
-                    w="100vw"
-                    h="100vh"
-                    bgGradient="linear(to-b, #c16161, #c70505, #b82e2e, #902323, #661919)"
-                >
-                    <LoadWrapper>
-                        <App />
-                    </LoadWrapper>
-                </Box>
+                <AuthProvider>
+                    <Box
+                        w="100vw"
+                        h="100vh"
+                        bgGradient="linear(to-b, #c16161, #c70505, #b82e2e, #902323, #661919)"
+                    >
+                        <BrowserRouter>
+                            <App />
+                        </BrowserRouter>
+                    </Box>
+                </AuthProvider>
             </ChakraProvider>
         </QueryClientProvider>
     </StrictMode>,

@@ -49,6 +49,7 @@ export const ENDPOINTS = {
         log: getUserEndpoint('/log/'),
         reg: getUserEndpoint('/reg/'),
         refresh: getUserEndpoint('/refresh/'),
+        auth: getUserEndpoint('/auth/'),
 
         data: {
             _: getUserDataEndpoint('/'),

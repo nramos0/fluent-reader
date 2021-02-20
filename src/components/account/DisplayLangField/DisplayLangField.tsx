@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import {
     FormControl,
     FormLabel,
@@ -7,13 +7,13 @@ import {
 } from '@chakra-ui/react';
 import { useField, useFormikContext, FieldHookConfig } from 'formik';
 import { useTranslation } from 'react-i18next';
-import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
+import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
 
 const DisplayLangField = (props: FieldHookConfig<string>) => {
     const { validateForm, values } = useFormikContext();
     const [field, meta] = useField(props);
     const { t, i18n } = useTranslation('account');
-    const { loadUntilResolve } = useContext(LoadContext);
+    const { loadUntilResolve } = useLoadInfo();
 
     const onChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {

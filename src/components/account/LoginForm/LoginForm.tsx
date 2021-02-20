@@ -1,11 +1,12 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Button, Heading, useToast, Text, Link } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
+import { useHistory } from 'react-router-dom';
 import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
-import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
+import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
 import { login } from '../../../net/requests/login';
 
 interface Props {
@@ -24,8 +25,9 @@ const loginFormInitialValues: LoginFormValues = {
 
 const LoginForm = ({ goToRegistration }: Props) => {
     const { t } = useTranslation('account');
-    const { loadUntilResolve } = useContext(LoadContext);
+    const { loadUntilResolve } = useLoadInfo();
     const showToast = useToast();
+    const history = useHistory();
 
     const onSubmit = useCallback(
         async (
@@ -38,7 +40,7 @@ const LoginForm = ({ goToRegistration }: Props) => {
             });
             loadUntilResolve(promise);
 
-            const [err, data] = await to(promise);
+            const [err, resData] = await to(promise);
 
             actions.setSubmitting(false);
 
@@ -51,7 +53,7 @@ const LoginForm = ({ goToRegistration }: Props) => {
                     duration: 5000,
                     isClosable: true,
                 });
-            } else if (data !== undefined) {
+            } else if (resData !== undefined) {
                 // good case
                 showToast({
                     title: t('login-success-title'),
@@ -61,9 +63,15 @@ const LoginForm = ({ goToRegistration }: Props) => {
                     isClosable: true,
                 });
                 actions.resetForm();
+                localStorage.setItem('token', resData.data.token);
+                localStorage.setItem(
+                    'refreshToken',
+                    resData.data.refresh_token
+                );
+                history.push('/app');
             }
         },
-        [loadUntilResolve, showToast, t]
+        [history, loadUntilResolve, showToast, t]
     );
     return (
         <Formik initialValues={loginFormInitialValues} onSubmit={onSubmit}>

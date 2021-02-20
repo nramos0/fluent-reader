@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Flex, Button, Heading, useToast, Text, Link } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import PasswordField from '../PasswordField/PasswordField';
 import PasswordConfirmField from '../PasswordConfirmField/PasswordConfirmField';
 import StudyLangField from '../StudyLangField/StudyLangField';
 import DisplayLangField from '../DisplayLangField/DisplayLangField';
-import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
+import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
 import { register } from '../../../net/requests/register';
 
 interface Props {
@@ -34,7 +34,7 @@ const createAccountFormInitialValues: CreateAccountFormValues = {
 
 const CreateAccountForm = ({ returnToLogin }: Props) => {
     const { t } = useTranslation('account');
-    const { loadUntilResolve } = useContext(LoadContext);
+    const { loadUntilResolve } = useLoadInfo();
     const showToast = useToast();
 
     const validationSchema = useMemo(() => {

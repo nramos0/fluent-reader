@@ -41,12 +41,10 @@ export const request = <ReqProps extends object, ResData>(
 ) => {
     const data = getRequestData(dataInput, headers['content-type']);
 
-    // return to(
     return axios({
         method: method,
         url: url,
         data: data,
         headers: headers,
     }) as AxiosPromise<ResData>;
-    // );
 };

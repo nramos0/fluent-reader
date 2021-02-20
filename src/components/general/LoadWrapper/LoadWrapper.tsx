@@ -1,37 +1,49 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
-import i18n, { initPromise } from '../../../i18n';
+import i18n, { initPromise as i18nInitPromise } from '../../../i18n';
 import { Center, Spinner, Flex, Heading } from '@chakra-ui/react';
 
 const getInitialLoadingState = () => {
     return !i18n.isInitialized;
 };
 
-export type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
+type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
 
 interface LoadInfo {
     loadUntilResolve: LoadUntilResolve;
     isLoading: boolean;
 }
 
-export const LoadContext = React.createContext<LoadInfo>(undefined!);
+const LoadContext = React.createContext<LoadInfo>(undefined!);
 
-const LoadWrapper: React.FC = (props) => {
+export const useLoadInfo = () => {
+    return useContext(LoadContext);
+};
+
+interface Props {
+    promiseList: Promise<any>[];
+}
+
+const LoadWrapper: React.FC<Props> = (props) => {
     const { ready } = useTranslation();
     const [isInitialLoad, setIsInitialLoad] = useState(getInitialLoadingState);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const load = async () => {
-            const promiseList = [initPromise];
+            const promiseList = [i18nInitPromise, ...props.promiseList];
             await Promise.all(promiseList);
-            setIsInitialLoad(false);
+
+            const minimumLoadTime = 300;
+            setTimeout(() => {
+                setIsInitialLoad(false);
+            }, minimumLoadTime);
         };
         if (isInitialLoad) {
             load();
         }
-    }, [isInitialLoad]);
+    }, [isInitialLoad, props.promiseList]);
 
     const loadUntilResolve: LoadUntilResolve = useCallback(async (promise) => {
         setIsLoading(true);
@@ -41,7 +53,7 @@ const LoadWrapper: React.FC = (props) => {
 
     if (isInitialLoad || !ready) {
         return (
-            <Center h="inherit" display="flex" flexDir="column">
+            <Center h="100vh" display="flex" flexDir="column">
                 <Heading mb={10} color="white">
                     Fluent Reader
                 </Heading>
