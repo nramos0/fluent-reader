@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex, Heading, Text, Link } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import LoginForm from '../LoginForm/LoginForm';
 import CreateAccountForm from '../CreateAccountForm/CreateAccountForm';
@@ -10,33 +10,17 @@ const AccountPage: React.FC<{}> = () => {
     const { t } = useTranslation('account');
 
     const outerForm = isLogin ? (
-        <>
-            <LoginForm />
-            <Text mt={3}>
-                {t('to-register-prompt')}&nbsp;
-                <Link
-                    onClick={() => {
-                        setIsLogin(false);
-                    }}
-                >
-                    {t('to-register')}
-                </Link>
-            </Text>
-        </>
+        <LoginForm
+            goToRegistration={() => {
+                setIsLogin(false);
+            }}
+        />
     ) : (
-        <>
-            <CreateAccountForm />
-            <Text mt={3}>
-                {t('to-login-prompt')}&nbsp;
-                <Link
-                    onClick={() => {
-                        setIsLogin(true);
-                    }}
-                >
-                    {t('to-login')}
-                </Link>
-            </Text>
-        </>
+        <CreateAccountForm
+            returnToLogin={() => {
+                setIsLogin(true);
+            }}
+        />
     );
 
     return (

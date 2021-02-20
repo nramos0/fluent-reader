@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react';
-import { Button, Heading, useToast } from '@chakra-ui/react';
+import { Button, Heading, useToast, Text, Link } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
@@ -7,6 +7,10 @@ import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
 import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
 import { login } from '../../../net/requests/login';
+
+interface Props {
+    goToRegistration: () => void;
+}
 
 interface LoginFormValues {
     username: string;
@@ -18,7 +22,7 @@ const loginFormInitialValues: LoginFormValues = {
     password: '',
 };
 
-const LoginForm = () => {
+const LoginForm = ({ goToRegistration }: Props) => {
     const { t } = useTranslation('account');
     const { loadUntilResolve } = useContext(LoadContext);
     const showToast = useToast();
@@ -79,6 +83,19 @@ const LoginForm = () => {
                     >
                         {t('login')}
                     </Button>
+
+                    <Text mt={3}>
+                        {t('to-register-prompt')}&nbsp;
+                        <Link
+                            onClick={
+                                props.isSubmitting
+                                    ? undefined
+                                    : goToRegistration
+                            }
+                        >
+                            {t('to-register')}
+                        </Link>
+                    </Text>
                 </Form>
             )}
         </Formik>

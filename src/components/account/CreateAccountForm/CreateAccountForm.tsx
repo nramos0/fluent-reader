@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useMemo } from 'react';
-import { Flex, Button, Heading, useToast } from '@chakra-ui/react';
+import { Flex, Button, Heading, useToast, Text, Link } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
@@ -11,6 +11,10 @@ import StudyLangField from '../StudyLangField/StudyLangField';
 import DisplayLangField from '../DisplayLangField/DisplayLangField';
 import { LoadContext } from '../../general/LoadWrapper/LoadWrapper';
 import { register } from '../../../net/requests/register';
+
+interface Props {
+    returnToLogin: () => void;
+}
 
 interface CreateAccountFormValues {
     username: string;
@@ -28,7 +32,7 @@ const createAccountFormInitialValues: CreateAccountFormValues = {
     displayLang: 'default',
 };
 
-const CreateAccountForm = () => {
+const CreateAccountForm = ({ returnToLogin }: Props) => {
     const { t } = useTranslation('account');
     const { loadUntilResolve } = useContext(LoadContext);
     const showToast = useToast();
@@ -146,6 +150,17 @@ const CreateAccountForm = () => {
                     >
                         {t('create-account')}
                     </Button>
+
+                    <Text mt={3}>
+                        {t('to-login-prompt')}&nbsp;
+                        <Link
+                            onClick={
+                                props.isSubmitting ? undefined : returnToLogin
+                            }
+                        >
+                            {t('to-login')}
+                        </Link>
+                    </Text>
                 </Form>
             )}
         </Formik>
