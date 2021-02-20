@@ -2,5 +2,9 @@
   "en": "English",
   "zh-CN": "Chinese (Simplified)",
   "prompt-login-title": "Please Login",
-  "prompt-login-info": "Please login in order to use the app."
+  "prompt-login-info": "Please login in order to use the app.",
+  "library": "Library",
+  "read": "Read",
+  "add-article": "Add Article",
+  "settings": "Settings"
 }

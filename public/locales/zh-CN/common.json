@@ -2,5 +2,9 @@
   "en": "英语",
   "zh-CN": "中文 (简体)",
   "prompt-login-title": "请登入",
-  "prompt-login-info": "使用应用前，需要先登入系统"
+  "prompt-login-info": "使用应用前，需要先登入系统",
+  "library": "文章资料库",
+  "read": "阅读",
+  "add-article": "添加文章",
+  "settings": "设置"
 }

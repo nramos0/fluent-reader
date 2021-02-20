@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
-import { Box, Center, useToast, Text } from '@chakra-ui/react';
+import { Box, useToast } from '@chakra-ui/react';
 import AccountPage from '../components/account/AccountPage/AccountPage';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import to from 'await-to-js';
 import i18n, { i18nInitPromise } from '../i18n';
 import LoadProvider from '../components/general/LoadWrapper/LoadWrapper';
+import SideBar from '../components/general/SideBar/SideBar';
 import './App.css';
 import { useAuth } from '../components/general/AuthWrapper/AuthWrapper';
 import { authenticate } from '../net/requests/auth';
@@ -38,7 +39,9 @@ function App() {
                 });
                 return;
             } else {
-                history.push('/app');
+                if (!history.location.pathname.includes('app')) {
+                    history.push('/app');
+                }
                 resolve();
                 return;
             }
@@ -57,11 +60,7 @@ function App() {
                         <AccountPage />
                     </Route>
                     <Route path="/app">
-                        <Center h="inherit">
-                            <Text color="white" fontSize="xl">
-                                Hi! The app is currently a work-in-progress.
-                            </Text>
-                        </Center>
+                        <SideBar />
                     </Route>
                 </Switch>
             </LoadProvider>
