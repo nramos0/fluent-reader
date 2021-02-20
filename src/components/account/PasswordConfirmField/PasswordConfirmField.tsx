@@ -15,7 +15,7 @@ const PasswordConfirmField = (props: FieldHookConfig<string>) => {
     return (
         <FormControl
             isInvalid={meta.error !== undefined && meta.touched}
-            mb={5}
+            mb={3}
         >
             <FormLabel htmlFor="passwordConfirm">
                 {t('password-confirm')}

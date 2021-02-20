@@ -24,5 +24,14 @@
   "login-success-title": "登入成功。",
   "login-success-desc": "您成功登入Fluent Reader系统。",
   "login-fail-title": "登入失败。",
-  "login-fail-desc": "登入时出错了，您输入的密码可能不正确，也有可能具有您输入的用户名的账号不存在。"
+  "login-fail-desc": "登入时出错了，您输入的密码可能不正确，也有可能具有您输入的用户名的账号不存在。",
+  "required": "必填",
+  "too-short": "太短",
+  "too-long": "太长",
+  "pass-need-lower": "密码必须至少包含一个小写英文字母。",
+  "pass-need-upper": "密码必须至少包含一个大写英文字母。",
+  "pass-need-digit": "密码必须至少包含一个数字。",
+  "pass-must-match": "两个密码必须一致",
+  "must-select-study-lang": "请选择学习语言",
+  "must-select-display-lang": "请选择显示语言"
 }

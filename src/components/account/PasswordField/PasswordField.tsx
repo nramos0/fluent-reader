@@ -17,7 +17,7 @@ const PasswordField = (
     return (
         <FormControl
             mr={5}
-            mb={5}
+            mb={3}
             isInvalid={meta.error !== undefined && meta.touched}
         >
             <FormLabel htmlFor="password">{t('password')}</FormLabel>

@@ -25,5 +25,14 @@
   "login-success-title": "Login success.",
   "login-success-desc": "You've successfully logged into Fluent Reader.",
   "login-fail-title": "Login failed.",
-  "login-fail-desc": "There was an error while logging in. Your password may be incorrect, or an account with that username may not exist."
+  "login-fail-desc": "There was an error while logging in. Your password may be incorrect, or an account with that username may not exist.",
+  "required": "Required",
+  "too-short": "Too short.",
+  "too-long": "Too long.",
+  "pass-need-lower": "Password must contain at least one lowercase letter.",
+  "pass-need-upper": "Password must contain at least one uppercase letter.",
+  "pass-need-digit": "Password must contain at least one number.",
+  "pass-must-match": "Passwords must match",
+  "must-select-study-lang": "Please select a study language",
+  "must-select-display-lang": "Please select a display language"
 }

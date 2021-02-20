@@ -1,8 +1,9 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useMemo } from 'react';
 import { Flex, Button, Heading, useToast } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
+import * as Yup from 'yup';
 import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
 import PasswordConfirmField from '../PasswordConfirmField/PasswordConfirmField';
@@ -15,16 +16,16 @@ interface CreateAccountFormValues {
     username: string;
     password: string;
     passwordConfirm: string;
-    studyLang: string | undefined;
-    displayLang: string | undefined;
+    studyLang: string;
+    displayLang: string;
 }
 
 const createAccountFormInitialValues: CreateAccountFormValues = {
     username: '',
     password: '',
     passwordConfirm: '',
-    studyLang: undefined,
-    displayLang: undefined,
+    studyLang: 'default',
+    displayLang: 'default',
 };
 
 const CreateAccountForm = () => {
@@ -32,11 +33,47 @@ const CreateAccountForm = () => {
     const { loadUntilResolve } = useContext(LoadContext);
     const showToast = useToast();
 
+    const validationSchema = useMemo(() => {
+        const required = t('required');
+        const tooShort = t('too-short');
+        const tooLong = t('too-long');
+
+        return Yup.object().shape({
+            username: Yup.string()
+                .required(required)
+                .min(2, tooShort)
+                .max(100, tooLong),
+            password: Yup.string()
+                .required(required)
+                .min(8, tooShort)
+                .max(64, tooLong)
+                .matches(/[a-z]/, t('pass-need-lower'))
+                .matches(/[A-Z]/, t('pass-need-upper'))
+                .matches(/\d/, t('pass-need-digit')),
+            passwordConfirm: Yup.string()
+                .required(required)
+                .oneOf([Yup.ref('password'), ''], t('pass-must-match')),
+            studyLang: Yup.string()
+                .required(required)
+                .oneOf(['en', 'zh-CN'], t('must-select-study-lang')),
+            displayLang: Yup.string()
+                .required(required)
+                .oneOf(['en', 'zh-CN'], t('must-select-display-lang')),
+        });
+    }, [t]);
+
     const onSubmit = useCallback(
         async (
             values: CreateAccountFormValues,
             actions: FormikHelpers<CreateAccountFormValues>
         ) => {
+            const [validationError] = await to(actions.validateForm(values));
+
+            if (validationError !== null) {
+                actions.setSubmitting(false);
+                return;
+            }
+
             const promise = register({
                 username: values.username,
                 password: values.password,
@@ -77,6 +114,7 @@ const CreateAccountForm = () => {
         <Formik
             initialValues={createAccountFormInitialValues}
             onSubmit={onSubmit}
+            validationSchema={validationSchema}
         >
             {(props) => (
                 <Form>
@@ -95,7 +133,14 @@ const CreateAccountForm = () => {
                     <DisplayLangField name="displayLang" />
 
                     <Button
-                        disabled={props.isSubmitting}
+                        disabled={
+                            props.isSubmitting ||
+                            !!props.errors.username ||
+                            !!props.errors.password ||
+                            !!props.errors.passwordConfirm ||
+                            !!props.errors.studyLang ||
+                            !!props.errors.displayLang
+                        }
                         w="100%"
                         type="submit"
                     >

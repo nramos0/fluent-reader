@@ -17,7 +17,7 @@ const UsernameField = (
     return (
         <FormControl
             id="username"
-            mb={5}
+            mb={3}
             isInvalid={meta.error !== undefined && meta.touched}
         >
             <FormLabel htmlFor="username">{t('username')}</FormLabel>
