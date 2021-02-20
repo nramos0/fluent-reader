@@ -12,7 +12,6 @@ export const initPromise = i18n
             loadPath: '/locales/{{lng}}/{{ns}}.json',
         },
 
-        lng: 'en',
         fallbackLng: 'en',
         defaultNS: 'common',
         ns: ['common', 'account'],
