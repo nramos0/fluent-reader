@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
-import i18n, { initPromise as i18nInitPromise } from '../../../i18n';
 import { Center, Spinner, Flex, Heading } from '@chakra-ui/react';
-
-const getInitialLoadingState = () => {
-    return !i18n.isInitialized;
-};
 
 type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
 
@@ -27,12 +22,12 @@ interface Props {
 
 const LoadWrapper: React.FC<Props> = (props) => {
     const { ready } = useTranslation();
-    const [isInitialLoad, setIsInitialLoad] = useState(getInitialLoadingState);
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const load = async () => {
-            const promiseList = [i18nInitPromise, ...props.promiseList];
+            const promiseList = [...props.promiseList];
             await Promise.all(promiseList);
 
             const minimumLoadTime = 300;

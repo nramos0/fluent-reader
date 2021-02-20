@@ -3,6 +3,7 @@ import { Box, Center, useToast, Text } from '@chakra-ui/react';
 import AccountPage from '../components/account/AccountPage/AccountPage';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import to from 'await-to-js';
+import i18n, { i18nInitPromise } from '../i18n';
 import LoadProvider from '../components/general/LoadWrapper/LoadWrapper';
 import './App.css';
 import { useAuth } from '../components/general/AuthWrapper/AuthWrapper';
@@ -20,13 +21,17 @@ function App() {
                 return;
             }
 
+            await i18nInitPromise;
+
+            const t = i18n.getFixedT(i18n.language, 'common');
+
             const [err] = await to(authenticate({ token: auth.token }));
             if (err !== null) {
                 history.push('/account');
                 resolve();
                 showToast({
-                    title: 'Please Login',
-                    description: 'Please login in order to use the app',
+                    title: t('prompt-login-title'),
+                    description: t('prompt-login-info'),
                     status: 'error',
                     duration: 5000,
                     isClosable: true,
@@ -41,7 +46,7 @@ function App() {
     }, [auth.token, history, showToast]);
 
     const promiseList = useMemo(() => {
-        return [initialRoutePromise];
+        return [initialRoutePromise, i18nInitPromise];
     }, [initialRoutePromise]);
 
     return (

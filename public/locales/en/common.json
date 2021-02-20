@@ -1,4 +1,6 @@
 {
   "en": "English",
-  "zh-CN": "Chinese (Simplified)"
+  "zh-CN": "Chinese (Simplified)",
+  "prompt-login-title": "Please Login",
+  "prompt-login-info": "Please login in order to use the app."
 }
