@@ -45,8 +45,10 @@ const getConfig = async () => {
 
     const newConfig = {
         ...baseConfig,
-        include: includeFiles,
+        include: [...includeFiles, ...baseConfig.compilerOptions.types],
     };
+
+    delete newConfig.compilerOptions.types;
 
     return JSON.stringify(newConfig);
 };
