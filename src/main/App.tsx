@@ -6,6 +6,7 @@ import to from 'await-to-js';
 import i18n, { i18nInitPromise } from '../i18n';
 import LoadProvider from '../components/general/LoadWrapper/LoadWrapper';
 import SideBar from '../components/general/SideBar/SideBar';
+import Logout from '../components/general/Logout/Logout';
 import './App.css';
 import { useAuth } from '../components/general/AuthWrapper/AuthWrapper';
 import { authenticate } from '../net/requests/auth';
@@ -61,6 +62,9 @@ function App() {
                     </Route>
                     <Route path="/app">
                         <SideBar />
+                    </Route>
+                    <Route path="/logout">
+                        <Logout />
                     </Route>
                 </Switch>
             </LoadProvider>

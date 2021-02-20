@@ -6,5 +6,7 @@
   "library": "Library",
   "read": "Read",
   "add-article": "Add Article",
-  "settings": "Settings"
+  "settings": "Settings",
+  "logout": "Logout",
+  "logout-success": "Loggged out successfully"
 }

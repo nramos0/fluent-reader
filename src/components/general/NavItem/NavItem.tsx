@@ -4,6 +4,7 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 interface Props {
     location: string;
+    floatBottom?: boolean;
 }
 
 const NavItem: React.FC<Props> = (props) => {
@@ -15,6 +16,7 @@ const NavItem: React.FC<Props> = (props) => {
             as={RouterLink}
             to={props.location}
             p={3}
+            mt={props.floatBottom ? 'auto' : 'inherit'}
             fontSize={{ base: 'x-small', sm: 'sm', lg: 'lg' }}
             bgColor={isSelected ? '#d16161' : 'white'}
             color={isSelected ? 'white' : '#661919'}
