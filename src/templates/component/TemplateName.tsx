@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import './TemplateName.css';
 
 interface Props {}
 
@@ -10,7 +9,7 @@ const TemplateName: React.FC<Props> = (_props) => {
     const { t } = useTranslation();
     // prettier-ignore
     return (
-        <Box className="TemplateName">
+        <Box>
 
         </Box>
     );
