@@ -1,5 +1,6 @@
 {
   "en": "English",
+  "zh": "Chinese",
   "zh-CN": "Chinese (Simplified)",
   "prompt-login-title": "Please Login",
   "prompt-login-info": "Please login in order to use the app.",
@@ -11,5 +12,7 @@
   "logout-success": "Loggged out successfully",
   "logout-confirm-title": "Logout Confirmation",
   "logout-confirm-info": "Are you sure you want to log out?",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "none": "None",
+  "lang": "Language"
 }

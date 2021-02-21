@@ -1,0 +1,7 @@
+{
+  "author": "Author",
+  "word": "word",
+  "word_plural": "words",
+  "wordWithCount": "{{count}} word",
+  "wordWithCount_plural": "{{count}} words"
+}

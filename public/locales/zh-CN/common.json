@@ -1,5 +1,6 @@
 {
   "en": "英语",
+  "zh": "中文",
   "zh-CN": "中文 (简体)",
   "prompt-login-title": "请登入",
   "prompt-login-info": "使用应用前，需要先登入系统",
@@ -11,5 +12,7 @@
   "logout-success": "登出成功",
   "logout-confirm-title": "确认登出",
   "logout-confirm-info": "您确定要登出系统吗？",
-  "cancel": "取消"
+  "cancel": "取消",
+  "none": "无",
+  "lang": "语言"
 }
