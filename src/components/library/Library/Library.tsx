@@ -7,7 +7,8 @@ import ScrollBox from '../../general/ScrollBox/ScrollBox';
 const articleList: SimpleArticle[] = [
     {
         id: 3,
-        title: 'Interesting Programming',
+        title:
+            'Interesting Programming Interesting Programming Interesting Programming',
         author: null,
         content_length: 19,
         created_on: {

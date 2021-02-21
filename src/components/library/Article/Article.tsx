@@ -1,5 +1,6 @@
 import React from 'react';
-import { Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading, Tooltip } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import ArticleAuthor from '../ArticleAuthor/ArticleAuthor';
 import ArticleTime from '../ArticleTime/ArticleTime';
 import ArticleLength from '../ArticleLength/ArticleLength';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const Article: React.FC<Props> = ({ article }) => {
+    const { t } = useTranslation();
     return (
         <Flex
             direction="column"
@@ -21,11 +23,27 @@ const Article: React.FC<Props> = ({ article }) => {
             borderRadius="lg"
             bgColor="white"
             color="#661919"
-            minW={{ base: '15%', lg: '20%' }}
+            minW={{ sm: '35%', md: '25%', lg: '20%' }}
             flex={1}
             textAlign="left"
+            fontSize={{ base: 'xs', sm: 'sm', md: 'md' }}
         >
-            <Heading fontSize="lg">{article.title}</Heading>
+            <Tooltip
+                label={article.title}
+                aria-label={t('aria:article-title-tooltip')}
+                noOfLines={5}
+                borderRadius="lg"
+                bgColor="#661919"
+                color="white"
+            >
+                <Heading
+                    fontSize={{ base: 'sm', sm: 'md', md: 'lg' }}
+                    isTruncated={true}
+                    maxW="100%"
+                >
+                    {article.title}
+                </Heading>
+            </Tooltip>
             <Flex flexDir={{ base: 'column', xl: 'row' }}>
                 <ArticleAuthor author={article.author} />
                 <ArticleTime timestamp={article.created_on} />
