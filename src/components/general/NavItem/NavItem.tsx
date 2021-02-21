@@ -5,6 +5,7 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 interface Props {
     location: string;
     floatBottom?: boolean;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
 const NavItem: React.FC<Props> = (props) => {
@@ -14,6 +15,7 @@ const NavItem: React.FC<Props> = (props) => {
     return (
         <Link
             as={RouterLink}
+            onClick={props.onClick}
             to={props.location}
             p={3}
             mt={props.floatBottom ? 'auto' : 'inherit'}

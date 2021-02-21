@@ -8,5 +8,8 @@
   "add-article": "Add Article",
   "settings": "Settings",
   "logout": "Logout",
-  "logout-success": "Loggged out successfully"
+  "logout-success": "Loggged out successfully",
+  "logout-confirm-title": "Logout Confirmation",
+  "logout-confirm-info": "Are you sure you want to log out?",
+  "cancel": "Cancel"
 }

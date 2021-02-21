@@ -8,5 +8,8 @@
   "add-article": "添加文章",
   "settings": "设置",
   "logout": "登出",
-  "logout-success": "登出成功"
+  "logout-success": "登出成功",
+  "logout-confirm-title": "确认登出",
+  "logout-confirm-info": "您确定要登出系统吗？",
+  "cancel": "取消"
 }
