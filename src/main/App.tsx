@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Box, useToast } from '@chakra-ui/react';
+import { Box, useToast, Flex } from '@chakra-ui/react';
 import AccountPage from '../components/account/AccountPage/AccountPage';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import to from 'await-to-js';
@@ -61,7 +61,13 @@ function App() {
                         <AccountPage />
                     </Route>
                     <Route path="/app">
-                        <SideBar />
+                        <Flex direction="row" w="100%" h="100%      ">
+                            <SideBar />
+                            <Route path="/app/library">Library</Route>
+                            <Route path="/app/read">Read</Route>
+                            <Route path="/app/add-article">Add Article</Route>
+                            <Route path="/app/settings">Settings</Route>
+                        </Flex>
                     </Route>
                     <Route path="/logout">
                         <Logout />
