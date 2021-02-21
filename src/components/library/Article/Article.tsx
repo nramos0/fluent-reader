@@ -21,16 +21,16 @@ const Article: React.FC<Props> = ({ article }) => {
             borderRadius="lg"
             bgColor="white"
             color="#661919"
-            minW="20%"
+            minW={{ base: '15%', lg: '20%' }}
             flex={1}
             textAlign="left"
         >
             <Heading fontSize="lg">{article.title}</Heading>
-            <Flex flexDir={{ base: 'column', lg: 'row' }}>
+            <Flex flexDir={{ base: 'column', xl: 'row' }}>
                 <ArticleAuthor author={article.author} />
                 <ArticleTime timestamp={article.created_on} />
             </Flex>
-            <Flex flexDir={{ base: 'column', lg: 'row' }}>
+            <Flex flexDir={{ base: 'column', xl: 'row' }}>
                 <ArticleLang lang={article.lang} />
                 <ArticleLength length={article.content_length} />
             </Flex>
