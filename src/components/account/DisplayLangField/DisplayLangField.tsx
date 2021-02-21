@@ -38,7 +38,7 @@ const DisplayLangField = (props: FieldHookConfig<string>) => {
             isInvalid={meta.error !== undefined && meta.touched}
         >
             <FormLabel>{t('display-lang')}</FormLabel>
-            <Select defaultValue="default" {...field} onChange={onChange}>
+            <Select {...field} onChange={onChange}>
                 <option value="default" disabled={true}>
                     {t('display-lang-info')}
                 </option>

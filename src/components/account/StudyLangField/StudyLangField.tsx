@@ -18,7 +18,7 @@ const StudyLangField = (props: FieldHookConfig<string>) => {
             isInvalid={meta.error !== undefined && meta.touched}
         >
             <FormLabel>{t('study-lang')}</FormLabel>
-            <Select defaultValue="default" {...field}>
+            <Select {...field}>
                 <option value="default" disabled={true}>
                     {t('study-lang-info')}
                 </option>
