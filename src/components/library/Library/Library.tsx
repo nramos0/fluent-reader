@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import ArticleList from '../ArticleList/ArticleList';
+import ScrollBox from '../../general/ScrollBox/ScrollBox';
 
 const articleList: SimpleArticle[] = [
     {
@@ -165,12 +166,14 @@ const articleList: SimpleArticle[] = [
 const Library: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <Flex direction="column" align="center" flex={1} p={3}>
-            <Heading color="white" textAlign="center" fontSize="4xl" mb={3}>
-                {t('library')}
-            </Heading>
-            <ArticleList list={articleList} />
-        </Flex>
+        <ScrollBox overflowX="hidden" m={1} flex={1}>
+            <Flex direction="column" align="center" flex={1} p={3}>
+                <Heading color="white" textAlign="center" fontSize="4xl" mb={3}>
+                    {t('library')}
+                </Heading>
+                <ArticleList list={articleList} />
+            </Flex>
+        </ScrollBox>
     );
 };
 
