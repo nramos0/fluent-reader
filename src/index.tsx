@@ -31,7 +31,7 @@ ReactDOM.render(
                     <Box
                         w="100vw"
                         h="100vh"
-                        bgGradient="linear(to-b, #c16161, #c70505, #b82e2e, #902323, #661919)"
+                        bgGradient="linear(to-b, #c15151, #c70505, #b82e2e, #902323, #661919)"
                     >
                         <BrowserRouter>
                             <App />
