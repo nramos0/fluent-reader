@@ -1,6 +1,5 @@
 import { ENDPOINTS } from '../apiEndpoints';
 import { request } from '../request';
-import { useMutation } from 'react-query';
 
 interface RegisterReqProps {
     username: string;
@@ -20,20 +19,4 @@ export const register: API.Request<RegisterReqProps, RegisterResData> = async (
     return request(url, data, 'POST', {
         'content-type': 'application/json',
     });
-};
-
-export const useRegister = (
-    query: RegisterReqProps,
-    onSuccessInput: API.OnSuccessFunction<RegisterResData>,
-    onFailureInput: API.OnFailureFunction
-) => {
-    return useMutation(
-        () => {
-            return register(query);
-        },
-        {
-            onSuccess: onSuccessInput,
-            onError: onFailureInput,
-        }
-    );
 };

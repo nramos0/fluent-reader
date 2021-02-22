@@ -86,11 +86,11 @@ const CreateAccountForm = ({ returnToLogin }: Props) => {
             });
             loadUntilResolve(promise);
 
-            const [err, data] = await to(promise);
+            const [resErr, resData] = await to(promise);
 
             actions.setSubmitting(false);
 
-            if (err !== null) {
+            if (resErr !== null) {
                 // error case
                 showToast({
                     title: t('register-fail-title'),
@@ -99,7 +99,7 @@ const CreateAccountForm = ({ returnToLogin }: Props) => {
                     duration: 5000,
                     isClosable: true,
                 });
-            } else if (data !== undefined) {
+            } else if (resData !== undefined) {
                 // good case
                 showToast({
                     title: t('register-success-title'),

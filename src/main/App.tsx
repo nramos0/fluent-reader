@@ -3,6 +3,7 @@ import { Box, useToast } from '@chakra-ui/react';
 import AccountPage from '../components/account/AccountPage/AccountPage';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import to from 'await-to-js';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import i18n, { i18nInitPromise } from '../i18n';
 
 import InnerApp from '../components/general/InnerApp/InnerApp';
@@ -58,6 +59,7 @@ function App() {
     return (
         <Box className="App" h="inherit">
             <LoadProvider promiseList={promiseList}>
+                <ReactQueryDevtools initialIsOpen={true} />
                 <Switch>
                     <Route path="/account">
                         <AccountPage />

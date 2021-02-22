@@ -8,6 +8,7 @@ import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
 import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
 import { login } from '../../../net/requests/login';
+import { useAuth } from '../../general/AuthWrapper/AuthWrapper';
 
 interface Props {
     goToRegistration: () => void;
@@ -28,6 +29,7 @@ const LoginForm = ({ goToRegistration }: Props) => {
     const { loadUntilResolve } = useLoadInfo();
     const showToast = useToast();
     const history = useHistory();
+    const auth = useAuth();
 
     const onSubmit = useCallback(
         async (
@@ -40,11 +42,11 @@ const LoginForm = ({ goToRegistration }: Props) => {
             });
             loadUntilResolve(promise);
 
-            const [err, resData] = await to(promise);
+            const [resErr, resData] = await to(promise);
 
             actions.setSubmitting(false);
 
-            if (err !== null) {
+            if (resErr !== null) {
                 // error case
                 showToast({
                     title: t('login-fail-title'),
@@ -63,15 +65,14 @@ const LoginForm = ({ goToRegistration }: Props) => {
                     isClosable: true,
                 });
                 actions.resetForm();
-                localStorage.setItem('token', resData.data.token);
-                localStorage.setItem(
-                    'refreshToken',
-                    resData.data.refresh_token
-                );
+
+                auth.setToken(resData.data.token);
+                auth.setRefreshToken(resData.data.refresh_token);
+
                 history.push('/app');
             }
         },
-        [history, loadUntilResolve, showToast, t]
+        [auth, history, loadUntilResolve, showToast, t]
     );
     return (
         <Formik initialValues={loginFormInitialValues} onSubmit={onSubmit}>

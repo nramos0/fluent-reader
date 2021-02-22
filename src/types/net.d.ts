@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 
 declare global {
     namespace API {
@@ -9,9 +9,11 @@ declare global {
 
         type Response<ResData> = Promise<AxiosResponse<ResData>>;
 
-        type OnSuccessFunction<T> = (data: AxiosResponse<T>) => void;
+        type ToWrap<T> = [AxiosError | null, AxiosResponse<T> | undefined];
 
-        type OnFailureFunction = (err: API.Error) => void;
+        type OnSuccessFn<T> = (data: AxiosResponse<T>) => void;
+
+        type OnFailureFn = (err: AxiosError) => void;
     }
 
     type ContentType =

@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios';
+import axios from 'axios';
 
 const convertToUrlEncoded = (data: Dictionary<any>): string => {
     return Object.keys(data)
@@ -33,7 +33,7 @@ const getRequestData = (data: object, contentType: ContentType) => {
     }
 };
 
-export const request = <ReqProps extends object, ResData>(
+export const request = async <ReqProps extends object>(
     url: string,
     dataInput: ReqProps,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -46,5 +46,5 @@ export const request = <ReqProps extends object, ResData>(
         url: url,
         data: data,
         headers: headers,
-    }) as AxiosPromise<ResData>;
+    });
 };
