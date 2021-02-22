@@ -1,27 +1,27 @@
 import React, { useEffect } from 'react';
 import { Flex } from '@chakra-ui/react';
-import { Route, useHistory } from 'react-router-dom';
+import { Route, useHistory, useLocation } from 'react-router-dom';
 import SideBar from '../SideBar/SideBar';
 import Library from '../../library/Library/Library';
 import AddArticle from '../../add-article/AddArticle/AddArticle';
 
 const InnerApp: React.FC = () => {
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         const lastPage = localStorage.getItem('lastPage');
-        history.push('/app/add-article');
 
         if (lastPage === null) {
-            // history.push('/app/add-article');
+            history.push('/app/library');
         } else {
-            // history.push(lastPage);
+            history.push(lastPage);
         }
     }, [history]);
 
     useEffect(() => {
-        localStorage.setItem('lastPage', history.location.pathname);
-    }, [history.location.pathname]);
+        localStorage.setItem('lastPage', location.pathname);
+    }, [location.pathname]);
 
     return (
         <Flex direction="row" w="100%" h="100%">
