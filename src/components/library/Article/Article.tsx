@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flex, Heading, Tooltip } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+// import LazyTooltip from '../../general/LazyTooltip/LazyTooltip';
 import ArticleAuthor from '../ArticleAuthor/ArticleAuthor';
 import ArticleTime from '../ArticleTime/ArticleTime';
 import ArticleLength from '../ArticleLength/ArticleLength';
@@ -58,4 +59,4 @@ const Article: React.FC<Props> = ({ article }) => {
     );
 };
 
-export default Article;
+export default React.memo(Article);

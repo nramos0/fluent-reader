@@ -14,5 +14,8 @@
   "logout-confirm-info": "Are you sure you want to log out?",
   "cancel": "Cancel",
   "none": "None",
-  "lang": "Language"
+  "lang": "Language",
+  "required": "Required",
+  "too-short": "Too short.",
+  "too-long": "Too long."
 }

@@ -2,7 +2,10 @@ import { AxiosResponse } from 'axios';
 
 declare global {
     namespace API {
-        type Request<ReqProps, ResData> = (data: ReqProps) => Response<ResData>;
+        type Request<ReqProps, ResData> = (
+            data: ReqProps,
+            token?: string
+        ) => Response<ResData>;
 
         type Response<ResData> = Promise<AxiosResponse<ResData>>;
 

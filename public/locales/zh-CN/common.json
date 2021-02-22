@@ -14,5 +14,8 @@
   "logout-confirm-info": "您确定要登出系统吗？",
   "cancel": "取消",
   "none": "无",
-  "lang": "语言"
+  "lang": "语言",
+  "required": "必填",
+  "too-short": "太短",
+  "too-long": "太长"
 }
