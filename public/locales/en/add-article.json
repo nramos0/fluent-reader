@@ -13,7 +13,7 @@
   "content-info": "The article's content. This is the actual text that you read in the article.",
   "language": "Language",
   "language-info": "The language that the article is written in. This is usually your study language and will be set by default.",
-  "language-default": "Select the article' language.",
+  "language-default": "Select the article's language.",
   "is-private": "Article Privacy",
   "is-private-info": "Whether the article is public or private. Public articles may be seen by other users, whereas only you can see private articles that you uploaded.",
   "private": "Private",
