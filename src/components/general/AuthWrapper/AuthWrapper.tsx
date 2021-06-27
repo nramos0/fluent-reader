@@ -19,7 +19,6 @@ const AuthWrapper: React.FC<{}> = (props) => {
     });
 
     const setTokenWithLS = useCallback((token: string) => {
-        console.log('setting token: ', token);
         setToken(token);
         localStorage.setItem('token', token);
     }, []);

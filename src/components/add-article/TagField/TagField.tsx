@@ -68,8 +68,8 @@ const TagField = (props: FieldHookConfig<string[]>) => {
     }, [currentTagInput, helpers, t, tagMap, tags]);
 
     const onKeyUp = useCallback(
-        ({ key }: KeyboardEvent) => {
-            if (key === 'Enter') {
+        (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
                 onTagAdd();
             }
         },
@@ -79,10 +79,7 @@ const TagField = (props: FieldHookConfig<string[]>) => {
     useOnKeyUp(onKeyUp);
 
     return (
-        <FormControl
-            mb={3}
-            isInvalid={meta.error !== undefined && meta.touched}
-        >
+        <FormControl mb={3} isInvalid={meta.error !== undefined}>
             <FormLabel htmlFor="article-tags">{t('tag')}</FormLabel>
             {tags.length === 0 ? (
                 <Text align="left" mb={2} fontSize="sm">
