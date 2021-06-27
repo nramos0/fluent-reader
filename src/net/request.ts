@@ -41,6 +41,10 @@ export const request = async <ReqProps extends object>(
 ) => {
     const data = getRequestData(dataInput, headers['content-type']);
 
+    if (headers.authorization !== undefined) {
+        headers.authorization = `Bearer ${headers.authorization}`;
+    }
+
     return axios({
         method: method,
         url: url,

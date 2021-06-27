@@ -28,7 +28,7 @@ export const getSysArticleList: API.Request<
 
     return request(url, data, 'GET', {
         'content-type': 'application/json',
-        authorization: token === undefined ? undefined : `Bearer ${token}`,
+        authorization: token,
     });
 };
 

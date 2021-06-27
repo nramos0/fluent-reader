@@ -9,6 +9,6 @@ export const authenticate: API.Request<AuthReqProps, {}> = async (data) => {
     const url = ENDPOINTS.user.auth;
     return request(url, {}, 'POST', {
         'content-type': 'application/json',
-        authorization: `Bearer ${data.token}`,
+        authorization: data.token,
     });
 };
