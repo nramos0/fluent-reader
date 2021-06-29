@@ -4,6 +4,7 @@ import { Route, useHistory, useLocation } from 'react-router-dom';
 import SideBar from '../SideBar/SideBar';
 import Library from '../../library/Library/Library';
 import AddArticle from '../../add-article/AddArticle/AddArticle';
+import Reader from '../../read/Reader/Reader';
 
 const InnerApp: React.FC = () => {
     const history = useHistory();
@@ -29,7 +30,9 @@ const InnerApp: React.FC = () => {
             <Route path="/app/library">
                 <Library />
             </Route>
-            <Route path="/app/read">Read</Route>
+            <Route path="/app/read">
+                <Reader />
+            </Route>
             <Route path="/app/add-article">
                 <AddArticle />
             </Route>
