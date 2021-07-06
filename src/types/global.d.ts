@@ -15,3 +15,5 @@ declare interface Store {
 
 declare type Language = 'en' | 'zh';
 declare type WordStatus = 'known' | 'learning' | 'new';
+
+declare type OnClickFunction = (e: MouseEvent<HTMLElement>) => void;

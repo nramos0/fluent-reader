@@ -25,7 +25,7 @@ const InnerApp: React.FC = () => {
     }, [location.pathname]);
 
     return (
-        <Flex direction={{ md: 'column-reverse', lg: 'row' }} w="100%" h="100%">
+        <Flex direction={{ lg: 'row' }} w="100%" h="100%">
             <SideBar />
             <Route path="/app/library">
                 <Library />
@@ -36,7 +36,7 @@ const InnerApp: React.FC = () => {
             <Route path="/app/add-article">
                 <AddArticle />
             </Route>
-            <Route path="/app/settings">Settings</Route>
+            <Route path="/app/settings"></Route>
         </Flex>
     );
 };

@@ -16,30 +16,25 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
             justifyContent="center"
             alignItems="center"
             overflowY="auto"
-            flex={1}
+            flex={7}
             overflowX="hidden"
+            backgroundColor="#fff"
+            width="90%"
+            height="90%"
+            borderRadius="lg"
+            margin="0px 7.5px 0px 15px"
+            color="#222"
         >
-            <Box
-                backgroundColor="#fff"
-                width="90%"
-                height="90%"
-                borderRadius="lg"
-                color="#222"
-                overflowY="auto"
-                display="flex"
-                flexDir="column"
-            >
-                <PageText page={pages[currPage]} />
-                <Box w="100%" border="thin solid #CCC" />
-                <Box height="5%" p="5px">
-                    Page {currPage + 1}
-                </Box>
-                <PageFooter
-                    currPage={currPage}
-                    setCurrPage={setCurrPage}
-                    pageCountM1={pageCountM1}
-                />
+            <PageText page={pages[currPage]} />
+            <Box w="100%" border="thin solid #d16161" />
+            <Box height="5%" p="5px">
+                Page {currPage + 1}
             </Box>
+            <PageFooter
+                currPage={currPage}
+                setCurrPage={setCurrPage}
+                pageCountM1={pageCountM1}
+            />
         </Flex>
     );
 };

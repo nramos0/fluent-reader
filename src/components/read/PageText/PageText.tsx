@@ -1,44 +1,99 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Text } from '@chakra-ui/react';
 import { useStore } from '../../../hooks/useStore';
 import { useMemo } from 'react';
 import { isStopWord } from '../../../util/lang';
 import { observer } from 'mobx-react';
+import { useReaderStore } from '../Reader/Reader';
 
 import './PageText.css';
+
+interface WordProps {
+    word: string;
+    onClick?: OnClickFunction;
+    className: string;
+    index: number;
+}
+
+const Word: React.FC<WordProps> = ({ word, className, index, onClick }) => {
+    return (
+        <Text
+            as="span"
+            className={className}
+            onClick={onClick}
+            id={String(index)}
+        >
+            {word}
+        </Text>
+    );
+};
 
 interface Props {
     page: string[];
 }
 
-const Word: React.FC<{ word: string }> = observer(({ word }) => {
+const PageText: React.FC<Props> = ({ page }) => {
     const store = useStore();
 
-    const className: string = useMemo(() => {
-        if (isStopWord(word)) {
-            return '';
+    const { classNameMap, stopWordMap, wordStatusMap } = useMemo(() => {
+        const wordCount = page.length;
+
+        const classNameMap: string[] = [];
+        classNameMap[wordCount - 1] = ''; // extend array
+
+        const stopWordMap: boolean[] = [];
+        stopWordMap[wordCount - 1] = false; // extend array
+
+        const wordStatusMap: WordStatus[] = [];
+        wordStatusMap[wordCount - 1] = 'new'; // extend array
+
+        for (let i = 0; i < wordCount; ++i) {
+            const word = page[i];
+            if (isStopWord(word)) {
+                classNameMap[i] = '';
+                stopWordMap[i] = true;
+                continue;
+            }
+
+            stopWordMap[i] = false;
+
+            const status = store.getWordStatus(word);
+            wordStatusMap[i] = status;
+
+            let className = '';
+            switch (status) {
+                case 'known':
+                    className = 'word';
+                    break;
+                case 'new':
+                    className = 'word new';
+                    break;
+                case 'learning':
+                    className = 'word learning';
+                    break;
+            }
+
+            classNameMap[i] = className;
         }
 
-        const status = store.getWordStatus(word);
+        return {
+            classNameMap: classNameMap,
+            stopWordMap: stopWordMap,
+            wordStatusMap: wordStatusMap,
+        };
+    }, [store, page]);
 
-        switch (status) {
-            case 'known':
-                return 'word';
-            case 'new':
-                return 'word non-known new';
-            case 'learning':
-                return 'word non-known learning';
-        }
-    }, [store, word]);
+    const readerStore = useReaderStore();
 
-    return (
-        <Text as="span" className={className}>
-            {word}
-        </Text>
+    const onClick: OnClickFunction = useCallback(
+        (e) => {
+            const word = e.target.innerText as string;
+            const index = e.target.id;
+            readerStore.setCurrentWord(word, wordStatusMap[index]);
+        },
+        [readerStore, wordStatusMap]
     );
-});
 
-const PageText: React.FC<Props> = ({ page }) => {
     return (
         <Text
             as="pre"
@@ -47,15 +102,21 @@ const PageText: React.FC<Props> = ({ page }) => {
             flex={1}
             padding="10px 20px 0px 20px"
             mb="10px"
-            fontSize="24px"
+            fontSize="22px"
             overflowY="auto"
             textAlign="left"
         >
             {page.map((word, index) => (
-                <Word word={word} key={index} />
+                <Word
+                    word={word}
+                    className={classNameMap[index]}
+                    onClick={stopWordMap[index] ? undefined : onClick}
+                    index={index}
+                    key={index}
+                />
             ))}
         </Text>
     );
 };
 
-export default PageText;
+export default observer(PageText);

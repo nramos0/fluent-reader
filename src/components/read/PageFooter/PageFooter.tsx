@@ -13,7 +13,7 @@ const PageFooter: React.FC<Props> = ({
     pageCountM1,
 }) => {
     return (
-        <Flex height="10%" direction="row" p="10px">
+        <Flex height="10%" direction="row" p="10px" width="100%">
             <Button
                 flex={1}
                 mr="5px"
