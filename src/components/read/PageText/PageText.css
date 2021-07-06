@@ -1,0 +1,23 @@
+.learning {
+    background-color: rgba(255, 90, 91, 0.9);
+}
+
+.new {
+    background-color: rgba(93, 194, 255, 0.9);
+}
+
+.new:hover,
+.learning:hover {
+    background-color: rgba(255, 255, 81, 0.9);
+}
+
+.non-known {
+    padding: 3px 4px 3px 4px;
+    margin: 0px -2px 0px -2px;
+    border-radius: 10px;
+}
+
+.word {
+    transition: background-color linear 200ms;
+    cursor: pointer;
+}

@@ -25,7 +25,6 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
                 height="90%"
                 borderRadius="lg"
                 color="#222"
-                padding="10px 20px 0px 20px"
                 overflowY="auto"
                 display="flex"
                 flexDir="column"

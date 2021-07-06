@@ -41,3 +41,20 @@ declare interface Article {
     lang: string;
     tags: string[];
 }
+
+declare interface WordData {
+    word_status_data: {
+        en: {
+            known: Dictionary<number>;
+            learning: Dictionary<number>;
+        };
+        zh: {
+            known: Dictionary<number>;
+            learning: Dictionary<number>;
+        };
+    };
+    word_definition_data: {
+        en: Dictionary<string>;
+        zh: Dictionary<string>;
+    };
+}
