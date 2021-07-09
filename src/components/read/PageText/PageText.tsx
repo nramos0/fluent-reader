@@ -11,16 +11,24 @@ import './PageText.css';
 interface WordProps {
     word: string;
     onClick?: OnClickFunction;
+    onDoubleClick?: OnClickFunction;
     className: string;
     index: number;
 }
 
-const Word: React.FC<WordProps> = ({ word, className, index, onClick }) => {
+const Word: React.FC<WordProps> = ({
+    word,
+    className,
+    index,
+    onClick,
+    onDoubleClick,
+}) => {
     return (
         <Text
             as="span"
             className={className}
             onClick={onClick}
+            onDoubleClick={onDoubleClick}
             id={String(index)}
         >
             {word}
@@ -120,6 +128,31 @@ const PageText: React.FC<Props> = ({ page }) => {
         [readerStore]
     );
 
+    const onDoubleClick: OnClickFunction = useCallback(
+        (e) => {
+            if (readerStore.wordStatusMap === null) {
+                return;
+            }
+
+            const word = e.target.innerText as string;
+            const index = e.target.id;
+            const status = readerStore.wordStatusMap[index];
+
+            const newStatus =
+                status === 'new'
+                    ? 'learning'
+                    : status === 'learning'
+                    ? 'known'
+                    : 'learning';
+
+            if (readerStore.currentWord !== null) {
+                store.updateWordStatus(word, newStatus);
+                readerStore.updateWordStatus(newStatus);
+            }
+        },
+        [readerStore, store]
+    );
+
     return (
         <Text
             as="pre"
@@ -137,6 +170,7 @@ const PageText: React.FC<Props> = ({ page }) => {
                     word={word}
                     className={classNameMap[index]}
                     onClick={stopWordMap[index] ? undefined : onClick}
+                    onDoubleClick={onDoubleClick}
                     index={index}
                     key={index}
                 />
