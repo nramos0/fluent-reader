@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Text } from '@chakra-ui/react';
 import { useStore } from '../../../hooks/useStore';
 import { useMemo } from 'react';
@@ -85,13 +85,25 @@ const PageText: React.FC<Props> = ({ page }) => {
 
     const readerStore = useReaderStore();
 
+    useEffect(() => {
+        readerStore.wordStatusMap = wordStatusMap;
+    }, [readerStore, wordStatusMap]);
+
     const onClick: OnClickFunction = useCallback(
         (e) => {
+            if (readerStore.wordStatusMap === null) {
+                return;
+            }
+
             const word = e.target.innerText as string;
             const index = e.target.id;
-            readerStore.setCurrentWord(word, wordStatusMap[index]);
+            readerStore.setCurrentWord(
+                word,
+                readerStore.wordStatusMap[index],
+                index
+            );
         },
-        [readerStore, wordStatusMap]
+        [readerStore]
     );
 
     return (

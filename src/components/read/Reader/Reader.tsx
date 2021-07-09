@@ -6,17 +6,103 @@ import article from './test1.json';
 import { observable } from 'mobx';
 
 interface ReaderStore {
-    currentWord: string | null;
-    setCurrentWord: (newWord: string, newStatus: WordStatus) => void;
-    currentWordStatus: WordStatus | null;
+    currentWord: {
+        word: string;
+        status: WordStatus;
+        id: string;
+    } | null;
+    setCurrentWord: (
+        newWord: string,
+        newStatus: WordStatus,
+        newId: string
+    ) => void;
+
+    updateWordStatus: (newStatus: WordStatus) => void;
+
+    wordStatusMap: WordStatus[] | null;
+
+    visitedPageIndices: Dictionary<number>;
+
+    markPageAsKnown: (
+        page: string[],
+        updateWordStatus: (word: string, status: WordStatus) => void
+    ) => void;
 }
 
 const readerStore = observable({
     currentWord: null,
-    currentWordStatus: null,
-    setCurrentWord: function (newWord, newStatus) {
-        this.currentWord = newWord;
-        this.currentWordStatus = newStatus;
+    setCurrentWord: function (newWord, newStatus, newId) {
+        this.currentWord = {
+            word: newWord,
+            status: newStatus,
+            id: newId,
+        };
+    },
+
+    updateWordStatus: function (newStatus) {
+        if (
+            this.currentWord === null ||
+            this.currentWord.status === newStatus
+        ) {
+            return;
+        }
+
+        const wordElement = document.getElementById(this.currentWord.id);
+
+        if (wordElement === null) {
+            return;
+        }
+
+        this.setCurrentWord(
+            this.currentWord.word,
+            newStatus,
+            this.currentWord.id
+        );
+
+        const removeStatusList = (() => {
+            switch (newStatus) {
+                case 'new':
+                    return ['learning', 'known'];
+                case 'learning':
+                    return ['new', 'known'];
+                case 'known':
+                    return ['new', 'learning'];
+            }
+        })();
+
+        const classList = wordElement.className.split(' ');
+
+        let newClassName = '';
+
+        for (const className of classList) {
+            if (!removeStatusList.includes(className)) {
+                newClassName += className + ' ';
+            }
+        }
+
+        wordElement.className = newClassName + newStatus;
+
+        if (this.wordStatusMap !== null) {
+            this.wordStatusMap[Number(this.currentWord.id)] = newStatus;
+        }
+    },
+
+    wordStatusMap: null,
+
+    visitedPageIndices: {},
+
+    markPageAsKnown: function (page, updateWordStatus) {
+        if (this.wordStatusMap === null) {
+            return;
+        }
+
+        const pageLength = page.length;
+        for (let i = 0; i < pageLength; ++i) {
+            const word = page[i];
+            if (this.wordStatusMap[i] === 'new') {
+                updateWordStatus(word, 'known');
+            }
+        }
     },
 } as ReaderStore);
 

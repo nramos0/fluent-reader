@@ -1,28 +1,51 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Flex, Button } from '@chakra-ui/react';
+import { useReaderStore } from '../Reader/Reader';
+import { useStore } from '../../../hooks/useStore';
 
 interface Props {
-    currPage: number;
-    setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+    currPage: string[];
+    currPageIndex: number;
+    setCurrPageIndex: React.Dispatch<React.SetStateAction<number>>;
     pageCountM1: number;
 }
 
 const PageFooter: React.FC<Props> = ({
     currPage,
-    setCurrPage,
+    currPageIndex,
+    setCurrPageIndex,
     pageCountM1,
 }) => {
+    const store = useStore();
+    const readerStore = useReaderStore();
+
+    const onPageLeft = () => {
+        if (currPageIndex > 0) {
+            setCurrPageIndex((prev) => prev - 1);
+        }
+    };
+
+    const updateWordStatus = useMemo(() => {
+        return store.updateWordStatus.bind(store);
+    }, [store]);
+
+    const onPageRight = () => {
+        if (currPageIndex < pageCountM1) {
+            if (readerStore.visitedPageIndices[currPageIndex] === 1) {
+                readerStore.markPageAsKnown(currPage, updateWordStatus);
+                readerStore.visitedPageIndices[currPageIndex] = 2;
+            }
+            setCurrPageIndex((prev) => prev + 1);
+        }
+    };
+
     return (
         <Flex height="10%" direction="row" p="10px" width="100%">
             <Button
                 flex={1}
                 mr="5px"
-                onClick={() => {
-                    if (currPage > 0) {
-                        setCurrPage((prev) => prev - 1);
-                    }
-                }}
-                disabled={currPage <= 0}
+                onClick={onPageLeft}
+                disabled={currPageIndex <= 0}
             >
                 Prev
             </Button>
@@ -30,12 +53,8 @@ const PageFooter: React.FC<Props> = ({
             <Button
                 flex={1}
                 mr="5px"
-                onClick={() => {
-                    if (currPage < pageCountM1) {
-                        setCurrPage((prev) => prev + 1);
-                    }
-                }}
-                disabled={currPage >= pageCountM1}
+                onClick={onPageRight}
+                disabled={currPageIndex >= pageCountM1}
             >
                 Next
             </Button>

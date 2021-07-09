@@ -11,6 +11,7 @@ declare interface Store {
 
     wordData: WordData;
     getWordStatus: (word: string) => WordStatus;
+    updateWordStatus: (word: string, status: WordStatus) => boolean;
 }
 
 declare type Language = 'en' | 'zh';

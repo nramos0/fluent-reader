@@ -2,13 +2,13 @@ import React from 'react';
 import { observable } from 'mobx';
 
 export const store: Store = observable({
-    studyLanguage: 'en' as Language,
-    setStudyLanguage: function (newLanguage: Language) {
+    studyLanguage: 'en',
+    setStudyLanguage: function (newLanguage) {
         this.studyLanguage = newLanguage;
     },
 
-    displayLanguage: 'en' as Language,
-    setDisplayLanguage: function (newLanguage: Language) {
+    displayLanguage: 'en',
+    setDisplayLanguage: function (newLanguage) {
         this.displayLanguage = newLanguage;
     },
 
@@ -53,24 +53,64 @@ export const store: Store = observable({
         },
     },
 
-    getWordStatus: function (word: string) {
+    getWordStatus: function (word) {
+        word = word.toLowerCase();
+
         const wordStatusData = this.wordData.word_status_data[
             this.studyLanguage
         ];
 
-        word = word.toLowerCase();
-
         let status: WordStatus = 'new';
-        // @ts-ignore
         if (wordStatusData.known[word] === 1) {
             status = 'known';
-            // @ts-ignore
         } else if (wordStatusData.learning[word] === 1) {
             status = 'learning';
         }
 
         return status;
     },
-});
+
+    updateWordStatus: function (word, status) {
+        word = word.toLowerCase();
+
+        const wordStatusData = this.wordData.word_status_data[
+            this.studyLanguage
+        ];
+
+        switch (status) {
+            case 'known':
+                if (wordStatusData.known[word] === 1) {
+                    return false;
+                }
+                if (wordStatusData.learning[word] === 1) {
+                    delete wordStatusData.learning[word];
+                }
+                wordStatusData.known[word] = 1;
+                return true;
+
+            case 'learning':
+                if (wordStatusData.learning[word] === 1) {
+                    return false;
+                }
+                if (wordStatusData.known[word] === 1) {
+                    delete wordStatusData.known[word];
+                }
+                wordStatusData.learning[word] = 1;
+                return true;
+
+            case 'new':
+                let didUpdate = false;
+                if (wordStatusData.known[word] === 1) {
+                    delete wordStatusData.known[word];
+                    didUpdate = true;
+                }
+                if (wordStatusData.learning[word] === 1) {
+                    delete wordStatusData.learning[word];
+                    didUpdate = true;
+                }
+                return didUpdate;
+        }
+    },
+} as Store);
 
 export default React.createContext(store);

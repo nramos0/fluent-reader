@@ -1,4 +1,9 @@
 {
   "dictionary": "Dictionary",
-  "status:": "Status"
+  "status": "Status",
+  "known": "Known",
+  "learning": "Learning",
+  "new": "New",
+  "set-status": "Set Status",
+  "click-word-to-search": "Please click a word to change its status and search for its definition!"
 }
