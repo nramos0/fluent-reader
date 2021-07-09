@@ -89,6 +89,20 @@ const PageText: React.FC<Props> = ({ page }) => {
         readerStore.wordStatusMap = wordStatusMap;
     }, [readerStore, wordStatusMap]);
 
+    useEffect(() => {
+        // find first word that is not a stop word and select it on page change
+        const pageLength = page.length;
+        for (let i = 0; i < pageLength; ++i) {
+            if (stopWordMap[i]) {
+                continue;
+            }
+            readerStore.setCurrentWord(page[i], wordStatusMap[i], String(i));
+            return;
+        }
+
+        readerStore.clearCurrentWord();
+    }, [page, readerStore, stopWordMap, wordStatusMap]);
+
     const onClick: OnClickFunction = useCallback(
         (e) => {
             if (readerStore.wordStatusMap === null) {

@@ -16,6 +16,7 @@ interface ReaderStore {
         newStatus: WordStatus,
         newId: string
     ) => void;
+    clearCurrentWord: () => void;
 
     updateWordStatus: (newStatus: WordStatus) => void;
 
@@ -37,6 +38,10 @@ const readerStore = observable({
             status: newStatus,
             id: newId,
         };
+    },
+
+    clearCurrentWord: function () {
+        this.currentWord = null;
     },
 
     updateWordStatus: function (newStatus) {
