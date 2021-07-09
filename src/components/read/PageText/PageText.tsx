@@ -164,6 +164,7 @@ const PageText: React.FC<Props> = ({ page }) => {
             fontSize="22px"
             overflowY="auto"
             textAlign="left"
+            userSelect="none"
         >
             {page.map((word, index) => (
                 <Word
