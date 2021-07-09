@@ -27,7 +27,7 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
             justifyContent="center"
             alignItems="center"
             overflowY="auto"
-            flex={7}
+            flex={9}
             overflowX="hidden"
             backgroundColor="#fff"
             width="90%"
