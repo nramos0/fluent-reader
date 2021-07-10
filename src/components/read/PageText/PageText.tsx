@@ -171,7 +171,9 @@ const PageText: React.FC<Props> = ({ page }) => {
                     word={word}
                     className={classNameMap[index]}
                     onClick={stopWordMap[index] ? undefined : onClick}
-                    onDoubleClick={onDoubleClick}
+                    onDoubleClick={
+                        stopWordMap[index] ? undefined : onDoubleClick
+                    }
                     index={index}
                     key={index}
                 />
