@@ -10,7 +10,7 @@ import AuthProvider from './components/general/AuthWrapper/AuthWrapper';
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from './net/queryClient';
 import reportWebVitals from './reportWebVitals';
-import StoreContext, { store } from './store';
+import StoreWrapper from './StoreWrapper';
 
 // https://medium.com/@keeganfamouss/accessibility-on-demand-with-chakra-ui-and-focus-visible-19413b1bc6f9
 const theme = extendTheme({
@@ -28,7 +28,7 @@ ReactDOM.render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
             <ChakraProvider theme={theme}>
-                <StoreContext.Provider value={store}>
+                <StoreWrapper>
                     <AuthProvider>
                         <Box
                             w="100vw"
@@ -40,7 +40,7 @@ ReactDOM.render(
                             </BrowserRouter>
                         </Box>
                     </AuthProvider>
-                </StoreContext.Provider>
+                </StoreWrapper>
             </ChakraProvider>
         </QueryClientProvider>
     </StrictMode>,
