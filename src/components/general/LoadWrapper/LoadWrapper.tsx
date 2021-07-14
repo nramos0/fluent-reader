@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
-import { Center, Spinner, Flex, Heading } from '@chakra-ui/react';
+import { Center, Spinner, Flex } from '@chakra-ui/react';
 
 type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
 
@@ -30,8 +30,14 @@ const LoadWrapper: React.FC<Props> = (props) => {
             const promiseList = [...props.promiseList];
             await Promise.all(promiseList);
 
-            const minimumLoadTime = 300;
+            const minimumLoadTime = 100;
             setTimeout(() => {
+                document
+                    .getElementById('outer-root')
+                    ?.setAttribute('style', '');
+                document
+                    .getElementById('loading-screen-root')
+                    ?.setAttribute('style', 'display: none');
                 setIsInitialLoad(false);
             }, minimumLoadTime);
         };
@@ -47,14 +53,7 @@ const LoadWrapper: React.FC<Props> = (props) => {
     }, []);
 
     if (isInitialLoad || !ready) {
-        return (
-            <Center h="100vh" display="flex" flexDir="column">
-                <Heading mb={10} color="white">
-                    Fluent Reader
-                </Heading>
-                <Spinner color="white" size="xl" thickness="5px" />
-            </Center>
-        );
+        return null;
     }
 
     return (

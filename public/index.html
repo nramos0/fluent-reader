@@ -25,10 +25,24 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
         <title>Fluent Reader</title>
+
+        <link rel="stylesheet" href="%PUBLIC_URL%/index.css" />
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
+        <div id="outer-root" style="display: none">
+            <div id="root"></div>
+        </div>
+
+        <div class="loading-screen-root" id="loading-screen-root">
+            <h2
+                style="margin-bottom: 20px; color: white"
+                class="loading-screen-font loading-spinner-text"
+            >
+                Fluent Reader
+            </h2>
+            <div class="loading-screen-spinner"></div>
+        </div>
         <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
