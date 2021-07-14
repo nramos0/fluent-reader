@@ -58,12 +58,6 @@ const readerStore = observable({
             return;
         }
 
-        this.setCurrentWord(
-            this.currentWord.word,
-            newStatus,
-            this.currentWord.id
-        );
-
         const removeStatusList = (() => {
             switch (newStatus) {
                 case 'new':
