@@ -72,10 +72,14 @@ const LoadWrapper: React.FC<Props> = (props) => {
                     pointerEvents="none"
                     align="center"
                     justify="center"
+                    backgroundColor="rgba(10, 10, 10, 0.5)"
                 >
                     <Center
-                        h={{ base: '40%', md: '25%', lg: '15%' }}
-                        w={{ base: '40%', md: '25%', lg: '15%' }}
+                        h={{ base: '100px', md: '150px' }}
+                        w={{ base: '100px', md: '150px' }}
+                        backgroundColor="#fff"
+                        borderRadius="15px"
+                        p="10px"
                     >
                         <Spinner
                             color="rgba(50, 50, 50, 0.9)"
