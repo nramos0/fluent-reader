@@ -1,4 +1,7 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import { useStore } from '../../../hooks/useStore';
+import { useGetWordData } from '../../../net/requests/getWordData';
+import { observer } from 'mobx-react';
 
 export interface AuthInfo {
     token: string;
@@ -12,6 +15,31 @@ const AuthContext = React.createContext<AuthInfo>(undefined!);
 export const useAuth = () => {
     return useContext(AuthContext);
 };
+
+// binds the auth store token to the store
+const TokenBind: React.FC<{}> = observer(() => {
+    const store = useStore();
+    const auth = useAuth();
+
+    useEffect(() => {
+        store.token = auth.token;
+    }, [auth.token, store]);
+
+    return null;
+});
+
+const WordDataBind: React.FC<{}> = observer(() => {
+    const store = useStore();
+    const wordData = useGetWordData();
+
+    useEffect(() => {
+        if (wordData !== null) {
+            store.wordData = wordData;
+        }
+    }, [store, wordData]);
+
+    return null;
+});
 
 const AuthWrapper: React.FC<{}> = (props) => {
     const [token, setToken] = useState(() => {
@@ -41,6 +69,8 @@ const AuthWrapper: React.FC<{}> = (props) => {
                 setRefreshToken: setRefreshTokenWithLS,
             }}
         >
+            <TokenBind />
+            <WordDataBind />
             {props.children}
         </AuthContext.Provider>
     );

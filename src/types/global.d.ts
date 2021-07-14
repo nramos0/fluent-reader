@@ -3,6 +3,8 @@ declare interface Dictionary<T> {
 }
 
 declare interface Store {
+    token: string;
+
     studyLanguage: Language;
     setStudyLanguage: (newLanguage: Lagnuage) => void;
 

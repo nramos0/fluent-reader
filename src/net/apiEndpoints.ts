@@ -7,7 +7,7 @@ interface APIConfig {
 const config: APIConfig = {
     protocol: 'http://',
     root:
-        process.env.NODE_ENV === 'development'
+        process.env.NODE_ENV === 'development' || true
             ? '127.0.0.1'
             : '8.140.129.80:2244',
     prefix: '',
@@ -27,6 +27,10 @@ const getUserEndpoint = (inner: string) => {
 
 const getUserDataEndpoint = (inner: string) => {
     return getUserEndpoint(`/data${inner}`);
+};
+
+const getUserDataStatusEndpoint = (inner: string) => {
+    return getUserDataEndpoint(`/status${inner}`);
 };
 
 // article
@@ -53,7 +57,10 @@ export const ENDPOINTS = {
 
         data: {
             _: getUserDataEndpoint('/'),
-            status: getUserDataEndpoint('/status/'),
+            status: {
+                _: getUserDataStatusEndpoint('/'),
+                batch: getUserDataStatusEndpoint('/batch/'),
+            },
             definition: getUserDataEndpoint('/definition/'),
         },
     },

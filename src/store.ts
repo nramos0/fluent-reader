@@ -2,6 +2,8 @@ import React from 'react';
 import { observable } from 'mobx';
 
 export const store: Store = observable({
+    token: '',
+
     studyLanguage: 'en',
     setStudyLanguage: function (newLanguage) {
         this.studyLanguage = newLanguage;
