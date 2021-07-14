@@ -3,6 +3,7 @@ import { Flex, Box } from '@chakra-ui/react';
 import PageText from '../PageText/PageText';
 import PageFooter from '../PageFooter/PageFooter';
 import { useReaderStore } from '../Reader/Reader';
+import { observer } from 'mobx-react';
 
 interface Props {
     pages: string[][];
@@ -51,4 +52,4 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
     );
 };
 
-export default ReadPages;
+export default observer(ReadPages);

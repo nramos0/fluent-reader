@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Flex, Button } from '@chakra-ui/react';
 import { useReaderStore } from '../Reader/Reader';
-import { useStore } from '../../../hooks/useStore';
+import { observer } from 'mobx-react';
 
 interface Props {
     currPage: string[];
@@ -62,4 +62,4 @@ const PageFooter: React.FC<Props> = ({
     );
 };
 
-export default PageFooter;
+export default observer(PageFooter);
