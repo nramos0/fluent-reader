@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Flex, Button } from '@chakra-ui/react';
 import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
@@ -16,7 +16,6 @@ const PageFooter: React.FC<Props> = ({
     setCurrPageIndex,
     pageCountM1,
 }) => {
-    const store = useStore();
     const readerStore = useReaderStore();
 
     const onPageLeft = () => {
@@ -25,14 +24,10 @@ const PageFooter: React.FC<Props> = ({
         }
     };
 
-    const updateWordStatus = useMemo(() => {
-        return store.updateWordStatus.bind(store);
-    }, [store]);
-
     const onPageRight = () => {
         if (currPageIndex < pageCountM1) {
             if (readerStore.visitedPageIndices[currPageIndex] === 1) {
-                readerStore.markPageAsKnown(currPage, updateWordStatus);
+                readerStore.markPageAsKnown(currPage);
                 readerStore.visitedPageIndices[currPageIndex] = 2;
             }
             setCurrPageIndex((prev) => prev + 1);

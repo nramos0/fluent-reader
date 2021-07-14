@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import { isStopWord } from '../../../util/lang';
 import { observer } from 'mobx-react';
 import { useReaderStore } from '../Reader/Reader';
-
 import './PageText.css';
 
 interface WordProps {
@@ -43,17 +42,27 @@ interface Props {
 const PageText: React.FC<Props> = ({ page }) => {
     const store = useStore();
 
-    const { classNameMap, stopWordMap, wordStatusMap } = useMemo(() => {
+    /**
+     * Todo: move this work to the backend
+     */
+    const {
+        classNameMap,
+        stopWordMap,
+        wordStatusMap,
+        wordIndexMap,
+    } = useMemo(() => {
         const wordCount = page.length;
 
         const classNameMap: string[] = [];
-        classNameMap[wordCount - 1] = ''; // extend array
+        classNameMap[wordCount] = ''; // extend array (1 extra)
 
         const stopWordMap: boolean[] = [];
-        stopWordMap[wordCount - 1] = false; // extend array
+        stopWordMap[wordCount] = false; // extend array (1 extra)
 
         const wordStatusMap: WordStatus[] = [];
-        wordStatusMap[wordCount - 1] = 'new'; // extend array
+        wordStatusMap[wordCount] = 'new'; // extend array (1 extra)
+
+        const wordIndexMap: Dictionary<number[]> = {};
 
         for (let i = 0; i < wordCount; ++i) {
             const word = page[i];
@@ -62,6 +71,12 @@ const PageText: React.FC<Props> = ({ page }) => {
                 stopWordMap[i] = true;
                 continue;
             }
+
+            const lowercase = word.toLowerCase();
+            if (wordIndexMap[lowercase] === undefined) {
+                wordIndexMap[lowercase] = [];
+            }
+            wordIndexMap[lowercase].push(i);
 
             stopWordMap[i] = false;
 
@@ -88,14 +103,18 @@ const PageText: React.FC<Props> = ({ page }) => {
             classNameMap: classNameMap,
             stopWordMap: stopWordMap,
             wordStatusMap: wordStatusMap,
+            wordIndexMap: wordIndexMap,
         };
     }, [store, page]);
 
     const readerStore = useReaderStore();
 
     useEffect(() => {
+        // no need to separate into two effects.
+        // one changes iff the other changes.
         readerStore.wordStatusMap = wordStatusMap;
-    }, [readerStore, wordStatusMap]);
+        readerStore.wordIndexMap = wordIndexMap;
+    }, [readerStore, wordIndexMap, wordStatusMap]);
 
     useEffect(() => {
         // find first word that is not a stop word and select it on page change
@@ -146,7 +165,7 @@ const PageText: React.FC<Props> = ({ page }) => {
                     : 'learning';
 
             if (readerStore.currentWord !== null) {
-                store.updateWordStatus(word, newStatus);
+                store.updateWordStatus(word, newStatus, false);
                 readerStore.updateWordStatus(newStatus);
             }
         },

@@ -1,11 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Flex } from '@chakra-ui/react';
 import ReadPages from '../ReadPages/ReadPages';
 import ReaderSidebar from '../ReaderSidebar/ReaderSidebar';
 import article from './test1.json';
 import { observable } from 'mobx';
+import { useStore } from '../../../hooks/useStore';
+import { observer } from 'mobx-react';
 
 interface ReaderStore {
+    store: Store | null;
+
     currentWord: {
         word: string;
         status: WordStatus;
@@ -21,16 +25,18 @@ interface ReaderStore {
     updateWordStatus: (newStatus: WordStatus) => void;
 
     wordStatusMap: WordStatus[] | null;
+    wordIndexMap: Dictionary<number[]> | null;
 
     visitedPageIndices: Dictionary<number>;
 
-    markPageAsKnown: (
-        page: string[],
-        updateWordStatus: (word: string, status: WordStatus) => void
-    ) => void;
+    markPageAsKnown: (page: string[]) => void;
+
+    doesPageSkipMoveToKnown: boolean;
 }
 
 const readerStore = observable({
+    store: null,
+
     currentWord: null,
     setCurrentWord: function (newWord, newStatus, newId) {
         this.currentWord = {
@@ -47,7 +53,9 @@ const readerStore = observable({
     updateWordStatus: function (newStatus) {
         if (
             this.currentWord === null ||
-            this.currentWord.status === newStatus
+            this.currentWord.status === newStatus ||
+            this.wordStatusMap === null ||
+            this.wordIndexMap === null
         ) {
             return;
         }
@@ -80,30 +88,65 @@ const readerStore = observable({
         newClassName += newStatus;
 
         wordElement.className = newClassName;
+        this.wordStatusMap[Number(this.currentWord.id)] = newStatus;
         this.currentWord.status = newStatus;
 
-        if (this.wordStatusMap !== null) {
-            this.wordStatusMap[Number(this.currentWord.id)] = newStatus;
+        // update other occurrences of the current word in the page
+        const pageTextParent = wordElement.parentElement;
+        if (pageTextParent === null) {
+            console.error(
+                'Reader word has no parent! This should be impossible.'
+            );
+            return;
+        }
+
+        const wordList = pageTextParent.children;
+
+        const otherOccurrences = this.wordIndexMap[
+            this.currentWord.word.toLowerCase()
+        ];
+        for (const index of otherOccurrences) {
+            const otherWordElement = wordList[index];
+
+            otherWordElement.className = newClassName;
+            this.wordStatusMap[index] = newStatus;
         }
     },
 
     wordStatusMap: null,
+    wordIndexMap: null,
 
     visitedPageIndices: {},
 
-    markPageAsKnown: function (page, updateWordStatus) {
-        if (this.wordStatusMap === null) {
+    markPageAsKnown: function (page) {
+        if (
+            !this.doesPageSkipMoveToKnown ||
+            this.wordStatusMap === null ||
+            this.store === null
+        ) {
             return;
         }
+
+        const wordStatusData = this.store.wordData.word_status_data[
+            this.store.studyLanguage
+        ];
+
+        const newWords: string[] = [];
 
         const pageLength = page.length;
         for (let i = 0; i < pageLength; ++i) {
             const word = page[i];
             if (this.wordStatusMap[i] === 'new') {
-                updateWordStatus(word, 'known');
+                const lowercase = word.toLowerCase();
+                newWords.push(lowercase);
+                wordStatusData.known[lowercase] = 1;
             }
         }
+
+        this.store.updateWordStatusBatch(newWords, 'known');
     },
+
+    doesPageSkipMoveToKnown: false,
 } as ReaderStore);
 
 const ReaderContext = React.createContext(readerStore);
@@ -112,7 +155,21 @@ export const useReaderStore = () => {
     return useContext(ReaderContext);
 };
 
+// binds a store reference to the reader store
+const useStoreBind = () => {
+    const store = useStore();
+    const readerStore = useReaderStore();
+
+    useEffect(() => {
+        readerStore.store = store;
+    }, [readerStore, store]);
+
+    return null;
+};
+
 const Reader: React.FC<{}> = () => {
+    useStoreBind();
+
     return (
         <ReaderContext.Provider value={readerStore}>
             <Flex
@@ -129,4 +186,4 @@ const Reader: React.FC<{}> = () => {
     );
 };
 
-export default Reader;
+export default observer(Reader);

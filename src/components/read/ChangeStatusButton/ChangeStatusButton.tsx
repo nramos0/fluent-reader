@@ -32,7 +32,8 @@ const ChangeStatusButton: React.FC<Props> = (_props) => {
                     if (readerStore.currentWord !== null) {
                         store.updateWordStatus(
                             readerStore.currentWord.word,
-                            'learning'
+                            'learning',
+                            false
                         );
                         readerStore.updateWordStatus('learning');
                     }
@@ -50,7 +51,8 @@ const ChangeStatusButton: React.FC<Props> = (_props) => {
                     if (readerStore.currentWord !== null) {
                         store.updateWordStatus(
                             readerStore.currentWord.word,
-                            'known'
+                            'known',
+                            false
                         );
                         readerStore.updateWordStatus('known');
                     }
