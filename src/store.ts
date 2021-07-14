@@ -1,16 +1,17 @@
 import React from 'react';
 import { observable } from 'mobx';
+import { updateWordStatus, updateWordStatusBatch } from './net/requests/index';
 
 export const store: Store = observable({
     token: '',
 
     studyLanguage: 'en',
-    setStudyLanguage: function (newLanguage) {
+    setStudyLanguage(newLanguage) {
         this.studyLanguage = newLanguage;
     },
 
     displayLanguage: 'en',
-    setDisplayLanguage: function (newLanguage) {
+    setDisplayLanguage(newLanguage) {
         this.displayLanguage = newLanguage;
     },
 
@@ -55,7 +56,7 @@ export const store: Store = observable({
         },
     },
 
-    getWordStatus: function (word) {
+    getWordStatus(word) {
         word = word.toLowerCase();
 
         const wordStatusData = this.wordData.word_status_data[
@@ -72,36 +73,39 @@ export const store: Store = observable({
         return status;
     },
 
-    updateWordStatus: function (word, status) {
+    updateWordStatus(word, newStatus, isBatch) {
         word = word.toLowerCase();
 
         const wordStatusData = this.wordData.word_status_data[
             this.studyLanguage
         ];
 
-        switch (status) {
+        let didUpdate = false;
+
+        switch (newStatus) {
             case 'known':
                 if (wordStatusData.known[word] === 1) {
-                    return false;
+                    break;
                 }
                 if (wordStatusData.learning[word] === 1) {
                     delete wordStatusData.learning[word];
                 }
                 wordStatusData.known[word] = 1;
-                return true;
+                didUpdate = true;
+                break;
 
             case 'learning':
                 if (wordStatusData.learning[word] === 1) {
-                    return false;
+                    break;
                 }
                 if (wordStatusData.known[word] === 1) {
                     delete wordStatusData.known[word];
                 }
                 wordStatusData.learning[word] = 1;
-                return true;
+                didUpdate = true;
+                break;
 
             case 'new':
-                let didUpdate = false;
                 if (wordStatusData.known[word] === 1) {
                     delete wordStatusData.known[word];
                     didUpdate = true;
@@ -110,8 +114,33 @@ export const store: Store = observable({
                     delete wordStatusData.learning[word];
                     didUpdate = true;
                 }
-                return didUpdate;
+                break;
         }
+
+        if (!isBatch && didUpdate) {
+            updateWordStatus(
+                {
+                    lang: this.studyLanguage,
+                    word: word,
+                    status: newStatus,
+                },
+                this.token
+            );
+        }
+
+        return didUpdate;
+    },
+    updateWordStatusBatch(words, newStatus) {
+        updateWordStatusBatch(
+            {
+                lang: this.studyLanguage,
+                words: words,
+                status: newStatus,
+            },
+            this.token
+        );
+
+        return true;
     },
 } as Store);
 
