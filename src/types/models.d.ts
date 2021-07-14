@@ -32,14 +32,16 @@ declare interface Article {
     words: string[];
     sentences: string[][];
     unique_words: Dictionary<number>;
-    pages_sm: string[][];
-    pages_md: string[][];
-    pages_lg: string[][];
+    page_data: PageTypeData[];
     created_on: Timestamp;
     is_system: boolean;
     uploader_id: number;
     lang: string;
     tags: string[];
+}
+
+declare interface PageTypeData {
+    pages: string[][];
 }
 
 declare interface WordData {

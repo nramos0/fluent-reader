@@ -127,7 +127,7 @@ const Reader: React.FC<{}> = () => {
                 align="center"
                 height="100%"
             >
-                <ReadPages pages={article.pages_lg} />
+                <ReadPages pages={article.page_data[2].pages} />
                 <ReaderSidebar />
             </Flex>
         </ReaderContext.Provider>
