@@ -15,7 +15,7 @@ export const useAuth = () => {
 
 const AuthWrapper: React.FC<{}> = (props) => {
     const [token, setToken] = useState(() => {
-        return localStorage.getItem('token');
+        return localStorage.getItem('token') || '';
     });
 
     const setTokenWithLS = useCallback((token: string) => {
@@ -24,7 +24,7 @@ const AuthWrapper: React.FC<{}> = (props) => {
     }, []);
 
     const [refreshToken, setRefreshToken] = useState(() => {
-        return localStorage.getItem('refreshToken');
+        return localStorage.getItem('refreshToken') || '';
     });
 
     const setRefreshTokenWithLS = useCallback((refreshToken: string) => {
@@ -35,9 +35,9 @@ const AuthWrapper: React.FC<{}> = (props) => {
     return (
         <AuthContext.Provider
             value={{
-                token: token === null ? '' : token,
+                token,
                 setToken: setTokenWithLS,
-                refreshToken: refreshToken === null ? '' : refreshToken,
+                refreshToken,
                 setRefreshToken: setRefreshTokenWithLS,
             }}
         >
