@@ -63,7 +63,6 @@ const AddArticleForm = () => {
             values: AddArticleFormValues,
             actions: FormikHelpers<AddArticleFormValues>
         ) => {
-            console.log(values);
             const [validationError] = await to(actions.validateForm(values));
 
             if (validationError !== null) {
