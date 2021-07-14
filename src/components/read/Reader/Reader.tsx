@@ -72,14 +72,15 @@ const readerStore = observable({
         const classList = wordElement.className.split(' ');
 
         let newClassName = '';
-
         for (const className of classList) {
             if (!removeStatusList.includes(className)) {
                 newClassName += className + ' ';
             }
         }
+        newClassName += newStatus;
 
-        wordElement.className = newClassName + newStatus;
+        wordElement.className = newClassName;
+        this.currentWord.status = newStatus;
 
         if (this.wordStatusMap !== null) {
             this.wordStatusMap[Number(this.currentWord.id)] = newStatus;
