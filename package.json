@@ -98,10 +98,6 @@
       "no-self-compare": "error",
       "no-unused-vars": "off",
       "camelcase": "off",
-      "object-shorthand": [
-        "error",
-        "never"
-      ],
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
