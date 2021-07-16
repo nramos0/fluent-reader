@@ -5,5 +5,10 @@
   "learning": "Learning",
   "new": "New",
   "set-status": "Set Status",
-  "click-word-to-search": "Please click a word to change its status and search for its definition!"
+  "click-word-to-search": "Please click a word to change its status and search for its definition!",
+  "definition": "Definition",
+  "definition-search": "Definition Search",
+  "your-lang-dicts": "* Dictionaries",
+  "native-dicts": "* Dictionaries",
+  "type-definition": "Type the definition of the word here..."
 }
