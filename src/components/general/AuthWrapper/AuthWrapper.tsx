@@ -2,6 +2,7 @@ import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { useStore } from '../../../hooks/useStore';
 import { useGetWordData } from '../../../net/requests/getWordData';
 import { observer } from 'mobx-react';
+import { runInAction } from 'mobx';
 
 export interface AuthInfo {
     token: string;
@@ -34,7 +35,9 @@ const WordDataBind: React.FC<{}> = observer(() => {
 
     useEffect(() => {
         if (wordData !== null) {
-            store.wordData = wordData;
+            runInAction(() => {
+                store.wordData = wordData;
+            });
         }
     }, [store, wordData]);
 
