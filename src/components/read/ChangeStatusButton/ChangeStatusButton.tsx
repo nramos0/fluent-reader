@@ -5,9 +5,7 @@ import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
 import { useReaderStore } from '../Reader/Reader';
 
-interface Props {}
-
-const ChangeStatusButton: React.FC<Props> = (_props) => {
+const ChangeStatusButton: React.FC<{}> = () => {
     const { t } = useTranslation('reader');
     const readerStore = useReaderStore();
     const store = useStore();
