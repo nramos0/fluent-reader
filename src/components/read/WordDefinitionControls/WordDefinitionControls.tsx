@@ -34,6 +34,14 @@ const WordDefinitionControls: React.FC<{}> = () => {
             readerStore.currentWord!.word,
             e.target.value
         );
+        if (readerStore.currentWord!.status === 'new') {
+            store.updateWordStatus(
+                readerStore.currentWord!.word,
+                'learning',
+                false
+            );
+            readerStore.updateWordStatus('learning');
+        }
     };
 
     return (
