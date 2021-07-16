@@ -1,6 +1,9 @@
 import React from 'react';
 import { observable } from 'mobx';
 import { updateWordStatus, updateWordStatusBatch } from './net/requests/index';
+import { updateWordDefinition } from './net/requests/updateWordDefinition';
+
+const definitionUpdateCooldown = 1500;
 
 export const store: Store = observable({
     token: '',
@@ -10,7 +13,7 @@ export const store: Store = observable({
         this.studyLanguage = newLanguage;
     },
 
-    displayLanguage: 'en',
+    displayLanguage: 'zh',
     setDisplayLanguage(newLanguage) {
         this.displayLanguage = newLanguage;
     },
@@ -51,6 +54,7 @@ export const store: Store = observable({
                 did: '有',
                 in: '在',
                 us: '我们',
+                chapter: '章',
             },
             zh: {},
         },
@@ -142,6 +146,54 @@ export const store: Store = observable({
 
         return true;
     },
+
+    updateWordDefinition(word, definition) {
+        // if there currently exists a cached update when this
+        // function is, run, this update is surely newer than it,
+        // so first immediately remove it before updating
+        if (this.defUpdateCache !== null) {
+            clearTimeout(this.defUpdateCache.timeout);
+            this.defUpdateCache = null;
+        }
+        word = word.toLowerCase();
+
+        this.wordData.word_definition_data[this.studyLanguage][
+            word
+        ] = definition;
+
+        const currentTime = new Date().getTime();
+        if (currentTime - this.lastDefUpdate < definitionUpdateCooldown) {
+            this.defUpdateCache = {
+                word: word,
+                definition: definition,
+                timeout: setTimeout(() => {
+                    this.updateWordDefinition(word, definition);
+                }, definitionUpdateCooldown),
+            };
+            return false;
+        }
+
+        updateWordDefinition(
+            {
+                lang: this.studyLanguage,
+                word: word,
+                definition: definition,
+            },
+            this.token
+        );
+
+        this.lastDefUpdate = new Date().getTime();
+        return true;
+    },
+
+    getDefinition(word) {
+        return this.wordData.word_definition_data[this.studyLanguage][
+            word.toLowerCase()
+        ];
+    },
+
+    lastDefUpdate: 0,
+    defUpdateCache: null,
 } as Store);
 
 export default React.createContext(store);

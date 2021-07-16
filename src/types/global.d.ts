@@ -19,6 +19,16 @@ declare interface Store {
         isBatch: boolean
     ) => boolean;
     updateWordStatusBatch: (words: string[], newStatus: WordStatus) => boolean;
+
+    updateWordDefinition: (word: string, definition: string) => boolean;
+
+    getDefinition: (word: string) => string | undefined;
+    lastDefUpdate: number;
+    defUpdateCache: {
+        word: string;
+        definition: string;
+        timeout: NodeJS.Timeout;
+    } | null;
 }
 
 declare type Language = 'en' | 'zh';
