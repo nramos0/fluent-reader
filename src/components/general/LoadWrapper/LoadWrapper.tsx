@@ -30,7 +30,7 @@ const LoadWrapper: React.FC<Props> = (props) => {
             const promiseList = [...props.promiseList];
             await Promise.all(promiseList);
 
-            const minimumLoadTime = 100;
+            const minimumLoadTime = 10;
             setTimeout(() => {
                 document
                     .getElementById('outer-root')
