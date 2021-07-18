@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Box, useToast } from '@chakra-ui/react';
 import AccountPage from '../components/account/AccountPage/AccountPage';
 import { Switch, Route, useHistory } from 'react-router-dom';
@@ -21,55 +21,82 @@ function App() {
     const history = useHistory();
     const showToast = useToast();
 
-    const initialRoutePromise = useMemo(() => {
-        return (async () => {
-            if (history.location.pathname === '/account') {
-                return;
-            }
-            const [err] = await to(authenticate({ token: auth.token }));
-            if (err !== null) {
-                await i18nInitPromise;
-                const t = i18n.getFixedT(i18n.language, 'common');
+    const [initialLoadData, setInitialLoadData] = useState({
+        startInitialLoad: false,
+        promiseList: [] as Promise<any>[],
+    });
 
-                history.push('/account');
+    const initialLoad = useCallback(async () => {
+        if (history.location.pathname === '/account') {
+            return;
+        }
+        const [err] = await to(authenticate({ token: auth.token }));
+        if (err !== null) {
+            await i18nInitPromise;
+            const t = i18n.getFixedT(i18n.language, 'common');
 
-                showToast({
-                    title: t('prompt-login-title'),
-                    description: t('prompt-login-info'),
-                    status: 'error',
-                    duration: 5000,
-                    isClosable: true,
-                });
-                return;
-            } else {
-                if (!history.location.pathname.includes('app')) {
-                    history.push('/app');
-                }
-                return;
+            history.push('/account');
+
+            showToast({
+                title: t('prompt-login-title'),
+                description: t('prompt-login-info'),
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        } else {
+            if (!history.location.pathname.includes('app')) {
+                history.push('/app');
             }
-        })();
+        }
     }, [auth.token, history, showToast]);
 
     const store = useStore();
 
-    const userDataFetchPromise = useMemo(() => {
-        return (async () => {
-            const [err, data] = await to(getWordData({}, auth.token));
-            if (err !== null || data === undefined) {
-                return;
-            }
+    const userDataFetch = useCallback(async () => {
+        const [err, data] = await to(getWordData({}, auth.token));
+        if (err !== null || data === undefined) {
+            return;
+        }
 
-            store.wordData = data.data.data;
-        })();
+        store.wordData = data.data.data;
     }, [auth.token, store]);
 
-    const promiseList = useMemo(() => {
-        return [initialRoutePromise, i18nInitPromise, userDataFetchPromise];
-    }, [initialRoutePromise, userDataFetchPromise]);
+    useEffect(() => {
+        setInitialLoadData((prevData) => {
+            return {
+                ...prevData,
+                promiseList: [...prevData.promiseList, initialLoad()],
+            };
+        });
+    }, [initialLoad]);
+
+    useEffect(() => {
+        setInitialLoadData((prevData) => {
+            return {
+                ...prevData,
+                promiseList: [...prevData.promiseList, userDataFetch()],
+            };
+        });
+    }, [userDataFetch]);
+
+    useEffect(() => {
+        if (initialLoadData.promiseList.length === 2) {
+            setInitialLoadData((prevData) => {
+                return {
+                    ...prevData,
+                    startInitialLoad: true,
+                };
+            });
+        }
+    }, [initialLoadData.promiseList.length]);
 
     return (
         <Box className="App" h="inherit">
-            <LoadWrapper promiseList={promiseList}>
+            <LoadWrapper
+                promiseList={initialLoadData.promiseList}
+                startInitialLoad={initialLoadData.startInitialLoad}
+            >
                 <ReactQueryDevtools initialIsOpen={true} />
                 <Switch>
                     <Route path="/account">

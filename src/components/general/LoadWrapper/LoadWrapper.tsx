@@ -18,6 +18,7 @@ export const useLoadInfo = () => {
 
 interface Props {
     promiseList: Promise<any>[];
+    startInitialLoad: boolean;
 }
 
 const LoadWrapper: React.FC<Props> = (props) => {
@@ -25,26 +26,25 @@ const LoadWrapper: React.FC<Props> = (props) => {
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        const load = async () => {
-            const promiseList = [...props.promiseList];
-            await Promise.all(promiseList);
+    const initialLoad = useCallback(async () => {
+        const promiseList = [...props.promiseList];
+        await Promise.all(promiseList);
 
-            const minimumLoadTime = 10;
-            setTimeout(() => {
-                document
-                    .getElementById('outer-root')
-                    ?.setAttribute('style', '');
-                document
-                    .getElementById('loading-screen-root')
-                    ?.setAttribute('style', 'display: none');
-                setIsInitialLoad(false);
-            }, minimumLoadTime);
-        };
-        if (isInitialLoad) {
-            load();
+        const minimumLoadTime = 10;
+        setTimeout(() => {
+            document.getElementById('outer-root')?.setAttribute('style', '');
+            document
+                .getElementById('loading-screen-root')
+                ?.setAttribute('style', 'display: none');
+            setIsInitialLoad(false);
+        }, minimumLoadTime);
+    }, [props.promiseList]);
+
+    useEffect(() => {
+        if (isInitialLoad && props.startInitialLoad) {
+            initialLoad();
         }
-    }, [isInitialLoad, props.promiseList]);
+    }, [initialLoad, isInitialLoad, props.startInitialLoad]);
 
     const loadUntilResolve: LoadUntilResolve = useCallback(async (promise) => {
         setIsLoading(true);
