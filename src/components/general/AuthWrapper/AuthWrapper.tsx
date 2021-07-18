@@ -1,8 +1,6 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { useStore } from '../../../hooks/useStore';
-import { useGetWordData } from '../../../net/requests/getWordData';
 import { observer } from 'mobx-react';
-import { runInAction } from 'mobx';
 
 export interface AuthInfo {
     token: string;
@@ -25,21 +23,6 @@ const TokenBind: React.FC<{}> = observer(() => {
     useEffect(() => {
         store.token = auth.token;
     }, [auth.token, store]);
-
-    return null;
-});
-
-const WordDataBind: React.FC<{}> = observer(() => {
-    const store = useStore();
-    const wordData = useGetWordData();
-
-    useEffect(() => {
-        if (wordData !== null) {
-            runInAction(() => {
-                store.wordData = wordData;
-            });
-        }
-    }, [store, wordData]);
 
     return null;
 });
@@ -73,7 +56,6 @@ const AuthWrapper: React.FC<{}> = (props) => {
             }}
         >
             <TokenBind />
-            <WordDataBind />
             {props.children}
         </AuthContext.Provider>
     );
