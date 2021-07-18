@@ -25,7 +25,7 @@ const InnerApp: React.FC = () => {
     }, [location.pathname]);
 
     return (
-        <Flex direction={{ lg: 'row' }} w="100%" h="100%">
+        <Flex w="100%" h="100%">
             <SideBar />
             <Route path="/app/library">
                 <Library />

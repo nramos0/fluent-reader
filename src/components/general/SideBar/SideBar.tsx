@@ -8,7 +8,7 @@ interface Props {}
 const SideBar: React.FC<Props> = (_props) => {
     return (
         <Flex
-            direction={{ lg: 'column' }}
+            direction="column"
             align="flex-start"
             w={{ lg: '12.5%' }}
             h="100%"
