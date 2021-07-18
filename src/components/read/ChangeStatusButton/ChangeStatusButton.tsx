@@ -5,59 +5,73 @@ import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
 import { useReaderStore } from '../Reader/Reader';
 
-const ChangeStatusButton: React.FC<{}> = () => {
+const StatusButton: React.FC<{ display: string; newStatus: WordStatus }> = ({
+    display,
+    newStatus,
+}) => {
     const { t } = useTranslation('reader');
     const readerStore = useReaderStore();
     const store = useStore();
+    return (
+        <Button
+            size="sm"
+            bgColor="#661919"
+            color="white"
+            m="0px 5px 0px 5px"
+            border="1px solid transparent"
+            _hover={{
+                bg: '#FFFFFF',
+                color: '#661919',
+                border: '1px solid #661919',
+            }}
+            _active={{
+                bg: '#FFFFFF',
+                color: '#661919',
+                border: '1px solid #661919',
+            }}
+            display={display}
+            onClick={() => {
+                if (readerStore.currentWord !== null) {
+                    store.updateWordStatus(
+                        readerStore.currentWord.word,
+                        newStatus,
+                        false
+                    );
+                    readerStore.updateWordStatus(newStatus);
+                }
+            }}
+        >
+            {t(newStatus)}
+        </Button>
+    );
+};
+
+const ChangeStatusButton: React.FC<{}> = () => {
+    const readerStore = useReaderStore();
 
     const wordStatus =
         readerStore.currentWord === null
             ? 'new'
             : readerStore.currentWord.status;
 
-    const knownVisible = wordStatus !== 'known';
+    const newVisible = wordStatus !== 'new';
     const learningVisible = wordStatus !== 'learning';
+    const knownVisible = wordStatus !== 'known';
 
     return (
         <Flex direction="row" justify="center">
-            <Button
-                size="sm"
-                bgColor="#661919"
-                color="white"
-                m="0px 5px 0px 5px"
+            <StatusButton
                 display={learningVisible ? 'inline-flex' : 'none'}
-                onClick={() => {
-                    if (readerStore.currentWord !== null) {
-                        store.updateWordStatus(
-                            readerStore.currentWord.word,
-                            'learning',
-                            false
-                        );
-                        readerStore.updateWordStatus('learning');
-                    }
-                }}
-            >
-                {t('learning')}
-            </Button>
-            <Button
-                size="sm"
-                bgColor="#661919"
-                color="white"
-                m="0px 5px 0px 5px"
+                newStatus="learning"
+            />
+            <StatusButton
                 display={knownVisible ? 'inline-flex' : 'none'}
-                onClick={() => {
-                    if (readerStore.currentWord !== null) {
-                        store.updateWordStatus(
-                            readerStore.currentWord.word,
-                            'known',
-                            false
-                        );
-                        readerStore.updateWordStatus('known');
-                    }
-                }}
-            >
-                {t('known')}
-            </Button>
+                newStatus="known"
+            />
+            <StatusButton
+                display={newVisible ? 'inline-flex' : 'none'}
+                newStatus="new"
+            />
         </Flex>
     );
 };
