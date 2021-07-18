@@ -30,30 +30,30 @@ const sites = {
                 wordInLink: true,
             },
             {
-                name: 'Cambridge Dictionary (简体)',
+                name: '剑桥词典 (简体)',
                 link:
                     'https://dictionary.cambridge.org/dictionary/english-chinese-simplified/',
                 wordInLink: true,
             },
             {
-                name: 'Cambridge Dictionary (繁體)',
+                name: '剑桥词典 (繁體)',
                 link:
                     'https://dictionary.cambridge.org/dictionary/english-chinese-traditional/',
                 wordInLink: true,
             },
             {
-                name: 'MDBG Dictionary',
+                name: 'MDBG词典',
                 link:
                     'https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=',
                 wordInLink: true,
             },
             {
-                name: 'Google Translate (简体)',
+                name: '谷歌翻译 (简体)',
                 link: 'https://translate.google.com/#en/zh-CN/',
                 wordInLink: true,
             },
             {
-                name: 'Google Translate (繁體)',
+                name: '谷歌翻译 (繁體)',
                 link: 'https://translate.google.com/#en/zh-TW/',
                 wordInLink: true,
             },
@@ -95,12 +95,12 @@ const sites = {
         ],
         en: [
             {
-                name: '有道词典',
+                name: 'Youdao Dictionary',
                 link: 'https://www.youdao.com/w/eng/',
                 wordInLink: true,
             },
             {
-                name: '欧路词典',
+                name: 'eudic.net',
                 link: 'https://dict.eudic.net/dicts/en/',
                 wordInLink: true,
             },
