@@ -10,7 +10,8 @@ const ArticleAuthor: React.FC<Props> = ({ author }) => {
     const { t } = useTranslation();
     return (
         <Text pr={1}>
-            {t('library:author')}: {author !== null ? author : t('none')}
+            {t('library:author')}:{' '}
+            {author !== null && author.trim() !== '' ? author : t('none')}
         </Text>
     );
 };

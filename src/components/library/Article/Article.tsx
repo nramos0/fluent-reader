@@ -19,13 +19,20 @@ const Article: React.FC<Props> = ({ article }) => {
             direction="column"
             align="flex-start"
             p={3}
-            mb={3}
+            boxSizing="border-box"
+            mb={1}
             mr={3}
-            borderRadius="lg"
+            borderRadius="15px"
             bgColor="white"
+            border="2px solid #661919"
+            cursor="pointer"
             color="#661919"
-            minW={{ sm: '35%', md: '25%', lg: '20%' }}
-            flex={1}
+            _hover={{
+                color: 'white',
+                bgColor: '#661919',
+            }}
+            transition="color linear 200ms, background-color linear 200ms"
+            w="100%"
             textAlign="left"
             fontSize={{ base: 'xs', sm: 'sm', md: 'md' }}
         >
@@ -34,8 +41,8 @@ const Article: React.FC<Props> = ({ article }) => {
                 aria-label={t('aria:article-title-tooltip')}
                 noOfLines={5}
                 borderRadius="lg"
-                bgColor="#661919"
-                color="white"
+                color="#661919"
+                bgColor="white"
             >
                 <Heading
                     fontSize={{ base: 'sm', sm: 'md', md: 'lg' }}
