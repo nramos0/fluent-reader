@@ -147,6 +147,15 @@ const AddArticleForm = () => {
                         color="white"
                         w="100%"
                         type="submit"
+                        border="2px solid #661919"
+                        _hover={{
+                            bgColor: 'white',
+                            color: '#661919',
+                        }}
+                        _active={{
+                            borderColor: '#ccc',
+                            bgColor: '#ccc',
+                        }}
                     >
                         {t('create-article')}
                     </Button>
