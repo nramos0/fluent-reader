@@ -11,7 +11,7 @@ interface LibraryInfo {
 }
 
 const libraryInfo: LibraryInfo = observable({
-    libraryType: 'user',
+    libraryType: 'system',
 });
 
 const LibraryContext = React.createContext(libraryInfo);
