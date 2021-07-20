@@ -29,10 +29,12 @@ interface ReaderStore {
     wordIndexMap: Dictionary<number[]> | null;
 
     visitedPageIndices: Dictionary<number>;
+    clearVisitedPages: () => void;
 
     markPageAsKnown: (page: string[]) => void;
 
     doesPageSkipMoveToKnown: boolean;
+    toggleDoesPageSkipMoveToKnown: () => void;
 }
 
 const readerStore = observable({
@@ -118,6 +120,9 @@ const readerStore = observable({
     wordIndexMap: null,
 
     visitedPageIndices: {},
+    clearVisitedPages() {
+        this.visitedPageIndices = {};
+    },
 
     markPageAsKnown: function (page) {
         if (
@@ -148,6 +153,10 @@ const readerStore = observable({
     },
 
     doesPageSkipMoveToKnown: false,
+
+    toggleDoesPageSkipMoveToKnown() {
+        this.doesPageSkipMoveToKnown = !this.doesPageSkipMoveToKnown;
+    },
 } as ReaderStore);
 
 const ReaderContext = React.createContext(readerStore);
@@ -172,6 +181,24 @@ const StoreBind: React.FC = observer(() => {
     return useStoreBind();
 });
 
+const ArticleEffect: React.FC = observer(() => {
+    const store = useStore();
+    const article = store.readArticle;
+
+    const readerStore = useReaderStore();
+
+    useEffect(() => {
+        readerStore.clearCurrentWord();
+        readerStore.clearVisitedPages();
+    }, [article, readerStore]);
+
+    useEffect(() => {
+        readerStore.clearVisitedPages();
+    }, [readerStore, readerStore.doesPageSkipMoveToKnown]);
+
+    return null;
+});
+
 const Reader: React.FC<{}> = () => {
     const { t } = useTranslation('reader');
 
@@ -190,6 +217,7 @@ const Reader: React.FC<{}> = () => {
                 height="100%"
             >
                 <StoreBind />
+                <ArticleEffect />
                 {article === null ? (
                     <Flex
                         direction="column"
