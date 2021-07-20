@@ -40,7 +40,7 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
             <PageText page={currPage} />
             <Box w="100%" border="thin solid #d16161" />
             <Box height="5%" p="5px">
-                Page {currPageIndex + 1}
+                Page {currPageIndex + 1} / {pages.length}
             </Box>
             <PageFooter
                 currPage={currPage}
