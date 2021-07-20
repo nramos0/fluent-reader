@@ -17,7 +17,7 @@ const PageFooter: React.FC<Props> = ({
     setCurrPageIndex,
     pageCountM1,
 }) => {
-    const { t } = useTranslation('reader');
+    const { t } = useTranslation();
     const readerStore = useReaderStore();
 
     const onPageLeft = () => {

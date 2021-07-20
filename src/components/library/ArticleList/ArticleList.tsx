@@ -8,7 +8,6 @@ import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { sampleData } from './sampleData';
 import usePagination from '../../../hooks/usePagination';
-// import { useTranslation } from 'react-i18next';
 
 const pageSize = 3;
 const fetchSize = pageSize * 2 + 1;
@@ -149,15 +148,17 @@ const ArticleList: React.FC = () => {
                     onClick={decrementPage}
                     disabled={currentPage <= 0}
                 >
-                    Prev
+                    {t('common:prev')}
                 </Button>
-                <Button m="0 5px 0 5px">Page: {currentPage + 1}</Button>
+                <Button m="0 5px 0 5px">
+                    {t('common:page')}: {currentPage + 1}
+                </Button>
                 <Button
                     flex={1}
                     onClick={incrementPage}
                     disabled={currentPage >= pageCount - 1}
                 >
-                    Next
+                    {t('common:next')}
                 </Button>
             </Flex>
             {data.map((article, index) => (

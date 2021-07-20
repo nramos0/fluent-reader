@@ -20,7 +20,7 @@ interface Props {
 }
 
 const ReadPages: React.FC<Props> = ({ pages }) => {
-    const { t } = useTranslation('reader');
+    const { t } = useTranslation();
     const [currPageIndex, setCurrPageIndex] = useState(0);
     const pageCountM1 = pages.length - 1;
     const currPage = pages[currPageIndex];
