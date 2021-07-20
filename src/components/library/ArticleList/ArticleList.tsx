@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Flex, Text, Skeleton, Button } from '@chakra-ui/react';
 import Article from '../Article/Article';
 import { useGetSysArticleList } from '../../../net/requests/getSysArticleList';
@@ -10,6 +10,9 @@ import { sampleData } from './sampleData';
 import usePagination from '../../../hooks/usePagination';
 // import { useTranslation } from 'react-i18next';
 
+const pageSize = 3;
+const fetchSize = pageSize * 2 + 1;
+
 const ArticleList: React.FC = () => {
     const { t } = useTranslation('library');
 
@@ -17,9 +20,17 @@ const ArticleList: React.FC = () => {
     const [search] = useState<string>();
 
     const [sysList, setSysList] = useState<SimpleArticle[]>(sampleData);
+    const [sysOffset, setSysOffset] = useState(0);
+
     const [userList, setUserList] = useState<SimpleArticle[]>(sampleData);
+    const [userOffset, setUserOffset] = useState(0);
 
     const libraryInfo = useLibraryInfo();
+
+    useEffect(() => {
+        setUserOffset(0);
+        setSysOffset(0);
+    }, [libraryInfo.libraryType]);
 
     const list = libraryInfo.libraryType === 'user' ? userList : sysList;
 
@@ -29,9 +40,8 @@ const ArticleList: React.FC = () => {
         decrementPage,
         currentPage,
         pageCount,
-    } = usePagination(list, 8);
-
-    const [sysOffset, setSysOffset] = useState(0);
+        lastPage,
+    } = usePagination(list, pageSize);
 
     const {
         refetch: sysRefetch,
@@ -42,6 +52,7 @@ const ArticleList: React.FC = () => {
             offset: sysOffset,
             lang: lang,
             search: search,
+            limit: fetchSize,
         },
         {
             onSuccess: (res) => {
@@ -60,7 +71,6 @@ const ArticleList: React.FC = () => {
         }
     );
 
-    const [userOffset, setUserOffset] = useState(0);
     const {
         refetch: userRefetch,
         isLoading: userIsLoading,
@@ -70,6 +80,7 @@ const ArticleList: React.FC = () => {
             offset: userOffset,
             lang: lang,
             search: search,
+            limit: fetchSize,
         },
         {
             onSuccess: (res) => {
@@ -88,13 +99,23 @@ const ArticleList: React.FC = () => {
         }
     );
 
-    useEffect(() => {
+    const fetchByLibrary = useCallback(() => {
         if (libraryInfo.libraryType === 'user') {
             userRefetch();
         } else if (libraryInfo.libraryType === 'system') {
             sysRefetch();
         }
     }, [libraryInfo.libraryType, sysRefetch, userRefetch]);
+
+    useEffect(() => {
+        fetchByLibrary();
+    }, [fetchByLibrary]);
+
+    useEffect(() => {
+        if (lastPage < currentPage) {
+            fetchByLibrary();
+        }
+    }, [currentPage, fetchByLibrary, lastPage]);
 
     const isLoading = userIsLoading || sysIsLoading;
 

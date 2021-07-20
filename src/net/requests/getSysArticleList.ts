@@ -9,6 +9,7 @@ type GetSysArticleListReqProps = {
     offset?: number;
     lang?: string;
     search?: string;
+    limit?: number;
 };
 
 export interface GetSysArticleResData {
@@ -22,8 +23,8 @@ export const getSysArticleList: API.Request<
 > = async (data, token) => {
     const url = prepareURL(
         ENDPOINTS.article.system.list,
-        ['offset', 'lang', 'search'],
-        [data.offset, data.lang, data.search]
+        ['offset', 'lang', 'search', 'limit'],
+        [data.offset, data.lang, data.search, data.limit]
     );
 
     return request(url, data, 'GET', {
@@ -41,7 +42,13 @@ export const useGetSysArticleList = (
 ) => {
     const { token } = useAuth();
     return useQuery<AxiosResponse<GetSysArticleResData>, AxiosError>(
-        ['getSysArticleList', query.offset, query.lang, query.search],
+        [
+            'getSysArticleList',
+            query.offset,
+            query.lang,
+            query.search,
+            query.limit,
+        ],
         () => {
             return getSysArticleList(query, token);
         },

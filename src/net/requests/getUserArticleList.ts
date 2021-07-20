@@ -10,6 +10,7 @@ type GetUserArticleListReqProps = {
     user_id?: number;
     lang?: string;
     search?: string;
+    limit?: number;
 };
 
 export interface GetUserArticleResData {
@@ -23,8 +24,8 @@ export const getUserArticleList: API.Request<
 > = async (data, token) => {
     const url = prepareURL(
         ENDPOINTS.article.user.list,
-        ['offset', 'user_id', 'lang', 'search'],
-        [data.offset, data.user_id, data.lang, data.search]
+        ['offset', 'user_id', 'lang', 'search', 'limit'],
+        [data.offset, data.user_id, data.lang, data.search, data.limit]
     );
 
     return request(url, data, 'GET', {
@@ -42,7 +43,13 @@ export const useGetUserArticleList = (
 ) => {
     const { token } = useAuth();
     return useQuery<AxiosResponse<GetUserArticleResData>, AxiosError>(
-        ['getUserArticleList', query.offset, query.lang, query.search],
+        [
+            'getUserArticleList',
+            query.offset,
+            query.lang,
+            query.search,
+            query.limit,
+        ],
         () => {
             return getUserArticleList(query, token);
         },

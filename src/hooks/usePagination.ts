@@ -13,6 +13,7 @@ export default function usePagination<T>(
     const {
         currentPage,
         setCurrentPage,
+        lastPage,
         pageCount,
         setPageCount,
         incrementPage,
@@ -55,6 +56,7 @@ export default function usePagination<T>(
         data: paginatedData,
         currentPage: currentPage,
         setCurrentPage: setCurrentPage,
+        lastPage: lastPage,
         pageCount: pageCount,
         decrementPage: decrementPage,
         incrementPage: incrementPage,
