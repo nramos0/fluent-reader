@@ -194,6 +194,8 @@ export const store: Store = observable({
 
     lastDefUpdate: 0,
     defUpdateCache: null,
+
+    readArticle: null,
 } as Store);
 
 export default React.createContext(store);

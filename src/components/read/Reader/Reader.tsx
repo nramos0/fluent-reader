@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import ReadPages from '../ReadPages/ReadPages';
 import ReaderSidebar from '../ReaderSidebar/ReaderSidebar';
-import article from './test1.json';
 import { observable } from 'mobx';
 import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
 interface ReaderStore {
     store: Store | null;
@@ -167,8 +168,17 @@ const useStoreBind = () => {
     return null;
 };
 
+const StoreBind: React.FC = observer(() => {
+    return useStoreBind();
+});
+
 const Reader: React.FC<{}> = () => {
-    useStoreBind();
+    const { t } = useTranslation('reader');
+
+    const history = useHistory();
+
+    const store = useStore();
+    const article = store.readArticle;
 
     return (
         <ReaderContext.Provider value={readerStore}>
@@ -179,8 +189,48 @@ const Reader: React.FC<{}> = () => {
                 align="center"
                 height="100%"
             >
-                <ReadPages pages={article.page_data[2].pages} />
-                <ReaderSidebar />
+                <StoreBind />
+                {article === null ? (
+                    <Flex
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        backgroundColor="#fff"
+                        borderRadius="lg"
+                        margin="0 auto"
+                        color="#222"
+                        w="80%"
+                        p="100px 0px"
+                        fontSize="20px"
+                        fontWeight="bold"
+                    >
+                        <Text mb={3}>{t('no-article-open')}</Text>
+                        <Button
+                            size="lg"
+                            bgColor="#661919"
+                            color="white"
+                            border="2px solid #661919"
+                            _hover={{
+                                bgColor: 'white',
+                                color: '#661919',
+                            }}
+                            _active={{
+                                borderColor: '#ccc',
+                                bgColor: '#ccc',
+                            }}
+                            onClick={() => {
+                                history.push('/app/library');
+                            }}
+                        >
+                            {t('common:library')}
+                        </Button>
+                    </Flex>
+                ) : (
+                    <>
+                        <ReadPages pages={article.page_data[2].pages} />
+                        <ReaderSidebar />
+                    </>
+                )}
             </Flex>
         </ReaderContext.Provider>
     );

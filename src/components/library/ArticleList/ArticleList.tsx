@@ -1,31 +1,86 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Spinner } from '@chakra-ui/react';
+import { Flex, Text, Skeleton, Button } from '@chakra-ui/react';
 import Article from '../Article/Article';
 import { useGetSysArticleList } from '../../../net/requests/getSysArticleList';
+import { useGetUserArticleList } from '../../../net/requests/getUserArticleList';
+import { useLibraryInfo } from '../Library/Library';
+import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
+import { sampleData } from './sampleData';
+import usePagination from '../../../hooks/usePagination';
 // import { useTranslation } from 'react-i18next';
 
 const ArticleList: React.FC = () => {
-    // const t = useTranslation('library');
-    // const showToast = useToast();
+    const { t } = useTranslation('library');
 
-    const [list, setList] = useState<SimpleArticle[]>([]);
-
-    const [offset, setOffset] = useState(0);
     const [lang] = useState();
     const [search] = useState<string>();
 
-    const { refetch, isLoading, isError } = useGetSysArticleList(
+    const [sysList, setSysList] = useState<SimpleArticle[]>(sampleData);
+    const [userList, setUserList] = useState<SimpleArticle[]>(sampleData);
+
+    const libraryInfo = useLibraryInfo();
+
+    const list = libraryInfo.libraryType === 'user' ? userList : sysList;
+
+    const {
+        data,
+        incrementPage,
+        decrementPage,
+        currentPage,
+        pageCount,
+    } = usePagination(list, 8);
+
+    const [sysOffset, setSysOffset] = useState(0);
+
+    const {
+        refetch: sysRefetch,
+        isLoading: sysIsLoading,
+        isError: sysIsError,
+    } = useGetSysArticleList(
         {
-            offset: offset,
+            offset: sysOffset,
             lang: lang,
             search: search,
         },
         {
             onSuccess: (res) => {
-                setList((previousList) => {
-                    return [...previousList, ...res.data.articles];
+                setSysList((prevList) => {
+                    if (prevList === sampleData) {
+                        return [...res.data.articles];
+                    } else {
+                        return [...prevList, ...res.data.articles];
+                    }
                 });
-                setOffset((previousOffset) => previousOffset + res.data.count);
+                setSysOffset((prev) => prev + res.data.count);
+            },
+            onError: (err) => {
+                console.log(err);
+            },
+        }
+    );
+
+    const [userOffset, setUserOffset] = useState(0);
+    const {
+        refetch: userRefetch,
+        isLoading: userIsLoading,
+        isError: userIsError,
+    } = useGetUserArticleList(
+        {
+            offset: userOffset,
+            lang: lang,
+            search: search,
+        },
+        {
+            onSuccess: (res) => {
+                setUserList((prevList) => {
+                    if (prevList === sampleData) {
+                        return [...res.data.articles];
+                    } else {
+                        return [...prevList, ...res.data.articles];
+                    }
+                });
+                setUserOffset((prev) => prev + res.data.count);
             },
             onError: (err) => {
                 console.log(err);
@@ -34,25 +89,63 @@ const ArticleList: React.FC = () => {
     );
 
     useEffect(() => {
-        refetch();
-    }, [refetch]);
+        if (libraryInfo.libraryType === 'user') {
+            userRefetch();
+        } else if (libraryInfo.libraryType === 'system') {
+            sysRefetch();
+        }
+    }, [libraryInfo.libraryType, sysRefetch, userRefetch]);
 
-    if (isLoading) {
+    const isLoading = userIsLoading || sysIsLoading;
+
+    if (userIsError || sysIsError) {
+    } else if (list.length === 0) {
         return (
-            <Flex direction="row" wrap="wrap" w="100%" h="100vh" ml={3}>
-                <Spinner size="xl" />
-            </Flex>
+            <Text
+                fontStyle="bold"
+                fontSize="28px"
+                width="100%"
+                mt={2}
+                color="white"
+                textAlign="center"
+            >
+                {t('no-articles')}
+            </Text>
         );
-    } else if (isError) {
     }
 
     return (
-        <Flex direction="row" wrap="wrap" w="100%" ml={3}>
-            {list.map((article, index) => (
-                <Article article={article} key={index} />
+        <Flex
+            direction="column"
+            w="100%"
+            bg="#fff"
+            borderRadius="15px"
+            p="15px 100px"
+        >
+            <Flex mb={3} align="center">
+                <Button
+                    flex={1}
+                    onClick={decrementPage}
+                    disabled={currentPage <= 0}
+                >
+                    Prev
+                </Button>
+                <Button m="0 5px 0 5px">Page: {currentPage + 1}</Button>
+                <Button
+                    flex={1}
+                    onClick={incrementPage}
+                    disabled={currentPage >= pageCount - 1}
+                >
+                    Next
+                </Button>
+            </Flex>
+            {data.map((article, index) => (
+                <Skeleton key={index} isLoaded={!isLoading} mb={3}>
+                    <Article article={article} />
+                </Skeleton>
             ))}
         </Flex>
     );
 };
 
-export default ArticleList;
+export default observer(ArticleList);

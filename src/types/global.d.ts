@@ -29,6 +29,8 @@ declare interface Store {
         definition: string;
         timeout: NodeJS.Timeout;
     } | null;
+
+    readArticle: Article | null;
 }
 
 declare type Language = 'en' | 'zh';

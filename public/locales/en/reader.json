@@ -10,5 +10,6 @@
   "definition-search": "Definition Search",
   "your-lang-dicts": "* Dictionaries",
   "native-dicts": "* Dictionaries",
-  "type-definition": "Type the definition of the word here..."
+  "type-definition": "Type the definition of the word here...",
+  "no-article-open": "There is no article currently open. Please open an article in the library to continue!"
 }

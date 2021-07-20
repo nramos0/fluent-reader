@@ -7,6 +7,7 @@ import ArticleTime from '../ArticleTime/ArticleTime';
 import ArticleLength from '../ArticleLength/ArticleLength';
 import ArticleLang from '../ArticleLang/ArticleLang';
 import ArticleTags from '../ArticleTags/ArticleTags';
+import ArticleControls from '../ArticleControls/ArticleControls';
 
 interface Props {
     article: SimpleArticle;
@@ -62,6 +63,8 @@ const Article: React.FC<Props> = ({ article }) => {
             </Flex>
 
             <ArticleTags tags={article.tags} />
+
+            <ArticleControls article={article} />
         </Flex>
     );
 };

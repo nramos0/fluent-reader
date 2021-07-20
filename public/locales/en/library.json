@@ -3,5 +3,11 @@
   "word": "word",
   "word_plural": "words",
   "wordWithCount": "{{count}} word",
-  "wordWithCount_plural": "{{count}} words"
+  "wordWithCount_plural": "{{count}} words",
+  "library-select": "Library Selection",
+  "select-a-library": "Select a library",
+  "system-lib": "System Library",
+  "user-lib": "My Articles",
+  "no-articles": "There are no articles. Try picking a different library.",
+  "open": "Open"
 }

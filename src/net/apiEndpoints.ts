@@ -69,11 +69,11 @@ export const ENDPOINTS = {
         _: getArticleEndpoint('/'),
         system: {
             list: getArticleSystemEndpoint('/list/'),
-            single: getArticleSystemEndpoint('/list/single/{article_id}'),
+            single: getArticleSystemEndpoint('/single/{article_id}/'),
         },
         user: {
             list: getArticleUserEndpoint('/list/'),
-            single: getArticleUserEndpoint('/list/single/{article_id}'),
+            single: getArticleUserEndpoint('/single/{article_id}/'),
 
             all: {
                 list: getArticleUserEndpoint('/all/list/'),

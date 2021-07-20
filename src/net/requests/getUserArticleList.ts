@@ -5,25 +5,26 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
 import { prepareURL } from '../apiUtil';
 
-type GetSysArticleListReqProps = {
+type GetUserArticleListReqProps = {
     offset?: number;
+    user_id?: number;
     lang?: string;
     search?: string;
 };
 
-export interface GetSysArticleResData {
+export interface GetUserArticleResData {
     articles: SimpleArticle[];
     count: number;
 }
 
-export const getSysArticleList: API.Request<
-    GetSysArticleListReqProps,
-    GetSysArticleResData
+export const getUserArticleList: API.Request<
+    GetUserArticleListReqProps,
+    GetUserArticleResData
 > = async (data, token) => {
     const url = prepareURL(
-        ENDPOINTS.article.system.list,
-        ['offset', 'lang', 'search'],
-        [data.offset, data.lang, data.search]
+        ENDPOINTS.article.user.list,
+        ['offset', 'user_id', 'lang', 'search'],
+        [data.offset, data.user_id, data.lang, data.search]
     );
 
     return request(url, data, 'GET', {
@@ -32,21 +33,20 @@ export const getSysArticleList: API.Request<
     });
 };
 
-export const useGetSysArticleList = (
-    query: GetSysArticleListReqProps,
+export const useGetUserArticleList = (
+    query: GetUserArticleListReqProps,
     fn?: {
-        onSuccess?: API.OnSuccessFn<GetSysArticleResData>;
+        onSuccess?: API.OnSuccessFn<GetUserArticleResData>;
         onError?: API.OnFailureFn;
     }
 ) => {
     const { token } = useAuth();
-    return useQuery<AxiosResponse<GetSysArticleResData>, AxiosError>(
-        ['getSysArticleList', query.offset, query.lang, query.search],
+    return useQuery<AxiosResponse<GetUserArticleResData>, AxiosError>(
+        ['getUserArticleList', query.offset, query.lang, query.search],
         () => {
-            return getSysArticleList(query, token);
+            return getUserArticleList(query, token);
         },
         {
-            staleTime: Infinity,
             onSuccess: fn?.onSuccess,
             onError: fn?.onError,
             enabled: false,
