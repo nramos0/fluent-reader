@@ -34,6 +34,7 @@ const LogoutNavItem: React.FC = () => {
                     e.preventDefault();
                     setIsOpen(true);
                 }}
+                floatBottom={true}
             >
                 {t('logout')}
             </NavItem>

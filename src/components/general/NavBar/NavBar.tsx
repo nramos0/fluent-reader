@@ -10,9 +10,9 @@ const NavBar: React.FC = () => {
             <NavItem location="/app/library">{t('library')}</NavItem>
             <NavItem location="/app/read">{t('read')}</NavItem>
             <NavItem location="/app/add-article">{t('add-article')}</NavItem>
-            <NavItem location="/app/settings" floatBottom={true}>
+            {/* <NavItem location="/app/settings" floatBottom={true}>
                 {t('settings')}
-            </NavItem>
+            </NavItem> */}
             <LogoutNavItem />
         </>
     );
