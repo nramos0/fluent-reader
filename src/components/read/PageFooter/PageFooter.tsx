@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex, Button } from '@chakra-ui/react';
 import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     currPage: string[];
@@ -16,6 +17,7 @@ const PageFooter: React.FC<Props> = ({
     setCurrPageIndex,
     pageCountM1,
 }) => {
+    const { t } = useTranslation('reader');
     const readerStore = useReaderStore();
 
     const onPageLeft = () => {
@@ -42,7 +44,7 @@ const PageFooter: React.FC<Props> = ({
                 onClick={onPageLeft}
                 disabled={currPageIndex <= 0}
             >
-                Prev
+                {t('prev')}
             </Button>
 
             <Button
@@ -51,7 +53,7 @@ const PageFooter: React.FC<Props> = ({
                 onClick={onPageRight}
                 disabled={currPageIndex >= pageCountM1}
             >
-                Next
+                {t('next')}
             </Button>
         </Flex>
     );

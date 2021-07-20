@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import {
+    Flex,
+    Box,
+    Text,
+    NumberInput,
+    NumberInputField,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+    NumberInputStepper,
+} from '@chakra-ui/react';
 import PageText from '../PageText/PageText';
 import PageFooter from '../PageFooter/PageFooter';
 import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     pages: string[][];
 }
 
 const ReadPages: React.FC<Props> = ({ pages }) => {
+    const { t } = useTranslation('reader');
     const [currPageIndex, setCurrPageIndex] = useState(0);
     const pageCountM1 = pages.length - 1;
     const currPage = pages[currPageIndex];
@@ -39,9 +50,32 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
         >
             <PageText page={currPage} />
             <Box w="100%" border="thin solid #d16161" />
-            <Box height="5%" p="5px">
-                Page {currPageIndex + 1} / {pages.length}
-            </Box>
+            <Flex align="center" direction="row" height="5%" p="5px">
+                <Text as="span" mr={1}>
+                    {t('page')}
+                </Text>
+                <NumberInput
+                    value={currPageIndex + 1}
+                    onChange={(newPageIndex) => {
+                        const intIndex = parseInt(newPageIndex, 10);
+                        if (intIndex > 0 && intIndex <= pages.length) {
+                            setCurrPageIndex(intIndex - 1);
+                        }
+                    }}
+                    min={1}
+                    max={pages.length}
+                    size="xs"
+                    w="50px"
+                >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                    </NumberInputStepper>
+                </NumberInput>
+
+                <Text ml={1}> / {pages.length}</Text>
+            </Flex>
             <PageFooter
                 currPage={currPage}
                 currPageIndex={currPageIndex}
