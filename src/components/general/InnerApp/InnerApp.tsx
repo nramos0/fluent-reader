@@ -5,6 +5,7 @@ import SideBar from '../SideBar/SideBar';
 import Library from '../../library/Library/Library';
 import AddArticle from '../../add-article/AddArticle/AddArticle';
 import Reader from '../../read/Reader/Reader';
+import Settings from '../../settings/Settings/Settings';
 
 const InnerApp: React.FC = () => {
     const history = useHistory();
@@ -36,7 +37,9 @@ const InnerApp: React.FC = () => {
             <Route path="/app/add-article">
                 <AddArticle />
             </Route>
-            <Route path="/app/settings"></Route>
+            <Route path="/app/settings">
+                <Settings />
+            </Route>
         </Flex>
     );
 };

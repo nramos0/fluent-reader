@@ -3,18 +3,19 @@ import { Box, useToast } from '@chakra-ui/react';
 import AccountPage from '../components/account/AccountPage/AccountPage';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import to from 'await-to-js';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import i18n, { i18nInitPromise } from '../i18n';
 
 import InnerApp from '../components/general/InnerApp/InnerApp';
 import LoadWrapper from '../components/general/LoadWrapper/LoadWrapper';
 import Logout from '../components/general/Logout/Logout';
+import I18nBind from '../components/general/I18nBind/I18nBind';
 
 import './App.css';
 import { useAuth } from '../components/general/AuthWrapper/AuthWrapper';
 import { authenticate } from '../net/requests/auth';
 import { useStore } from '../hooks/useStore';
 import { getWordData } from '../net/requests';
+import { observer } from 'mobx-react';
 
 function App() {
     const auth = useAuth();
@@ -97,7 +98,8 @@ function App() {
                 promiseList={initialLoadData.promiseList}
                 startInitialLoad={initialLoadData.startInitialLoad}
             >
-                <ReactQueryDevtools initialIsOpen={true} />
+                <I18nBind />
+                {/* <ReactQueryDevtools initialIsOpen={true} /> */}
                 <Switch>
                     <Route path="/account">
                         <AccountPage />
@@ -114,4 +116,4 @@ function App() {
     );
 }
 
-export default App;
+export default observer(App);

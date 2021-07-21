@@ -8,14 +8,16 @@ import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { sampleData } from './sampleData';
 import usePagination from '../../../hooks/usePagination';
+import { useStore } from '../../../hooks/useStore';
 
-const pageSize = 3;
+const pageSize = 4;
 const fetchSize = pageSize * 2 + 1;
 
 const ArticleList: React.FC = () => {
     const { t } = useTranslation('library');
 
-    const [lang] = useState();
+    const store = useStore();
+
     const [search] = useState<string>();
 
     const [sysList, setSysList] = useState<SimpleArticle[]>(sampleData);
@@ -49,7 +51,7 @@ const ArticleList: React.FC = () => {
     } = useGetSysArticleList(
         {
             offset: sysOffset,
-            lang: lang,
+            lang: store.studyLanguage,
             search: search,
             limit: fetchSize,
         },
@@ -77,7 +79,7 @@ const ArticleList: React.FC = () => {
     } = useGetUserArticleList(
         {
             offset: userOffset,
-            lang: lang,
+            lang: store.studyLanguage,
             search: search,
             limit: fetchSize,
         },

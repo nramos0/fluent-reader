@@ -14,7 +14,15 @@ export const i18nInitPromise = i18n
 
         fallbackLng: 'en',
         defaultNS: 'common',
-        ns: ['common', 'account', 'library', 'aria', 'add-article', 'reader'],
+        ns: [
+            'common',
+            'account',
+            'library',
+            'aria',
+            'add-article',
+            'reader',
+            'settings',
+        ],
 
         debug: process.env.NODE_ENV === 'development',
 

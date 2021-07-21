@@ -1,3 +1,5 @@
+import { i18n } from 'i18next';
+
 declare interface Dictionary<T> {
     [index: string]: T;
 }
@@ -9,7 +11,7 @@ declare interface Store {
     setStudyLanguage: (newLanguage: Lagnuage) => void;
 
     displayLanguage: Language;
-    setDisplayLanguage: (newLanguage: Lagnuage) => void;
+    setDisplayLanguage: (newLanguage: Lagnuage) => Promise<unknown>;
 
     wordData: WordData;
     getWordStatus: (word: string) => WordStatus;
@@ -31,6 +33,9 @@ declare interface Store {
     } | null;
 
     readArticle: Article | null;
+
+    i18n: i18n | null;
+    setI18n: (val: i18n) => void;
 }
 
 declare type Language = 'en' | 'zh';

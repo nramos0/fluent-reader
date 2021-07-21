@@ -18,7 +18,7 @@ const sites = {
                 ending: '.html',
             },
         ],
-        zh: [
+        'zh-CN': [
             {
                 name: '有道词典',
                 link: 'https://www.youdao.com/w/eng/',
@@ -59,8 +59,8 @@ const sites = {
             },
         ],
     },
-    zh: {
-        zh: [
+    'zh-CN': {
+        'zh-CN': [
             {
                 name: '有道词典',
                 link: 'https://www.youdao.com/w/eng/',
@@ -172,7 +172,7 @@ export interface Site {
 
 interface Sites {
     en: Dictionary<Site[]>;
-    zh: Dictionary<Site[]>;
+    'zh-CN': Dictionary<Site[]>;
 }
 
 export default sites;

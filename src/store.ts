@@ -13,9 +13,15 @@ export const store: Store = observable({
         this.studyLanguage = newLanguage;
     },
 
-    displayLanguage: 'zh',
+    displayLanguage: 'en',
     setDisplayLanguage(newLanguage) {
         this.displayLanguage = newLanguage;
+
+        if (!this.i18n) {
+            return;
+        }
+
+        return this.i18n.changeLanguage(newLanguage);
     },
 
     wordData: {
@@ -196,6 +202,12 @@ export const store: Store = observable({
     defUpdateCache: null,
 
     readArticle: null,
+
+    i18n: null,
+
+    setI18n(val) {
+        this.i18n = val;
+    },
 } as Store);
 
 export default React.createContext(store);
