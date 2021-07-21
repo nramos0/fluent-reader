@@ -9,12 +9,12 @@ const Settings: React.FC = () => {
         <Flex
             direction="column"
             align="center"
-            width="100%"
+            flex={1}
             bgColor="white"
             color="#661919"
             p={3}
             borderRadius="lg"
-            m={6}
+            m="50px 100px"
         >
             <Heading>{t('common:settings')}</Heading>
             <Flex direction="column" w="100%" p="0 20%">
