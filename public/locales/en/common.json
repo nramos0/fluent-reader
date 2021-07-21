@@ -17,5 +17,8 @@
   "lang": "Language",
   "required": "Required",
   "too-short": "Too short.",
-  "too-long": "Too long."
+  "too-long": "Too long.",
+  "page": "Page",
+  "prev": "Previous",
+  "next": "Next"
 }
