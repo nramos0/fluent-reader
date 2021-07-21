@@ -28,10 +28,10 @@ const ArticleList: React.FC = () => {
 
     const libraryInfo = useLibraryInfo();
 
-    useEffect(() => {
-        setUserOffset(0);
-        setSysOffset(0);
-    }, [libraryInfo.libraryType]);
+    // useEffect(() => {
+    //     setUserOffset(0);
+    //     setSysOffset(0);
+    // }, [libraryInfo.libraryType]);
 
     const list = libraryInfo.libraryType === 'user' ? userList : sysList;
 
