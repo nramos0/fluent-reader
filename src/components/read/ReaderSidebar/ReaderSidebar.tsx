@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { useReaderStore } from '../Reader/Reader';
 import WordStatusControls from '../WordStatusControls/WordStatusControls';
 import WordDefinitionControls from '../WordDefinitionControls/WordDefinitionControls';
-import AuxiliaryControls from '../../AuxiliaryControls/AuxiliaryControls';
+import AuxiliaryControls from '../AuxiliaryControls/AuxiliaryControls';
 
 const line = (
     <Box width="100%" height="1px" bgColor="#d16161" borderRadius="5px" />

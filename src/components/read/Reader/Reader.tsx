@@ -232,7 +232,9 @@ const Reader: React.FC<{}> = () => {
                         fontSize="20px"
                         fontWeight="bold"
                     >
-                        <Text mb={3}>{t('no-article-open')}</Text>
+                        <Text mb={3} color="#661919">
+                            {t('no-article-open')}
+                        </Text>
                         <Button
                             size="lg"
                             bgColor="#661919"
