@@ -1,5 +1,3 @@
-import { i18n } from 'i18next';
-
 declare interface Dictionary<T> {
     [index: string]: T;
 }
@@ -35,7 +33,7 @@ declare interface Store {
     readArticle: Article | null;
 
     i18n: i18n | null;
-    setI18n: (val: i18n) => void;
+    setI18n: (val: any) => void;
 }
 
 declare type Language = 'en' | 'zh';

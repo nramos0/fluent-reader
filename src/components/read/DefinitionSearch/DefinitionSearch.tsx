@@ -53,8 +53,10 @@ const DefinitionSearch: React.FC<{}> = () => {
     const displayLang = store.displayLanguage;
     const studyLang = store.studyLanguage;
 
-    const studyLangDicts = sites[studyLang][studyLang];
-    const displayLangDicts = sites[studyLang][displayLang];
+    const studyLangDicts =
+        sites[studyLang === 'zh' ? 'zh-CN' : studyLang][studyLang];
+    const displayLangDicts =
+        sites[studyLang === 'zh' ? 'zh-CN' : studyLang][displayLang];
 
     return (
         <Menu>
