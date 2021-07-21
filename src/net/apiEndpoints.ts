@@ -7,9 +7,9 @@ interface APIConfig {
 const config: APIConfig = {
     protocol: 'http://',
     root:
-        process.env.NODE_ENV === 'development' || true
+        process.env.NODE_ENV === 'development'
             ? '127.0.0.1'
-            : '8.140.129.80:2244',
+            : '47.101.129.250:2244',
     prefix: '',
 };
 
