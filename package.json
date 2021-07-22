@@ -52,8 +52,8 @@
     "docker-stop": "docker stop web",
     "eject": "react-scripts eject",
     "gen:comp": "node ./src/scripts/generate-react.js component",
-    "git-clone": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/id_rsa; git clone git@github.com:nramos0/fluent-reader.git'",
-    "git-pull": "ssh-agent bash -c 'ssh-add /home/ubuntu/.ssh/id_rsa; git pull'",
+    "git-clone": "ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa; git clone git@github.com:nramos0/fluent-reader.git'",
+    "git-pull": "ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa; git pull'",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
