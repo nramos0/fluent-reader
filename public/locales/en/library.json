@@ -13,6 +13,10 @@
   "no-articles": "There are no articles. Try picking a different library.",
   "open": "Open",
   "save": "Save",
+  "remove": "Remove",
+  "delete": "Delete",
+  "article-remove-error": "There was an error removing the article from your saved articles.",
+  "article-remove-success": "Article removed successfully.",
   "article-fetch-error": "There was an error fetching articles.",
   "article-saved-before": "You've already saved this article.",
   "article-saved-success": "Article saved successfully."

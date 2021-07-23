@@ -11,9 +11,11 @@ import ArticleControls from '../ArticleControls/ArticleControls';
 
 interface Props {
     article: SimpleArticle;
+    onAdd: (article: SimpleArticle) => void;
+    onRemoveSuccess: (id: number) => void;
 }
 
-const Article: React.FC<Props> = ({ article }) => {
+const Article: React.FC<Props> = ({ article, onRemoveSuccess, onAdd }) => {
     const { t } = useTranslation();
     return (
         <Flex
@@ -64,7 +66,11 @@ const Article: React.FC<Props> = ({ article }) => {
 
             <ArticleTags tags={article.tags} />
 
-            <ArticleControls article={article} />
+            <ArticleControls
+                article={article}
+                onAdd={onAdd}
+                onRemoveSuccess={onRemoveSuccess}
+            />
         </Flex>
     );
 };

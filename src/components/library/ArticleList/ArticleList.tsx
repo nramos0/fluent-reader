@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Flex, Text, Skeleton, Button } from '@chakra-ui/react';
 import Article from '../Article/Article';
 import { useGetArticleList } from '../../../net/requests/getArticleList';
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { sampleData } from './sampleData';
 import usePagination from '../../../hooks/usePagination';
 import { useStore } from '../../../hooks/useStore';
+import { useCallback } from 'react';
 
 const pageSize = 4;
 const fetchSize = pageSize * 2 + 1;
@@ -143,6 +144,67 @@ const ArticleList: React.FC = () => {
         }
     }, [isLoading, ready]);
 
+    const onAdd = useCallback((article: SimpleArticle) => {
+        setListData((prevData) => {
+            return {
+                system: {
+                    ...prevData.system,
+                },
+                'user-saved': {
+                    list: [article, ...prevData['user-saved'].list],
+                    offset: prevData['user-saved'].offset + 1,
+                },
+                'user-created': {
+                    ...prevData['user-created'],
+                },
+                'all-user': {
+                    ...prevData['all-user'],
+                },
+            };
+        });
+    }, []);
+
+    const idIndexMap = useMemo(() => {
+        const map: Dictionary<number> = {};
+
+        const length = list.length;
+        for (let i = 0; i < length; ++i) {
+            map[list[i].id] = i;
+        }
+
+        return map;
+    }, [list]);
+
+    const onRemove = useCallback(
+        (id: number) => {
+            setListData((prevData) => {
+                const newData: ListData = {
+                    system: {
+                        ...prevData.system,
+                    },
+                    'user-saved': {
+                        ...prevData['user-saved'],
+                    },
+                    'user-created': {
+                        ...prevData['user-created'],
+                    },
+                    'all-user': {
+                        ...prevData['all-user'],
+                    },
+                };
+                const currentLibNewData = newData[libraryInfo.libraryType];
+
+                currentLibNewData.list = [...currentLibNewData.list];
+                currentLibNewData.list.splice(idIndexMap[id], 1);
+
+                currentLibNewData.offset -= 1;
+
+                return newData;
+            });
+        },
+        [idIndexMap, libraryInfo.libraryType]
+    );
+
     if (isError) {
         return (
             <Text
@@ -200,7 +262,11 @@ const ArticleList: React.FC = () => {
             </Flex>
             {data.map((article, index) => (
                 <Skeleton key={index} isLoaded={ready && !isLoading} mb={3}>
-                    <Article article={article} />
+                    <Article
+                        article={article}
+                        onRemoveSuccess={onRemove}
+                        onAdd={onAdd}
+                    />
                 </Skeleton>
             ))}
         </Flex>

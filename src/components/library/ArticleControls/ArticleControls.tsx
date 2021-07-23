@@ -15,9 +15,15 @@ import { useRemoveArticle } from '../../../net/requests/removeArticle';
 
 interface Props {
     article: SimpleArticle;
+    onAdd: (article: SimpleArticle) => void;
+    onRemoveSuccess: (id: number) => void;
 }
 
-const ArticleControls: React.FC<Props> = ({ article }) => {
+const ArticleControls: React.FC<Props> = ({
+    article,
+    onAdd,
+    onRemoveSuccess,
+}) => {
     const { t } = useTranslation('library');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -74,7 +80,7 @@ const ArticleControls: React.FC<Props> = ({ article }) => {
             }
         } else {
             // err === null && data !== undefined
-            console.log('success');
+            onAdd(article);
             showToast({
                 description: t('article-saved-success'),
                 status: 'success',
@@ -83,7 +89,7 @@ const ArticleControls: React.FC<Props> = ({ article }) => {
             });
         }
         setIsLoading(false);
-    }, [article.id, loadInfo, saveMutation, showToast, t]);
+    }, [article, loadInfo, onAdd, saveMutation, showToast, t]);
 
     const removeMutation = useRemoveArticle();
     const onRemove = useCallback(async () => {
@@ -104,7 +110,7 @@ const ArticleControls: React.FC<Props> = ({ article }) => {
             });
         } else {
             // err === null && data !== undefined
-            console.log('success');
+            onRemoveSuccess(article.id);
             showToast({
                 description: t('article-remove-success'),
                 status: 'success',
@@ -113,7 +119,7 @@ const ArticleControls: React.FC<Props> = ({ article }) => {
             });
         }
         setIsLoading(false);
-    }, [article.id, loadInfo, removeMutation, showToast, t]);
+    }, [article.id, loadInfo, onRemoveSuccess, removeMutation, showToast, t]);
 
     return (
         <Flex direction="row" p="3px 0px" justify="flex-start">
