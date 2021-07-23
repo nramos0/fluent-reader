@@ -7,7 +7,17 @@
   "library-select": "选择资料库",
   "select-a-library": "选择资料库",
   "system-lib": "系统资料库",
-  "user-saved": "我的文章",
+  "user-saved": "我的收藏",
+  "user-created": "我上传过的文章",
+  "all-user": "全部用户文章列表",
   "no-articles": "暂无文章，请试试选择其他资料库。",
-  "open": "打开"
+  "open": "打开",
+  "save": "收藏",
+  "remove": "取消收藏",
+  "delete": "删除",
+  "article-remove-error": "取消收藏时出错了。",
+  "article-remove-success": "取消收藏成功。",
+  "article-fetch-error": "下载文章时出错了。",
+  "article-saved-before": "您已经收藏过该文章。",
+  "article-saved-success": "文章收藏成功。"
 }
