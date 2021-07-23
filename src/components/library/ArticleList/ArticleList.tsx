@@ -35,6 +35,8 @@ const ArticleList: React.FC = () => {
 
     const list = libraryInfo.libraryType === 'user' ? userList : sysList;
 
+    const [ready, setReady] = useState(false);
+
     const {
         data,
         incrementPage,
@@ -65,9 +67,11 @@ const ArticleList: React.FC = () => {
                     }
                 });
                 setSysOffset((prev) => prev + res.data.count);
+                setReady(true);
             },
             onError: (err) => {
                 console.log(err);
+                setReady(true);
             },
         }
     );
@@ -93,9 +97,11 @@ const ArticleList: React.FC = () => {
                     }
                 });
                 setUserOffset((prev) => prev + res.data.count);
+                setReady(true);
             },
             onError: (err) => {
                 console.log(err);
+                setReady(true);
             },
         }
     );
@@ -118,7 +124,20 @@ const ArticleList: React.FC = () => {
         }
     }, [currentPage, fetchByLibrary, lastPage]);
 
-    const isLoading = userIsLoading || sysIsLoading;
+    const isLoading =
+        libraryInfo.libraryType === 'system' ? sysIsLoading : userIsLoading;
+
+    useEffect(() => {
+        if (isLoading && ready) {
+            setReady(false);
+        } else if (!isLoading && !ready) {
+            setReady(true);
+        }
+    }, [isLoading, ready]);
+
+    useEffect(() => {
+        setReady(false);
+    }, [libraryInfo.libraryType]);
 
     if (userIsError || sysIsError) {
     } else if (list.length === 0) {
@@ -164,7 +183,7 @@ const ArticleList: React.FC = () => {
                 </Button>
             </Flex>
             {data.map((article, index) => (
-                <Skeleton key={index} isLoaded={!isLoading} mb={3}>
+                <Skeleton key={index} isLoaded={ready && !isLoading} mb={3}>
                     <Article article={article} />
                 </Skeleton>
             ))}
