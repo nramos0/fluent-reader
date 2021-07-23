@@ -12,6 +12,7 @@ declare interface Store {
     setDisplayLanguage: (newLanguage: Lagnuage) => Promise<unknown>;
 
     wordData: WordData;
+    setWordData: (wordData: WordData) => void;
     getWordStatus: (word: string) => WordStatus;
     updateWordStatus: (
         word: string,

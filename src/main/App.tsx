@@ -60,7 +60,7 @@ function App() {
             return;
         }
 
-        store.wordData = data.data.data;
+        store.setWordData(data.data.data);
     }, [auth.token, store]);
 
     useEffect(() => {

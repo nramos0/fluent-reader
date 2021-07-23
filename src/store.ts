@@ -66,6 +66,10 @@ export const store: Store = observable({
         },
     },
 
+    setWordData(wordData) {
+        this.wordData = wordData;
+    },
+
     getWordStatus(word) {
         word = word.toLowerCase();
 
