@@ -7,7 +7,7 @@ import LibraryOptions from '../LibraryOptions/LibraryOptions';
 import { observable } from 'mobx';
 
 interface LibraryInfo {
-    libraryType: 'system' | 'user';
+    libraryType: LibraryType;
 }
 
 const libraryInfo: LibraryInfo = observable({

@@ -28,16 +28,16 @@ const LibraryOptions: React.FC<{}> = () => {
                     value={library.libraryType}
                     onChange={(e) => {
                         runInAction(() => {
-                            library.libraryType = e.target.value as
-                                | 'system'
-                                | 'user';
+                            library.libraryType = e.target.value as LibraryType;
                         });
                     }}
                     focusBorderColor="#661919"
                 >
                     <option disabled={true}>{t('select-a-library')}</option>
-                    <option value="user">{t('user-lib')}</option>
                     <option value="system">{t('system-lib')}</option>
+                    <option value="user-saved">{t('user-saved')}</option>
+                    <option value="user-created">{t('user-created')}</option>
+                    <option value="all-user">{t('all-user')}</option>
                 </Select>
             </Flex>
         </Flex>

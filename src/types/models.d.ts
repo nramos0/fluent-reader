@@ -60,3 +60,9 @@ declare interface WordData {
         zh: Dictionary<string>;
     };
 }
+
+declare type LibraryType =
+    | 'system'
+    | 'user-saved'
+    | 'user-created'
+    | 'all-user';

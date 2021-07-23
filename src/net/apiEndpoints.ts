@@ -81,7 +81,7 @@ export const ENDPOINTS = {
 
             saved: {
                 list: getArticleUserEndpoint('/saved/list/'),
-                single: getArticleUserEndpoint('/saved/list/single/'),
+                single: getArticleUserEndpoint('/saved/single/'),
             },
         },
     },

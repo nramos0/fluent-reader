@@ -1,14 +1,14 @@
 import { ENDPOINTS } from '../apiEndpoints';
 import { request } from '../request';
 
-type CreateArticleReqProps = {
+interface CreateArticleReqProps {
     title: string;
     author: string;
     content: string;
     language: string;
     tags: string[];
     is_private: boolean;
-};
+}
 
 interface CreateArticleResData {
     article: SimpleArticle;

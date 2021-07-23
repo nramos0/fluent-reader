@@ -5,24 +5,24 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
 import { prepareURL } from '../apiUtil';
 
-type GetSysArticleListReqProps = {
+type GetSavedArticleListReqProps = {
     offset?: number;
     lang?: string;
     search?: string;
     limit?: number;
 };
 
-export interface GetSysArticleResData {
+export interface GetSavedArticleResData {
     articles: SimpleArticle[];
     count: number;
 }
 
-export const getSysArticleList: API.Request<
-    GetSysArticleListReqProps,
-    GetSysArticleResData
+export const getSavedArticleList: API.Request<
+    GetSavedArticleListReqProps,
+    GetSavedArticleResData
 > = async (data, token) => {
     const url = prepareURL(
-        ENDPOINTS.article.system.list,
+        ENDPOINTS.article.user.saved.list,
         ['offset', 'lang', 'search', 'limit'],
         [data.offset, data.lang, data.search, data.limit]
     );
@@ -33,24 +33,24 @@ export const getSysArticleList: API.Request<
     });
 };
 
-export const useGetSysArticleList = (
-    query: GetSysArticleListReqProps,
+export const useGetSavedArticleList = (
+    query: GetSavedArticleListReqProps,
     fn?: {
-        onSuccess?: API.OnSuccessFn<GetSysArticleResData>;
+        onSuccess?: API.OnSuccessFn<GetSavedArticleResData>;
         onError?: API.OnFailureFn;
     }
 ) => {
     const { token } = useAuth();
-    return useQuery<AxiosResponse<GetSysArticleResData>, AxiosError>(
+    return useQuery<AxiosResponse<GetSavedArticleResData>, AxiosError>(
         [
-            'getSysArticleList',
+            'getSavedArticleList',
             query.offset,
             query.lang,
             query.search,
             query.limit,
         ],
         () => {
-            return getSysArticleList(query, token);
+            return getSavedArticleList(query, token);
         },
         {
             staleTime: Infinity,

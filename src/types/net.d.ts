@@ -2,9 +2,10 @@ import { AxiosResponse, AxiosError } from 'axios';
 
 declare global {
     namespace API {
-        type Request<ReqProps, ResData> = (
+        type Request<ReqProps = {}, ResData = {}, Meta = unknown> = (
             data: ReqProps,
-            token?: string
+            token?: string,
+            meta?: Meta
         ) => Response<ResData>;
 
         type Response<ResData> = Promise<AxiosResponse<ResData>>;

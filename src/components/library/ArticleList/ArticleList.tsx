@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex, Text, Skeleton, Button } from '@chakra-ui/react';
 import Article from '../Article/Article';
-import { useGetSysArticleList } from '../../../net/requests/getSysArticleList';
-import { useGetUserArticleList } from '../../../net/requests/getUserArticleList';
+import { useGetArticleList } from '../../../net/requests/getArticleList';
 import { useLibraryInfo } from '../Library/Library';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +12,22 @@ import { useStore } from '../../../hooks/useStore';
 const pageSize = 4;
 const fetchSize = pageSize * 2 + 1;
 
+enum LibraryTypeEnum {
+    SYSTEM = 'system',
+    USER_SAVED = 'user-saved',
+    USER_CREATED = 'user-created',
+    ALL_USER = 'all-user',
+}
+
+type LibraryTypeMap<T> = {
+    [index in LibraryTypeEnum]: T;
+};
+
+type ListData = LibraryTypeMap<{
+    list: SimpleArticle[];
+    offset: number;
+}>;
+
 const ArticleList: React.FC = () => {
     const { t } = useTranslation('library');
 
@@ -20,20 +35,28 @@ const ArticleList: React.FC = () => {
 
     const [search] = useState<string>();
 
-    const [sysList, setSysList] = useState<SimpleArticle[]>(sampleData);
-    const [sysOffset, setSysOffset] = useState(0);
-
-    const [userList, setUserList] = useState<SimpleArticle[]>(sampleData);
-    const [userOffset, setUserOffset] = useState(0);
+    const [listData, setListData] = useState<ListData>({
+        system: {
+            list: [],
+            offset: 0,
+        },
+        'user-saved': {
+            list: sampleData,
+            offset: 0,
+        },
+        'user-created': {
+            list: sampleData,
+            offset: 0,
+        },
+        'all-user': {
+            list: sampleData,
+            offset: 0,
+        },
+    });
 
     const libraryInfo = useLibraryInfo();
 
-    // useEffect(() => {
-    //     setUserOffset(0);
-    //     setSysOffset(0);
-    // }, [libraryInfo.libraryType]);
-
-    const list = libraryInfo.libraryType === 'user' ? userList : sysList;
+    const { list, offset } = listData[libraryInfo.libraryType];
 
     const [ready, setReady] = useState(false);
 
@@ -41,32 +64,58 @@ const ArticleList: React.FC = () => {
         data,
         incrementPage,
         decrementPage,
+        setCurrentPage,
         currentPage,
         pageCount,
         lastPage,
     } = usePagination(list, pageSize);
 
-    const {
-        refetch: sysRefetch,
-        isLoading: sysIsLoading,
-        isError: sysIsError,
-    } = useGetSysArticleList(
+    useEffect(() => {
+        setReady(false);
+        setCurrentPage(0);
+    }, [libraryInfo.libraryType, setCurrentPage]);
+
+    const { refetch, isLoading, isError } = useGetArticleList(
         {
-            offset: sysOffset,
+            offset: offset,
             lang: store.studyLanguage,
             search: search,
             limit: fetchSize,
         },
+        libraryInfo.libraryType,
         {
             onSuccess: (res) => {
-                setSysList((prevList) => {
+                setListData((prevData) => {
+                    const prevList = prevData[libraryInfo.libraryType].list;
+
+                    const newData: ListData = {
+                        system: {
+                            ...prevData.system,
+                        },
+                        'user-saved': {
+                            ...prevData['user-saved'],
+                        },
+                        'user-created': {
+                            ...prevData['user-created'],
+                        },
+                        'all-user': {
+                            ...prevData['all-user'],
+                        },
+                    };
+
+                    const currentLibNewData = newData[libraryInfo.libraryType];
                     if (prevList === sampleData) {
-                        return [...res.data.articles];
+                        currentLibNewData.list = [...res.data.articles];
                     } else {
-                        return [...prevList, ...res.data.articles];
+                        currentLibNewData.list = [
+                            ...list,
+                            ...res.data.articles,
+                        ];
                     }
+                    currentLibNewData.offset += res.data.count;
+
+                    return newData;
                 });
-                setSysOffset((prev) => prev + res.data.count);
                 setReady(true);
             },
             onError: (err) => {
@@ -75,57 +124,16 @@ const ArticleList: React.FC = () => {
             },
         }
     );
-
-    const {
-        refetch: userRefetch,
-        isLoading: userIsLoading,
-        isError: userIsError,
-    } = useGetUserArticleList(
-        {
-            offset: userOffset,
-            lang: store.studyLanguage,
-            search: search,
-            limit: fetchSize,
-        },
-        {
-            onSuccess: (res) => {
-                setUserList((prevList) => {
-                    if (prevList === sampleData) {
-                        return [...res.data.articles];
-                    } else {
-                        return [...prevList, ...res.data.articles];
-                    }
-                });
-                setUserOffset((prev) => prev + res.data.count);
-                setReady(true);
-            },
-            onError: (err) => {
-                console.log(err);
-                setReady(true);
-            },
-        }
-    );
-
-    const fetchByLibrary = useCallback(() => {
-        if (libraryInfo.libraryType === 'user') {
-            userRefetch();
-        } else if (libraryInfo.libraryType === 'system') {
-            sysRefetch();
-        }
-    }, [libraryInfo.libraryType, sysRefetch, userRefetch]);
 
     useEffect(() => {
-        fetchByLibrary();
-    }, [fetchByLibrary]);
+        refetch();
+    }, [refetch, libraryInfo.libraryType]);
 
     useEffect(() => {
         if (lastPage < currentPage) {
-            fetchByLibrary();
+            refetch();
         }
-    }, [currentPage, fetchByLibrary, lastPage]);
-
-    const isLoading =
-        libraryInfo.libraryType === 'system' ? sysIsLoading : userIsLoading;
+    }, [currentPage, refetch, lastPage]);
 
     useEffect(() => {
         if (isLoading && ready) {
@@ -135,11 +143,19 @@ const ArticleList: React.FC = () => {
         }
     }, [isLoading, ready]);
 
-    useEffect(() => {
-        setReady(false);
-    }, [libraryInfo.libraryType]);
-
-    if (userIsError || sysIsError) {
+    if (isError) {
+        return (
+            <Text
+                fontStyle="bold"
+                fontSize="28px"
+                width="100%"
+                mt={2}
+                color="white"
+                textAlign="center"
+            >
+                {t('article-fetch-error')}
+            </Text>
+        );
     } else if (list.length === 0) {
         return (
             <Text

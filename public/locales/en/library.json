@@ -7,7 +7,13 @@
   "library-select": "Library Selection",
   "select-a-library": "Select a library",
   "system-lib": "System Library",
-  "user-lib": "My Articles",
+  "user-saved": "My Saved Articles",
+  "user-created": "My Created Articles",
+  "all-user": "All User Articles",
   "no-articles": "There are no articles. Try picking a different library.",
-  "open": "Open"
+  "open": "Open",
+  "save": "Save",
+  "article-fetch-error": "There was an error fetching articles.",
+  "article-saved-before": "You've already saved this article.",
+  "article-saved-success": "Article saved successfully."
 }
