@@ -11,6 +11,7 @@ import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
 import { useSaveArticle } from '../../../net/requests/saveArticle';
+import { useRemoveArticle } from '../../../net/requests/removeArticle';
 
 interface Props {
     article: SimpleArticle;
@@ -84,6 +85,36 @@ const ArticleControls: React.FC<Props> = ({ article }) => {
         setIsLoading(false);
     }, [article.id, loadInfo, saveMutation, showToast, t]);
 
+    const removeMutation = useRemoveArticle();
+    const onRemove = useCallback(async () => {
+        setIsLoading(true);
+
+        const promise = removeMutation.mutateAsync({
+            article_id: article.id,
+        });
+        loadInfo.loadUntilResolve(promise);
+
+        const [err, data] = await promise;
+        if (err && data === undefined) {
+            showToast({
+                description: t('article-remove-error'),
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        } else {
+            // err === null && data !== undefined
+            console.log('success');
+            showToast({
+                description: t('article-remove-success'),
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+        setIsLoading(false);
+    }, [article.id, loadInfo, removeMutation, showToast, t]);
+
     return (
         <Flex direction="row" p="3px 0px" justify="flex-start">
             <Button
@@ -123,6 +154,46 @@ const ArticleControls: React.FC<Props> = ({ article }) => {
                     {t('save')}
                 </Button>
             )}
+            {libraryInfo.libraryType === 'user-saved' && (
+                <Button
+                    bgColor="#661919"
+                    color="white"
+                    border="2px solid white"
+                    _hover={{
+                        bgColor: 'white',
+                        color: '#661919',
+                    }}
+                    _active={{
+                        borderColor: '#ccc',
+                        bgColor: '#ccc',
+                    }}
+                    onClick={onRemove}
+                    disabled={isLoading}
+                    ml={3}
+                >
+                    {t('remove')}
+                </Button>
+            )}
+            {/* {libraryInfo.libraryType === 'user-created' && (
+                <Button
+                    bgColor="#661919"
+                    color="white"
+                    border="2px solid white"
+                    _hover={{
+                        bgColor: 'white',
+                        color: '#661919',
+                    }}
+                    _active={{
+                        borderColor: '#ccc',
+                        bgColor: '#ccc',
+                    }}
+                    onClick={onRemove}
+                    disabled={isLoading}
+                    ml={3}
+                >
+                    {t('delete')}
+                </Button>
+            )} */}
         </Flex>
     );
 };
