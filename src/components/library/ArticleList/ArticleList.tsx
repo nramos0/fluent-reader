@@ -38,7 +38,7 @@ const ArticleList: React.FC = () => {
 
     const [listData, setListData] = useState<ListData>({
         system: {
-            list: [],
+            list: sampleData,
             offset: 0,
         },
         'user-saved': {
@@ -121,7 +121,7 @@ const ArticleList: React.FC = () => {
             },
             onError: (err) => {
                 console.log(err);
-                setReady(true);
+                setReady(false);
             },
         }
     );
@@ -139,8 +139,6 @@ const ArticleList: React.FC = () => {
     useEffect(() => {
         if (isLoading && ready) {
             setReady(false);
-        } else if (!isLoading && !ready) {
-            setReady(true);
         }
     }, [isLoading, ready]);
 
