@@ -149,7 +149,12 @@ const ArticleList: React.FC = () => {
                     ...prevData.system,
                 },
                 'user-saved': {
-                    list: [article, ...prevData['user-saved'].list],
+                    list: [
+                        article,
+                        ...(prevData['user-saved'].list === sampleData
+                            ? []
+                            : prevData['user-saved'].list),
+                    ],
                     offset: prevData['user-saved'].offset + 1,
                 },
                 'user-created': {
