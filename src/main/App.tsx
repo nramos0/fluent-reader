@@ -14,8 +14,9 @@ import './App.css';
 import { useAuth } from '../components/general/AuthWrapper/AuthWrapper';
 import { authenticate } from '../net/requests/auth';
 import { useStore } from '../hooks/useStore';
-import { getWordData } from '../net/requests';
+import { useGetWordData } from '../net/requests';
 import { observer } from 'mobx-react';
+import { useGetUser } from '../net/requests/getUser';
 
 function App() {
     const auth = useAuth();
@@ -54,14 +55,23 @@ function App() {
 
     const store = useStore();
 
-    const userDataFetch = useCallback(async () => {
-        const [err, data] = await to(getWordData({}, auth.token));
-        if (err !== null || data === undefined) {
-            return;
-        }
+    const { wordData, promise: wordDataPromise } = useGetWordData();
+    const { user, promise: userPromise } = useGetUser();
 
-        store.setWordData(data.data.data);
-    }, [auth.token, store]);
+    useEffect(() => {
+        if (wordData !== null) {
+            store.setWordData(wordData);
+        }
+    }, [store, wordData]);
+
+    useEffect(() => {
+        if (user !== null) {
+            store.setUser(user);
+            i18nInitPromise.then(() => {
+                i18n.changeLanguage(user.display_lang);
+            });
+        }
+    }, [store, user]);
 
     useEffect(() => {
         setInitialLoadData((prevData) => {
@@ -73,16 +83,33 @@ function App() {
     }, [initialLoad]);
 
     useEffect(() => {
+        if (wordDataPromise === null) {
+            return;
+        }
+
         setInitialLoadData((prevData) => {
             return {
                 ...prevData,
-                promiseList: [...prevData.promiseList, userDataFetch()],
+                promiseList: [...prevData.promiseList, wordDataPromise],
             };
         });
-    }, [userDataFetch]);
+    }, [wordDataPromise]);
 
     useEffect(() => {
-        if (initialLoadData.promiseList.length === 2) {
+        if (userPromise === null) {
+            return;
+        }
+
+        setInitialLoadData((prevData) => {
+            return {
+                ...prevData,
+                promiseList: [...prevData.promiseList, userPromise],
+            };
+        });
+    }, [userPromise]);
+
+    useEffect(() => {
+        if (initialLoadData.promiseList.length === 3) {
             setInitialLoadData((prevData) => {
                 return {
                     ...prevData,

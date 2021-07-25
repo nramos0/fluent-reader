@@ -4,40 +4,40 @@ import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
 import { useEffect, useState } from 'react';
 import to from 'await-to-js';
 
-type GetWordDataReqProps = {};
+type GetUserReqProps = {};
 
-type GetWordDataResData = {
-    data: WordData;
+type GetUserResData = {
+    user: SimpleUser;
 };
 
-export const getWordData: API.Request<
-    GetWordDataReqProps,
-    GetWordDataResData
-> = async (data, token) => {
-    const url = ENDPOINTS.user.data._;
+export const getUser: API.Request<GetUserReqProps, GetUserResData> = async (
+    data,
+    token
+) => {
+    const url = ENDPOINTS.user._;
     return request(url, data, 'GET', {
         'content-type': 'application/json',
         authorization: token,
     });
 };
 
-export const useGetWordData = () => {
+export const useGetUser = () => {
     const auth = useAuth();
-    const [wordData, setWordData] = useState<WordData | null>(null);
+    const [user, setUser] = useState<SimpleUser | null>(null);
     const [promise, setPromise] = useState<Promise<void> | null>(null);
 
     useEffect(() => {
         const fetch = async () => {
-            const [err, data] = await to(getWordData({}, auth.token));
+            const [err, data] = await to(getUser({}, auth.token));
             if (err !== null || data === undefined) {
                 return;
             }
 
-            setWordData(data.data.data);
+            setUser(data.data.user);
         };
 
         setPromise(fetch());
     }, [auth.token]);
 
-    return { wordData, promise };
+    return { user, promise };
 };

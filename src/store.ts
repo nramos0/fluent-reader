@@ -2,20 +2,41 @@ import React from 'react';
 import { observable } from 'mobx';
 import { updateWordStatus, updateWordStatusBatch } from './net/requests/index';
 import { updateWordDefinition } from './net/requests/updateWordDefinition';
+import { updateUser } from './net/requests/updateUser';
 
 const definitionUpdateCooldown = 1500;
 
 export const store: Store = observable({
     token: '',
 
-    studyLanguage: 'en',
-    setStudyLanguage(newLanguage) {
-        this.studyLanguage = newLanguage;
+    studyLang() {
+        return this.getUser().study_lang;
     },
 
-    displayLanguage: 'en',
+    setStudyLanguage(newLanguage) {
+        this.getUser().study_lang = newLanguage;
+
+        updateUser(
+            {
+                study_lang: newLanguage,
+            },
+            this.token
+        );
+    },
+
+    displayLang() {
+        return this.getUser().display_lang;
+    },
+
     setDisplayLanguage(newLanguage) {
-        this.displayLanguage = newLanguage;
+        this.getUser().display_lang = newLanguage;
+
+        updateUser(
+            {
+                display_lang: newLanguage,
+            },
+            this.token
+        );
 
         if (!this.i18n) {
             return;
@@ -24,46 +45,13 @@ export const store: Store = observable({
         return this.i18n.changeLanguage(newLanguage);
     },
 
-    wordData: {
-        word_status_data: {
-            en: {
-                known: {
-                    both: 1,
-                    did: 1,
-                    from: 1,
-                    in: 1,
-                    left: 1,
-                    see: 1,
-                    something: 1,
-                },
-                learning: {
-                    i: 1,
-                    a: 1,
-                    and: 1,
-                    as: 1,
-                    his: 1,
-                    like: 1,
-                    some: 1,
-                    that: 1,
-                    the: 1,
-                },
-            },
-            zh: {
-                known: {},
-                learning: {},
-            },
-        },
-        word_definition_data: {
-            en: {
-                at: '在',
-                dark: '暗',
-                did: '有',
-                in: '在',
-                us: '我们',
-                chapter: '章',
-            },
-            zh: {},
-        },
+    wordData: null,
+
+    getWordData() {
+        if (this.wordData === null) {
+            throw new Error('Word data is null, but getWordStatus was called');
+        }
+        return this.wordData;
     },
 
     setWordData(wordData) {
@@ -73,9 +61,7 @@ export const store: Store = observable({
     getWordStatus(word) {
         word = word.toLowerCase();
 
-        const wordStatusData = this.wordData.word_status_data[
-            this.studyLanguage
-        ];
+        const wordStatusData = this.getWordStatusData();
 
         let status: WordStatus = 'new';
         if (wordStatusData.known[word] === 1) {
@@ -87,12 +73,18 @@ export const store: Store = observable({
         return status;
     },
 
+    getWordStatusData() {
+        return this.getWordData().word_status_data[this.studyLang()];
+    },
+
+    getWordDefinitionData() {
+        return this.getWordData().word_definition_data[this.studyLang()];
+    },
+
     updateWordStatus(word, newStatus, isBatch) {
         word = word.toLowerCase();
 
-        const wordStatusData = this.wordData.word_status_data[
-            this.studyLanguage
-        ];
+        const wordStatusData = this.getWordStatusData();
 
         let didUpdate = false;
 
@@ -134,7 +126,7 @@ export const store: Store = observable({
         if (!isBatch && didUpdate) {
             updateWordStatus(
                 {
-                    lang: this.studyLanguage,
+                    lang: this.studyLang(),
                     word: word,
                     status: newStatus,
                 },
@@ -144,10 +136,11 @@ export const store: Store = observable({
 
         return didUpdate;
     },
+
     updateWordStatusBatch(words, newStatus) {
         updateWordStatusBatch(
             {
-                lang: this.studyLanguage,
+                lang: this.studyLang(),
                 words: words,
                 status: newStatus,
             },
@@ -167,9 +160,7 @@ export const store: Store = observable({
         }
         word = word.toLowerCase();
 
-        this.wordData.word_definition_data[this.studyLanguage][
-            word
-        ] = definition;
+        this.getWordDefinitionData()[word] = definition;
 
         const currentTime = new Date().getTime();
         if (currentTime - this.lastDefUpdate < definitionUpdateCooldown) {
@@ -185,7 +176,7 @@ export const store: Store = observable({
 
         updateWordDefinition(
             {
-                lang: this.studyLanguage,
+                lang: this.studyLang(),
                 word: word,
                 definition: definition,
             },
@@ -197,9 +188,7 @@ export const store: Store = observable({
     },
 
     getDefinition(word) {
-        return this.wordData.word_definition_data[this.studyLanguage][
-            word.toLowerCase()
-        ];
+        return this.getWordDefinitionData()[word.toLowerCase()];
     },
 
     lastDefUpdate: 0,
@@ -211,6 +200,19 @@ export const store: Store = observable({
 
     setI18n(val) {
         this.i18n = val;
+    },
+
+    user: null,
+
+    getUser() {
+        if (this.user === null) {
+            throw new Error('user is null, but getUser() was called');
+        }
+        return this.user;
+    },
+
+    setUser(user) {
+        this.user = user;
     },
 } as Store);
 

@@ -52,7 +52,7 @@ const AddArticleForm = () => {
             content: Yup.string().required(required).max(100000, tooLong),
             language: Yup.string()
                 .required(required)
-                .oneOf(['en', 'zh-CN'], t('must-select-language')),
+                .oneOf(['en', 'zh'], t('must-select-language')),
             tags: Yup.array(Yup.string()),
             isPrivate: Yup.bool(),
         });

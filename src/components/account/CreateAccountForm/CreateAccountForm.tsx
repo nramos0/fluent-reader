@@ -59,10 +59,10 @@ const CreateAccountForm = ({ returnToLogin }: Props) => {
                 .oneOf([Yup.ref('password'), ''], t('pass-must-match')),
             studyLang: Yup.string()
                 .required(required)
-                .oneOf(['en', 'zh-CN'], t('must-select-study-lang')),
+                .oneOf(['en', 'zh'], t('must-select-study-lang')),
             displayLang: Yup.string()
                 .required(required)
-                .oneOf(['en', 'zh-CN'], t('must-select-display-lang')),
+                .oneOf(['en', 'zh'], t('must-select-display-lang')),
         });
     }, [t]);
 

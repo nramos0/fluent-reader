@@ -24,7 +24,7 @@ const LanguageField = (props: FieldHookConfig<string>) => {
                     {t('language-default')}
                 </option>
                 <option value="en">{t('common:en')}</option>
-                <option value="zh-CN">{t('common:zh-CN')}</option>
+                <option value="zh">{t('common:zh')}</option>
             </Select>
             <FormHelperText textAlign="left">
                 {t('language-info')}

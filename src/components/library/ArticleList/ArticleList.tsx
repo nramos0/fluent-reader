@@ -79,7 +79,7 @@ const ArticleList: React.FC = () => {
     const { refetch, isLoading, isError } = useGetArticleList(
         {
             offset: offset,
-            lang: store.studyLanguage,
+            lang: store.studyLang(),
             search: search,
             limit: fetchSize,
         },

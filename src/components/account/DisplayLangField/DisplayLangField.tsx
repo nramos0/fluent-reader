@@ -42,7 +42,7 @@ const DisplayLangField = (props: FieldHookConfig<string>) => {
                 <option value="default" disabled={true}>
                     {t('display-lang-info')}
                 </option>
-                <option value="zh-CN">{t('common:zh-CN')}</option>
+                <option value="zh">{t('common:zh')}</option>
                 <option value="en">{t('common:en')}</option>
             </Select>
             <FormErrorMessage>{meta.error}</FormErrorMessage>

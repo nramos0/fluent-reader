@@ -50,13 +50,11 @@ const DefinitionSearch: React.FC<{}> = () => {
     const { t } = useTranslation('reader');
     const store = useStore();
 
-    const displayLang = store.displayLanguage;
-    const studyLang = store.studyLanguage;
+    const displayLang = store.displayLang();
+    const studyLang = store.studyLang();
 
-    const studyLangDicts =
-        sites[studyLang === 'zh' ? 'zh-CN' : studyLang][studyLang];
-    const displayLangDicts =
-        sites[studyLang === 'zh' ? 'zh-CN' : studyLang][displayLang];
+    const studyLangDicts = sites[studyLang][studyLang];
+    const displayLangDicts = sites[studyLang][displayLang];
 
     return (
         <Menu>

@@ -1,6 +1,8 @@
 declare interface SimpleUser {
     id: number;
     username: string;
+    display_lang: Language;
+    study_lang: Language;
 }
 
 declare interface Timestamp {
@@ -44,21 +46,25 @@ declare interface PageTypeData {
     pages: string[][];
 }
 
+declare interface WordStatusData {
+    en: SingleLangStatusData;
+    zh: SingleLangStatusData;
+}
+
+declare interface SingleLangStatusData {
+    known: Dictionary<number>;
+    learning: Dictionary<number>;
+}
+declare type SingleLangDefData = Dictionary<string>;
+
+declare interface WordDefinitionData {
+    en: SingleLangDefData;
+    zh: SingleLangDefData;
+}
+
 declare interface WordData {
-    word_status_data: {
-        en: {
-            known: Dictionary<number>;
-            learning: Dictionary<number>;
-        };
-        zh: {
-            known: Dictionary<number>;
-            learning: Dictionary<number>;
-        };
-    };
-    word_definition_data: {
-        en: Dictionary<string>;
-        zh: Dictionary<string>;
-    };
+    word_status_data: WordStatusData;
+    word_definition_data: WordDefinitionData;
 }
 
 declare type LibraryType =

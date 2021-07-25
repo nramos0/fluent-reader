@@ -133,9 +133,7 @@ const readerStore = observable({
             return;
         }
 
-        const wordStatusData = this.store.wordData.word_status_data[
-            this.store.studyLanguage
-        ];
+        const wordStatusData = this.store.getWordStatusData();
 
         const newWords: string[] = [];
 

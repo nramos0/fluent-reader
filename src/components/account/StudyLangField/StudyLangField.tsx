@@ -23,7 +23,7 @@ const StudyLangField = (props: FieldHookConfig<string>) => {
                     {t('study-lang-info')}
                 </option>
                 <option value="en">{t('common:en')}</option>
-                <option value="zh-CN">{t('common:zh-CN')}</option>
+                <option value="zh">{t('common:zh')}</option>
             </Select>
             <FormErrorMessage>{meta.error}</FormErrorMessage>
         </FormControl>

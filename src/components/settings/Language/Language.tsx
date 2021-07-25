@@ -25,7 +25,7 @@ const Language: React.FC = () => {
                 </Text>
                 <Select
                     flex={7}
-                    value={store.displayLanguage}
+                    value={store.displayLang()}
                     onChange={(e) => {
                         loadUntilResolve(
                             store.setDisplayLanguage(e.target.value)
@@ -35,7 +35,7 @@ const Language: React.FC = () => {
                     <option disabled={true}>
                         {t('account:display-lang-info')}
                     </option>
-                    <option value="zh-CN">{t('common:zh-CN')}</option>
+                    <option value="zh">{t('common:zh')}</option>
                     <option value="en">{t('common:en')}</option>
                 </Select>
             </Flex>
@@ -45,7 +45,7 @@ const Language: React.FC = () => {
                 </Text>
                 <Select
                     flex={7}
-                    value={store.studyLanguage}
+                    value={store.studyLang()}
                     onChange={(e) => {
                         store.setStudyLanguage(e.target.value);
                     }}
@@ -53,7 +53,7 @@ const Language: React.FC = () => {
                     <option disabled={true}>
                         {t('account:study-lang-info')}
                     </option>
-                    <option value="zh-CN">{t('common:zh-CN')}</option>
+                    <option value="zh">{t('common:zh')}</option>
                     <option value="en">{t('common:en')}</option>
                 </Select>
             </Flex>

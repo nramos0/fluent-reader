@@ -36,7 +36,7 @@ const getRequestData = (data: object, contentType: ContentType) => {
 export const request = async <ReqProps extends object>(
     url: string,
     dataInput: ReqProps,
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
     headers: HeaderData
 ) => {
     const data = getRequestData(dataInput, headers['content-type']);

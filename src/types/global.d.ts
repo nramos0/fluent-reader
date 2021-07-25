@@ -5,14 +5,19 @@ declare interface Dictionary<T> {
 declare interface Store {
     token: string;
 
-    studyLanguage: Language;
+    studyLang: () => Language;
     setStudyLanguage: (newLanguage: Lagnuage) => void;
 
-    displayLanguage: Language;
+    displayLang: () => Language;
     setDisplayLanguage: (newLanguage: Lagnuage) => Promise<unknown>;
 
-    wordData: WordData;
+    wordData: WordData | null;
     setWordData: (wordData: WordData) => void;
+    getWordData: () => WordData;
+
+    getWordStatusData: () => SingleLangStatusData;
+    getWordDefinitionData: () => SingleLangDefData;
+
     getWordStatus: (word: string) => WordStatus;
     updateWordStatus: (
         word: string,
@@ -35,6 +40,10 @@ declare interface Store {
 
     i18n: i18n | null;
     setI18n: (val: any) => void;
+
+    user: SimpleUser | null;
+    getUser: () => SimpleUser;
+    setUser: (user: SimpleUser) => void;
 }
 
 declare type Language = 'en' | 'zh';
