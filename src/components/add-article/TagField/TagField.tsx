@@ -67,9 +67,18 @@ const TagField = (props: FieldHookConfig<string[]>) => {
         }
     }, [currentTagInput, helpers, t, tagMap, tags]);
 
+    const inputRef = React.useRef<HTMLInputElement>(null);
+
     const onKeyUp = useCallback(
         (e: KeyboardEvent) => {
-            if (e.key === 'Enter') {
+            if (inputRef === null) {
+                return;
+            }
+
+            if (
+                document.activeElement === inputRef.current &&
+                e.key === 'Enter'
+            ) {
                 onTagAdd();
             }
         },
@@ -113,6 +122,7 @@ const TagField = (props: FieldHookConfig<string[]>) => {
                     type="text"
                     id="article-tags"
                     mr={3}
+                    ref={inputRef}
                 />
                 <AddIcon w={5} h={5} onClick={onTagAdd} />
             </Flex>

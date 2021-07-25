@@ -146,8 +146,13 @@ const AddArticleForm = () => {
                         bgColor="#661919"
                         color="white"
                         w="100%"
-                        type="submit"
+                        type="button"
                         border="2px solid #661919"
+                        onClick={() => {
+                            props.submitForm().then(() => {
+                                props.validateForm();
+                            });
+                        }}
                         _hover={{
                             bgColor: 'white',
                             color: '#661919',
