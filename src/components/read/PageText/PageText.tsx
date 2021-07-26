@@ -123,11 +123,10 @@ const PageText: React.FC<Props> = ({ page, pageOffset }) => {
 
     const onUnderline = useCallback(
         (start: number, end: number) => {
-            if (readerStore.underlineRanges === null) {
-                return;
-            }
-
-            const newRanges = [...readerStore.underlineRanges];
+            const newRanges =
+                readerStore.underlineRanges === null
+                    ? []
+                    : [...readerStore.underlineRanges];
 
             const selection: RangeSelect = {
                 start: start + pageOffset,

@@ -181,12 +181,7 @@ const readerStore = observable({
         this.penColor = color;
     },
 
-    underlineRanges: [
-        { selection: { start: 0, end: 40 }, color: 'red' },
-        { selection: { start: 16, end: 16 }, color: 'blue' },
-        { selection: { start: 80, end: 91 }, color: 'green' },
-        { selection: { start: 215, end: 229 }, color: 'black' },
-    ],
+    underlineRanges: null,
     setUnderlineRanges(ranges: UnderlineRange[]) {
         this.underlineRanges = ranges;
     },
