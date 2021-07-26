@@ -72,3 +72,23 @@ declare type LibraryType =
     | 'user-saved'
     | 'user-created'
     | 'all-user';
+
+type UnderlineColor =
+    | 'red'
+    | 'orange'
+    | 'yellow'
+    | 'green'
+    | 'blue'
+    | 'purple'
+    | 'gray'
+    | 'black';
+
+declare interface RangeSelect {
+    start: number;
+    end: number;
+}
+
+declare interface UnderlineRange {
+    selection: RangeSelect;
+    color: UnderlineColor;
+}

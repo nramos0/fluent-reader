@@ -6,6 +6,7 @@ import { isStopWord } from '../../../util/lang';
 import { observer } from 'mobx-react';
 import { useReaderStore } from '../Reader/Reader';
 import './PageText.css';
+import useDetectUnderline from '../../../hooks/useDetectUnderline';
 
 interface WordProps {
     word: string;
@@ -37,10 +38,12 @@ const Word: React.FC<WordProps> = ({
 
 interface Props {
     page: string[];
+    pageOffset: number;
 }
 
-const PageText: React.FC<Props> = ({ page }) => {
+const PageText: React.FC<Props> = ({ page, pageOffset }) => {
     const store = useStore();
+    const readerStore = useReaderStore();
 
     /**
      * Todo: move this work to the backend
@@ -52,6 +55,8 @@ const PageText: React.FC<Props> = ({ page }) => {
         wordIndexMap,
     } = useMemo(() => {
         const wordCount = page.length;
+
+        const underlineMap = readerStore.underlineMap!;
 
         const classNameMap: string[] = [];
         classNameMap[wordCount] = ''; // extend array (1 extra)
@@ -68,6 +73,11 @@ const PageText: React.FC<Props> = ({ page }) => {
             const word = page[i];
             if (isStopWord(word)) {
                 classNameMap[i] = '';
+                if (underlineMap[i + pageOffset] !== undefined) {
+                    classNameMap[i] += ` underline-${
+                        underlineMap[i + pageOffset]
+                    }`;
+                }
                 stopWordMap[i] = true;
                 continue;
             }
@@ -97,6 +107,10 @@ const PageText: React.FC<Props> = ({ page }) => {
             }
 
             classNameMap[i] = className;
+
+            if (underlineMap[i + pageOffset] !== undefined) {
+                classNameMap[i] += ` underline-${underlineMap[i + pageOffset]}`;
+            }
         }
 
         return {
@@ -105,9 +119,33 @@ const PageText: React.FC<Props> = ({ page }) => {
             wordStatusMap: wordStatusMap,
             wordIndexMap: wordIndexMap,
         };
-    }, [store, page]);
+    }, [page, pageOffset, readerStore.underlineMap, store]);
 
-    const readerStore = useReaderStore();
+    const onUnderline = useCallback(
+        (start: number, end: number) => {
+            if (readerStore.underlineRanges === null) {
+                return;
+            }
+
+            const newRanges = [...readerStore.underlineRanges];
+
+            const selection: RangeSelect = {
+                start: start + pageOffset,
+                end: end + pageOffset,
+            };
+
+            newRanges.push({
+                selection,
+                color: readerStore.penColor,
+            });
+
+            readerStore.setUnderlineRanges(newRanges);
+            readerStore.computeUnderlineMap();
+        },
+        [pageOffset, readerStore]
+    );
+
+    useDetectUnderline(onUnderline);
 
     useEffect(() => {
         // no need to separate into two effects.
@@ -136,8 +174,10 @@ const PageText: React.FC<Props> = ({ page }) => {
                 return;
             }
 
-            const word = e.target.innerText as string;
-            const index = e.target.id;
+            const element = e.target;
+
+            const word = element.innerText as string;
+            const index = element.id;
             readerStore.setCurrentWord(
                 word,
                 readerStore.wordStatusMap[index],
@@ -184,6 +224,7 @@ const PageText: React.FC<Props> = ({ page }) => {
             overflowY="auto"
             textAlign="left"
             userSelect="none"
+            id="reader-text"
         >
             {page.map((word, index) => (
                 <Word

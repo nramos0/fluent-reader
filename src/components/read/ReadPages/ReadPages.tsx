@@ -33,6 +33,11 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
         }
     }, [currPageIndex, readerStore.visitedPageIndices]);
 
+    useEffect(() => {
+        readerStore.computePageOffsetMap(pages);
+        readerStore.computeUnderlineMap();
+    }, [pages, readerStore]);
+
     return (
         <Flex
             direction="column"
@@ -48,7 +53,14 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
             margin="0px 7.5px 0px 15px"
             color="#222"
         >
-            <PageText page={currPage} />
+            {readerStore.underlineMap !== null &&
+                readerStore.pageOffsetMap !== null && (
+                    <PageText
+                        page={currPage}
+                        pageOffset={readerStore.pageOffsetMap[currPageIndex]}
+                    />
+                )}
+
             <Box w="100%" border="thin solid #d16161" />
             <Flex align="center" direction="row" height="5%" p="5px">
                 <Text as="span" mr={1}>

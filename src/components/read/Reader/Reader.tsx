@@ -35,6 +35,19 @@ interface ReaderStore {
 
     doesPageSkipMoveToKnown: boolean;
     toggleDoesPageSkipMoveToKnown: () => void;
+
+    penEnabled: boolean;
+    togglePenEnabled: () => void;
+    penColor: UnderlineColor;
+    setPenColor: (color: UnderlineColor) => void;
+
+    underlineRanges: UnderlineRange[] | null;
+    setUnderlineRanges: (ranges: UnderlineRange[]) => void;
+    underlineMap: (UnderlineColor | undefined)[] | null;
+    computeUnderlineMap: () => boolean;
+
+    pageOffsetMap: number[] | null;
+    computePageOffsetMap: (pages: string[][]) => void;
 }
 
 const readerStore = observable({
@@ -154,6 +167,77 @@ const readerStore = observable({
 
     toggleDoesPageSkipMoveToKnown() {
         this.doesPageSkipMoveToKnown = !this.doesPageSkipMoveToKnown;
+    },
+
+    penEnabled: false,
+
+    togglePenEnabled() {
+        this.penEnabled = !this.penEnabled;
+    },
+
+    penColor: 'black',
+
+    setPenColor(color) {
+        this.penColor = color;
+    },
+
+    underlineRanges: [
+        { selection: { start: 0, end: 40 }, color: 'red' },
+        { selection: { start: 16, end: 16 }, color: 'blue' },
+        { selection: { start: 80, end: 91 }, color: 'green' },
+        { selection: { start: 215, end: 229 }, color: 'black' },
+    ],
+    setUnderlineRanges(ranges: UnderlineRange[]) {
+        this.underlineRanges = ranges;
+    },
+    underlineMap: [] as (UnderlineColor | undefined)[],
+    computeUnderlineMap() {
+        if (
+            this.underlineRanges === null ||
+            this.store === null ||
+            this.store.readArticle === null
+        ) {
+            return false;
+        }
+
+        let length = 0;
+        const article = this.store.readArticle;
+        const pages = article.page_data[2].pages;
+
+        for (let i = 0; i < pages.length; ++i) {
+            length += pages[i].length;
+        }
+
+        const underlineMap: (UnderlineColor | undefined)[] = [];
+        underlineMap[length] = undefined; // extend the array
+
+        const underlines = this.underlineRanges;
+        const underlineCount = underlines.length;
+
+        for (let i = 0; i < underlineCount; ++i) {
+            const underline = underlines[i];
+            const range = underline.selection;
+            for (let j = range.start; j <= range.end; ++j) {
+                underlineMap[j] = underline.color;
+            }
+        }
+
+        this.underlineMap = underlineMap;
+
+        return true;
+    },
+
+    pageOffsetMap: null,
+    computePageOffsetMap(pages) {
+        const map: number[] = [];
+
+        map[0] = 0;
+
+        for (let i = 1; i < pages.length; ++i) {
+            map[i] = map[i - 1] + pages[i].length;
+        }
+
+        this.pageOffsetMap = map;
     },
 } as ReaderStore);
 
