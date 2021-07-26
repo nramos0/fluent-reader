@@ -195,6 +195,9 @@ export const store: Store = observable({
     defUpdateCache: null,
 
     readArticle: null,
+    setReadArticle(article) {
+        this.readArticle = article;
+    },
 
     i18n: null,
 

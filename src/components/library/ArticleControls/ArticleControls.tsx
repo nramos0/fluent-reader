@@ -50,7 +50,7 @@ const ArticleControls: React.FC<Props> = ({
             return;
         }
 
-        store.readArticle = data.data.article;
+        store.setReadArticle(data.data.article);
         history.push('/app/read');
     }, [article.id, article.is_system, history, loadInfo, store, token]);
 
