@@ -3,12 +3,12 @@ import { Button, Heading, useToast, Text, Link } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
-import { useHistory } from 'react-router-dom';
 import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
 import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
 import { login } from '../../../net/requests/login';
 import { useAuth } from '../../general/AuthWrapper/AuthWrapper';
+import { useAppContext } from '../../../main/App';
 
 interface Props {
     goToRegistration: () => void;
@@ -28,8 +28,9 @@ const LoginForm = ({ goToRegistration }: Props) => {
     const { t } = useTranslation('account');
     const { loadUntilResolve } = useLoadInfo();
     const showToast = useToast();
-    const history = useHistory();
     const auth = useAuth();
+
+    const appInfo = useAppContext();
 
     const onSubmit = useCallback(
         async (
@@ -68,11 +69,10 @@ const LoginForm = ({ goToRegistration }: Props) => {
 
                 auth.setToken(resData.data.token);
                 auth.setRefreshToken(resData.data.refresh_token);
-
-                history.push('/app');
+                appInfo.setShouldFetchUserData(true);
             }
         },
-        [auth, history, loadUntilResolve, showToast, t]
+        [appInfo, auth, loadUntilResolve, showToast, t]
     );
     return (
         <Formik initialValues={loginFormInitialValues} onSubmit={onSubmit}>

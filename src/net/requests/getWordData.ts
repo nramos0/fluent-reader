@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '../apiEndpoints';
 import { request } from '../request';
 import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import to from 'await-to-js';
 
 type GetWordDataReqProps = {};
@@ -24,20 +24,22 @@ export const getWordData: API.Request<
 export const useGetWordData = () => {
     const auth = useAuth();
     const [wordData, setWordData] = useState<WordData | null>(null);
-    const [promise, setPromise] = useState<Promise<void> | null>(null);
-
-    useEffect(() => {
+    const [promise, setPromise] = useState<Promise<unknown> | null>(null);
+    const fetch = useCallback(() => {
         const fetch = async () => {
             const [err, data] = await to(getWordData({}, auth.token));
             if (err !== null || data === undefined) {
-                return;
+                return null;
             }
 
             setWordData(data.data.data);
-        };
 
-        setPromise(fetch());
+            return data.data.data;
+        };
+        const promise = fetch();
+        setPromise(promise);
+        return promise;
     }, [auth.token]);
 
-    return { wordData, promise };
+    return { wordData, promise, fetch };
 };
