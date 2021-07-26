@@ -3,6 +3,7 @@ import { useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useLoadInfo } from '../LoadWrapper/LoadWrapper';
+import { useAppContext } from '../../../main/App';
 
 const Logout: React.FC = () => {
     const { t } = useTranslation();
@@ -10,11 +11,15 @@ const Logout: React.FC = () => {
     const history = useHistory();
     const { loadUntilResolve } = useLoadInfo();
 
+    const appInfo = useAppContext();
+
     useEffect(() => {
         const logout = async () => {
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
-            history.push('/account');
+            localStorage.removeItem('lastPage');
+            appInfo.setHasData(false);
+            appInfo.setIsLoggingOut(true);
             showToast({
                 title: t('logout-success'),
                 status: 'success',
@@ -23,7 +28,7 @@ const Logout: React.FC = () => {
             });
         };
         loadUntilResolve(logout());
-    }, [history, loadUntilResolve, showToast, t]);
+    }, [appInfo, history, loadUntilResolve, showToast, t]);
 
     return null;
 };
