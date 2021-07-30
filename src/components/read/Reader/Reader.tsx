@@ -8,6 +8,45 @@ import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
+const binarySearch = <T extends unknown>(
+    arr: T[],
+    item: T,
+    compare: (a: T, b: T) => number
+) => {
+    if (arr.length === 0) return -1;
+    else if (compare(arr[arr.length - 1], item) <= 0) {
+        return arr.length;
+    }
+
+    let min = 0;
+    let max = arr.length;
+
+    while (max >= min) {
+        const mid = Math.floor((min + max) / 2);
+        const comparison1 = mid > 0 ? compare(arr[mid - 1], item) : -1;
+        const comparison2 = compare(arr[mid], item);
+
+        if (comparison1 <= 0) {
+            if (comparison2 >= 0) {
+                // item is greater than or equal to arr[mid - 1] and less than or equal to arr[mid]
+                return mid;
+            } else {
+                // item is greater than or equal to both arr[mid] and arr[mid - 1]
+                min = mid + 1;
+            }
+        } else {
+            // item is less than arr[mid - 1], so it is certainly less than arr[mid]
+            max = mid - 1;
+        }
+    }
+
+    return -1;
+};
+
+const compare = <T extends number>(a: T, b: T) => {
+    return a - b;
+};
+
 interface ReaderStore {
     store: Store | null;
 
@@ -26,7 +65,9 @@ interface ReaderStore {
     updateWordStatus: (newStatus: WordStatus) => void;
 
     wordStatusMap: WordStatus[] | null;
+
     wordIndexMap: Dictionary<number[]> | null;
+    setWordIndexMap: (map: Dictionary<number[]>) => void;
 
     visitedPageIndices: Dictionary<number>;
     clearVisitedPages: () => void;
@@ -43,11 +84,20 @@ interface ReaderStore {
 
     underlineRanges: UnderlineRange[] | null;
     setUnderlineRanges: (ranges: UnderlineRange[]) => void;
-    underlineMap: (UnderlineColor | undefined)[] | null;
+    underlineMap: Dictionary<UnderlineColor | undefined> | null;
     computeUnderlineMap: () => boolean;
 
     pageOffsetMap: number[] | null;
     computePageOffsetMap: (pages: string[][]) => void;
+
+    pageIndexRange: {
+        start: number;
+        end: number;
+    } | null;
+    computePageIndexRange: (page: number, length: number) => void;
+
+    pageIndex: number;
+    setPageIndex: (pageIndex: number) => void;
 }
 
 const readerStore = observable({
@@ -71,7 +121,9 @@ const readerStore = observable({
             this.currentWord === null ||
             this.currentWord.status === newStatus ||
             this.wordStatusMap === null ||
-            this.wordIndexMap === null
+            this.wordIndexMap === null ||
+            this.pageIndexRange === null ||
+            this.pageOffsetMap === null
         ) {
             return;
         }
@@ -121,16 +173,50 @@ const readerStore = observable({
         const otherOccurrences = this.wordIndexMap[
             this.currentWord.word.toLowerCase()
         ];
-        for (const index of otherOccurrences) {
-            const otherWordElement = wordList[index];
+
+        const pageStart = this.pageIndexRange.start;
+        const pageEnd = this.pageIndexRange.end;
+
+        // binary search to find the start of the current page range
+        const startIndex = binarySearch(otherOccurrences, pageStart, compare);
+        if (startIndex === -1) {
+            console.error(
+                'updateWordStatus otherOccurrences startIndex search failed! pageStart:',
+                pageStart,
+                'otherOccurrences: ',
+                otherOccurrences
+            );
+            return;
+        }
+
+        const endIndex = binarySearch(otherOccurrences, pageEnd, compare);
+        if (endIndex === -1) {
+            console.error(
+                'updateWordStatus otherOccurrences endIndex search failed! pageEnd:',
+                pageEnd,
+                'otherOccurrences: ',
+                otherOccurrences
+            );
+            return;
+        }
+
+        const pageOffset = this.pageOffsetMap[this.pageIndex];
+
+        for (let index = startIndex; index < endIndex; ++index) {
+            const wordListIndex = otherOccurrences[index] - pageOffset;
+            const otherWordElement = wordList[wordListIndex];
 
             otherWordElement.className = newClassName;
-            this.wordStatusMap[index] = newStatus;
+            this.wordStatusMap[wordListIndex] = newStatus;
         }
     },
 
     wordStatusMap: null,
+
     wordIndexMap: null,
+    setWordIndexMap(map) {
+        this.wordIndexMap = map;
+    },
 
     visitedPageIndices: {},
     clearVisitedPages() {
@@ -185,7 +271,7 @@ const readerStore = observable({
     setUnderlineRanges(ranges: UnderlineRange[]) {
         this.underlineRanges = ranges;
     },
-    underlineMap: [] as (UnderlineColor | undefined)[],
+    underlineMap: {},
     computeUnderlineMap() {
         if (
             this.underlineRanges === null ||
@@ -203,7 +289,7 @@ const readerStore = observable({
             length += pages[i].length;
         }
 
-        const underlineMap: (UnderlineColor | undefined)[] = [];
+        const underlineMap: Dictionary<UnderlineColor | undefined> = {};
         underlineMap[length] = undefined; // extend the array
 
         const underlines = this.underlineRanges;
@@ -229,10 +315,30 @@ const readerStore = observable({
         map[0] = 0;
 
         for (let i = 1; i < pages.length; ++i) {
-            map[i] = map[i - 1] + pages[i].length;
+            map[i] = map[i - 1] + pages[i - 1].length;
         }
 
         this.pageOffsetMap = map;
+    },
+
+    pageIndexRange: null,
+    computePageIndexRange(page: number, length: number) {
+        if (this.pageOffsetMap === null) {
+            return;
+        }
+
+        const start = this.pageOffsetMap[page];
+        const end = start + length;
+
+        this.pageIndexRange = {
+            start,
+            end,
+        };
+    },
+
+    pageIndex: 0,
+    setPageIndex(pageIndex) {
+        this.pageIndex = pageIndex;
     },
 } as ReaderStore);
 
@@ -334,7 +440,10 @@ const Reader: React.FC<{}> = () => {
                     </Flex>
                 ) : (
                     <>
-                        <ReadPages pages={article.page_data[2].pages} />
+                        <ReadPages
+                            pages={article.page_data[2].pages}
+                            wordIndexMap={article.word_index_map}
+                        />
                         <ReaderSidebar />
                     </>
                 )}

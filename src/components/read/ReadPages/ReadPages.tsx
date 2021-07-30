@@ -14,12 +14,14 @@ import PageFooter from '../PageFooter/PageFooter';
 import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
+import { useStore } from '../../../hooks/useStore';
 
 interface Props {
     pages: string[][];
+    wordIndexMap: Dictionary<number[]>;
 }
 
-const ReadPages: React.FC<Props> = ({ pages }) => {
+const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
     const { t } = useTranslation();
     const [currPageIndex, setCurrPageIndex] = useState(0);
     const pageCountM1 = pages.length - 1;
@@ -28,16 +30,31 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
     const readerStore = useReaderStore();
 
     useEffect(() => {
+        readerStore.setPageIndex(currPageIndex);
+    }, [currPageIndex, readerStore]);
+
+    useEffect(() => {
         if (readerStore.visitedPageIndices[currPageIndex] === undefined) {
             readerStore.visitedPageIndices[currPageIndex] = 1;
         }
     }, [currPageIndex, readerStore.visitedPageIndices]);
 
     useEffect(() => {
+        readerStore.setWordIndexMap(wordIndexMap);
         readerStore.computePageOffsetMap(pages);
         readerStore.computeUnderlineMap();
-    }, [pages, readerStore]);
+    }, [pages, readerStore, wordIndexMap]);
 
+    useEffect(() => {
+        readerStore.computePageIndexRange(currPageIndex, currPage.length);
+    }, [
+        currPage.length,
+        currPageIndex,
+        readerStore,
+        readerStore.pageOffsetMap,
+    ]);
+
+    const store = useStore();
     return (
         <Flex
             direction="column"
@@ -54,10 +71,12 @@ const ReadPages: React.FC<Props> = ({ pages }) => {
             color="#222"
         >
             {readerStore.underlineMap !== null &&
-                readerStore.pageOffsetMap !== null && (
+                readerStore.pageOffsetMap !== null &&
+                store.readArticle !== null && (
                     <PageText
                         page={currPage}
                         pageOffset={readerStore.pageOffsetMap[currPageIndex]}
+                        stopWordMap={store.readArticle.stop_word_map}
                     />
                 )}
 

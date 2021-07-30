@@ -12,38 +12,46 @@ declare interface Timestamp {
 
 declare interface SimpleArticle {
     id: number;
+
     title: string;
     author: string | null;
-    // no content
-    content_length: number;
-    // no words
-    // no unique words
     created_on: Timestamp;
+    uploader_id: number;
+    content_description: string | null;
+
     is_system: boolean;
-    // no uploader_id
+    is_private: boolean;
+
     lang: string;
     tags: string[];
+
+    unique_word_count: number;
 }
 
 declare interface Article {
     id: number;
+
     title: string;
     author: string | null;
-    content: string;
-    content_length: number;
-    words: string[];
-    sentences: string[][];
-    unique_words: Dictionary<number>;
-    page_data: PageTypeData[];
     created_on: Timestamp;
-    is_system: boolean;
     uploader_id: number;
+
+    is_system: boolean;
+    is_private: boolean;
+
     lang: string;
     tags: string[];
-}
 
-declare interface PageTypeData {
-    pages: string[][];
+    word_count: number;
+
+    unique_word_count: number;
+
+    word_index_map: Dictionary<number[]>;
+    stop_word_map: Dictionary<boolean>;
+
+    page_data: {
+        pages: string[][];
+    }[];
 }
 
 declare interface WordStatusData {

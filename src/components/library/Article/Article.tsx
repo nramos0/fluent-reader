@@ -61,7 +61,7 @@ const Article: React.FC<Props> = ({ article, onRemoveSuccess, onAdd }) => {
             </Flex>
             <Flex flexDir={{ base: 'column', xl: 'row' }}>
                 <ArticleLang lang={article.lang} />
-                <ArticleLength length={article.content_length} />
+                <ArticleLength length={article.unique_word_count} />
             </Flex>
 
             <ArticleTags tags={article.tags} />

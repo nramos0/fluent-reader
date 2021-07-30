@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import { Text } from '@chakra-ui/react';
 import { useStore } from '../../../hooks/useStore';
 import { useMemo } from 'react';
-import { isStopWord } from '../../../util/lang';
 import { observer } from 'mobx-react';
 import { useReaderStore } from '../Reader/Reader';
 import './PageText.css';
@@ -39,21 +38,17 @@ const Word: React.FC<WordProps> = ({
 interface Props {
     page: string[];
     pageOffset: number;
+    stopWordMap: Dictionary<boolean>;
 }
 
-const PageText: React.FC<Props> = ({ page, pageOffset }) => {
+const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap }) => {
     const store = useStore();
     const readerStore = useReaderStore();
 
     /**
      * Todo: move this work to the backend
      */
-    const {
-        classNameMap,
-        stopWordMap,
-        wordStatusMap,
-        wordIndexMap,
-    } = useMemo(() => {
+    const { classNameMap, wordStatusMap } = useMemo(() => {
         const wordCount = page.length;
 
         const underlineMap = readerStore.underlineMap!;
@@ -61,34 +56,20 @@ const PageText: React.FC<Props> = ({ page, pageOffset }) => {
         const classNameMap: string[] = [];
         classNameMap[wordCount] = ''; // extend array (1 extra)
 
-        const stopWordMap: boolean[] = [];
-        stopWordMap[wordCount] = false; // extend array (1 extra)
-
         const wordStatusMap: WordStatus[] = [];
         wordStatusMap[wordCount] = 'new'; // extend array (1 extra)
 
-        const wordIndexMap: Dictionary<number[]> = {};
-
         for (let i = 0; i < wordCount; ++i) {
             const word = page[i];
-            if (isStopWord(word)) {
+            if (stopWordMap[i + pageOffset]) {
                 classNameMap[i] = '';
                 if (underlineMap[i + pageOffset] !== undefined) {
                     classNameMap[i] += ` underline-${
                         underlineMap[i + pageOffset]
                     }`;
                 }
-                stopWordMap[i] = true;
                 continue;
             }
-
-            const lowercase = word.toLowerCase();
-            if (wordIndexMap[lowercase] === undefined) {
-                wordIndexMap[lowercase] = [];
-            }
-            wordIndexMap[lowercase].push(i);
-
-            stopWordMap[i] = false;
 
             const status = store.getWordStatus(word);
             wordStatusMap[i] = status;
@@ -115,11 +96,9 @@ const PageText: React.FC<Props> = ({ page, pageOffset }) => {
 
         return {
             classNameMap: classNameMap,
-            stopWordMap: stopWordMap,
             wordStatusMap: wordStatusMap,
-            wordIndexMap: wordIndexMap,
         };
-    }, [page, pageOffset, readerStore.underlineMap, store]);
+    }, [page, pageOffset, readerStore.underlineMap, stopWordMap, store]);
 
     const onUnderline = useCallback(
         (start: number, end: number) => {
@@ -150,14 +129,13 @@ const PageText: React.FC<Props> = ({ page, pageOffset }) => {
         // no need to separate into two effects.
         // one changes iff the other changes.
         readerStore.wordStatusMap = wordStatusMap;
-        readerStore.wordIndexMap = wordIndexMap;
-    }, [readerStore, wordIndexMap, wordStatusMap]);
+    }, [readerStore, wordStatusMap]);
 
     useEffect(() => {
         // find first word that is not a stop word and select it on page change
         const pageLength = page.length;
         for (let i = 0; i < pageLength; ++i) {
-            if (stopWordMap[i]) {
+            if (stopWordMap[i + pageOffset]) {
                 continue;
             }
             readerStore.setCurrentWord(page[i], wordStatusMap[i], String(i));
@@ -165,7 +143,7 @@ const PageText: React.FC<Props> = ({ page, pageOffset }) => {
         }
 
         readerStore.clearCurrentWord();
-    }, [page, readerStore, stopWordMap, wordStatusMap]);
+    }, [page, pageOffset, readerStore, stopWordMap, wordStatusMap]);
 
     const onClick: OnClickFunction = useCallback(
         (e) => {
@@ -229,9 +207,13 @@ const PageText: React.FC<Props> = ({ page, pageOffset }) => {
                 <Word
                     word={word}
                     className={classNameMap[index]}
-                    onClick={stopWordMap[index] ? undefined : onClick}
+                    onClick={
+                        stopWordMap[index + pageOffset] ? undefined : onClick
+                    }
                     onDoubleClick={
-                        stopWordMap[index] ? undefined : onDoubleClick
+                        stopWordMap[index + pageOffset]
+                            ? undefined
+                            : onDoubleClick
                     }
                     index={index}
                     key={index}
