@@ -7,6 +7,7 @@ type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
 
 interface LoadInfo {
     loadUntilResolve: LoadUntilResolve;
+    setIsLogoLoading: React.Dispatch<React.SetStateAction<boolean>>;
     isLoading: boolean;
 }
 
@@ -25,19 +26,12 @@ const LoadWrapper: React.FC<Props> = (props) => {
     const { ready } = useTranslation();
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLogoLoading, setIsLogoLoading] = useState(true);
 
     const initialLoad = useCallback(async () => {
         const promiseList = [...props.promiseList];
         await Promise.all(promiseList);
-
-        const minimumLoadTime = 10;
-        setTimeout(() => {
-            document.getElementById('outer-root')?.setAttribute('style', '');
-            document
-                .getElementById('loading-screen-root')
-                ?.setAttribute('style', 'display: none');
-            setIsInitialLoad(false);
-        }, minimumLoadTime);
+        setIsInitialLoad(false);
     }, [props.promiseList]);
 
     useEffect(() => {
@@ -52,6 +46,16 @@ const LoadWrapper: React.FC<Props> = (props) => {
         setIsLoading(false);
     }, []);
 
+    useEffect(() => {
+        const { hiddenId, visibleId } = isLogoLoading
+            ? { hiddenId: 'outer-root', visibleId: 'loading-screen-root' }
+            : { hiddenId: 'loading-screen-root', visibleId: 'outer-root' };
+        document.getElementById(visibleId)?.setAttribute('style', '');
+        document
+            .getElementById(hiddenId)
+            ?.setAttribute('style', 'display: none');
+    }, [isLogoLoading]);
+
     if (isInitialLoad || !ready) {
         return null;
     }
@@ -60,6 +64,7 @@ const LoadWrapper: React.FC<Props> = (props) => {
         <LoadContext.Provider
             value={{
                 loadUntilResolve: loadUntilResolve,
+                setIsLogoLoading: setIsLogoLoading,
                 isLoading: isLoading,
             }}
         >

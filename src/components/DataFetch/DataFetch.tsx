@@ -20,26 +20,27 @@ const DataFetch: React.FC<Props> = ({ fetch, setHasData }) => {
 
     useEffect(() => {
         if (fetch) {
-            loadInfo.loadUntilResolve(
-                Promise.all([fetchWordData(), fetchUser()])
-                    .then(([wordData, user]) => {
-                        if (wordData === null || user === null) {
-                            throw new Error('data is null');
-                        }
+            Promise.all([fetchWordData(), fetchUser()])
+                .then(([wordData, user]) => {
+                    if (wordData === null || user === null) {
+                        throw new Error('data is null');
+                    }
 
-                        store.setWordData(wordData);
-                        store.setUser(user);
-                        i18nInitPromise.then(() => {
-                            i18n.changeLanguage(user.display_lang);
-                        });
+                    store.setWordData(wordData);
+                    store.setUser(user);
+                    i18nInitPromise.then(() => {
+                        i18n.changeLanguage(user.display_lang);
+                    });
 
-                        setHasData(true);
-                    })
-                    .catch(() => {
-                        // do something
-                        console.error('data was null');
-                    })
-            );
+                    setHasData(true);
+                })
+                .catch(() => {
+                    // do something
+                    console.error('data was null');
+                })
+                .finally(() => {
+                    loadInfo.setIsLogoLoading(false);
+                });
         }
     }, [fetch, fetchUser, fetchWordData, loadInfo, setHasData, store]);
 
