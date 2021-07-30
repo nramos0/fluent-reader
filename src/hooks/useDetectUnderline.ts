@@ -51,12 +51,10 @@ const useDetectUnderline = (
 
             const target = e.target as any;
             if (target.className.includes('word')) {
-                setUnderlineState((prev) => {
-                    return {
-                        ...prev,
-                        isUnderlining: true,
-                        start: parseInt(target.id),
-                    };
+                setUnderlineState({
+                    isUnderlining: true,
+                    start: parseInt(target.id),
+                    end: null,
                 });
             }
         },
