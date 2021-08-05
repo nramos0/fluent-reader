@@ -44,20 +44,25 @@ const AccountPage: React.FC<{}> = () => {
                 {outerForm}
             </Flex>
             <Flex
+                position="absolute"
+                bottom="10px"
                 direction="row"
+                align="flex-end"
                 fontSize="16px"
                 textAlign="center"
-                color="white"
+                height="5%"
+                color="rgba(255, 255, 255, 0.5)"
                 mt={3}
             >
-                <Text>ICP备案号：京ICP备2021024530号-1</Text>
-                <Text mr={2} ml={2}>
-                    |
-                </Text>
+                <Text mr={2}>Created by Nicholas Ramos</Text>
+                <Text mr={2}>|</Text>
+                <Text mr={2}>ICP备案号：京ICP备2021024530号-1</Text>
+                <Text mr={2}>|</Text>
                 <Link
                     href="https://beian.miit.gov.cn"
                     target="_blank"
                     rel="noreferrer noopener"
+                    mr={2}
                 >
                     https://beian.miit.gov.cn
                 </Link>
