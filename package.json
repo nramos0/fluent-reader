@@ -45,11 +45,7 @@
   "scripts": {
     "build": "react-scripts build",
     "check-tsc": "node src/scripts/compile-ts-lint.js --allFiles",
-    "deploy": "yarn git-pull; yarn install; yarn build; yarn docker-stop; yarn docker-rm; yarn docker-build; yarn docker-run;",
-    "docker-build": "docker build -f Dockerfile -t web:latest .",
-    "docker-rm": "docker rm web",
-    "docker-run": "docker run --name web -d -p 80:80 web:latest",
-    "docker-stop": "docker stop web",
+    "deploy": "yarn git-pull; yarn install; yarn build; docker-compose up -d --force-recreate;",
     "eject": "react-scripts eject",
     "gen:comp": "node ./src/scripts/generate-react.js component",
     "git-clone": "ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa; git clone git@github.com:nramos0/fluent-reader.git'",
