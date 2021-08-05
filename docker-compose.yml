@@ -13,7 +13,7 @@ services:
             - '80:80'
             - '85:85'
             - '443:443'
-            - '3000:3000'
+            - '2244:2244'
         command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
     certbot:
         image: certbot/certbot
