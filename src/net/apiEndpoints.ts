@@ -9,7 +9,7 @@ const config: APIConfig = {
     root:
         process.env.NODE_ENV === 'development'
             ? '127.0.0.1'
-            : '47.101.129.250:2244',
+            : 'fluentreader.cc:3000',
     prefix: '',
 };
 
