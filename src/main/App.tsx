@@ -60,7 +60,13 @@ function App() {
         }
     }, [hasData, history, isLoggingOut, shouldFetchUserData]);
 
-    const [authErr, setAuthErr] = useState(false);
+    const [authErr, setAuthErr] = useState<{
+        initialLocation: string | null;
+        err: boolean;
+    }>({
+        initialLocation: null,
+        err: false,
+    });
 
     const initialLoad = useCallback(async () => {
         if (history.location.pathname === '/account') {
@@ -71,16 +77,18 @@ function App() {
         if (err !== null) {
             await i18nInitPromise;
 
+            setAuthErr({
+                initialLocation: history.location.pathname,
+                err: true,
+            });
             history.push('/account');
-
-            setAuthErr(true);
         } else {
             setShouldFetchUserData(true);
         }
     }, [auth.token, history]);
 
     useEffect(() => {
-        if (authErr) {
+        if (authErr.err && authErr.initialLocation !== '/') {
             i18nInitPromise.then((t) => {
                 showToast({
                     title: t('prompt-login-title'),
@@ -90,9 +98,14 @@ function App() {
                     isClosable: true,
                 });
             });
-            setAuthErr(false);
+            setAuthErr((prev) => {
+                return {
+                    ...prev,
+                    err: false,
+                };
+            });
         }
-    }, [authErr, showToast]);
+    }, [authErr, history.location.pathname, showToast]);
 
     useEffect(() => {
         setInitialLoadData((prevData) => {
