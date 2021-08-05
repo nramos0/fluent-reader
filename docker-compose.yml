@@ -11,6 +11,7 @@ services:
             - ./build:/var/www/web
         ports:
             - '80:80'
+            - '85:85'
             - '443:443'
             - '3000:3000'
         command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
