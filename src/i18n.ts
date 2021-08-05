@@ -22,11 +22,12 @@ export const i18nInitPromise = i18n
             'add-article',
             'reader',
             'settings',
+            'about',
         ],
 
         debug: process.env.NODE_ENV === 'development',
 
-        saveMissing: false,
+        saveMissing: true,
 
         keySeparator: false,
 

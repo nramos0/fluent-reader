@@ -21,20 +21,5 @@
   "too-long": "Too long.",
   "page": "Page",
   "prev": "Previous",
-  "next": "Next",
-  "app": "Fluent Reader",
-  "app-description-1": "Fluent Reader is a free, open-source web application for assisted reading of articles, books, or other material written in foreign languages. When reading things in another language, it's common to run into words or expressions that we don't know, but it can be annoying to constantly need to take out our phones or search online manually. Fluent Reader helps remedy this, in addition to having other features. Users can easily search up definitions of words that they don't know from a list of different online dictionaries automatically and record statuses of words that they read to find out how many words that they know, or perhaps how many words they don't know in a new article.",
-  "app-description-2-1": "Fluent Reader's code is publicly available on Github ",
-  "app-code-link": "here",
-  "app-description-2-2": ". Its frontend is written with ",
-  "react": "React",
-  "app-description-2-3": " and the backend is written in ",
-  "rust": "Rust",
-  "app-description-2-4": ". Bug reports, suggestions, and contributions are all welcome! You can open an issue on Github if you're interested, or you can also contact me at my email address below. Both the user and codebase documentations are currently still being worked on, and will be published on Github as soon as a reasonable amount has been completed.",
-  "credits-contact": "Contact Information and Credits",
-  "developer": "Developer",
-  "nicholas": "Nicholas Ramos",
-  "designer": "Designer",
-  "porter": "E.L. Porter",
-  "credits-1": "The code for Fluent Reader was written by Nicholas, and the original designs for the website were created by E.L. Porter. Extensive feature-related suggestions and ideas were given by app tester Kendall Shao."
+  "next": "Next"
 }

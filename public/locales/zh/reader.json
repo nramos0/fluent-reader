@@ -12,5 +12,6 @@
   "native-dicts": "*词典",
   "type-definition": "在这里输入词语的定义...",
   "no-article-open": "当前没有文章被打开，请在文章资料库中选择文章打开！",
-  "should-page-to-known": "跳到下一页时，将当前页面的全部新手词改为已熟悉"
+  "should-page-to-known": "跳到下一页时，将当前页面的全部新手词改为已熟悉",
+  "pen": "Pen"
 }

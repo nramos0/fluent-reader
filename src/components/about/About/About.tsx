@@ -8,7 +8,7 @@ const line = (
 );
 
 const About: React.FC = () => {
-    const { t } = useTranslation();
+    const { t } = useTranslation('about');
     return (
         <Flex
             direction="column"
@@ -23,7 +23,7 @@ const About: React.FC = () => {
             <ScrollBox overflowX="hidden" flex={1} display="flex" p={3} m={1}>
                 <Flex direction="column" w="100%" px={10}>
                     <Heading mb={2} textAlign="center">
-                        {t('about')}
+                        {t('common:about')}
                     </Heading>
                     <Text mb={2}>{t('app-description-1')}</Text>
                     {line}
@@ -63,9 +63,20 @@ const About: React.FC = () => {
                     </Heading>
                     <Text>{t('credits-1')}</Text>
                     <Text>
-                        {t('developer')}: {t('nicholas')}{' '}
+                        {t('developer')}: {t('nicholas')}
+                        {' | '}
+                        <Text as="span">{t('email')}: </Text>
                         <Link href="mailto:xoen000@163.com">
                             xoen000@163.com
+                        </Link>
+                        {' | '}
+                        <Text as="span">{t('github')}: </Text>
+                        <Link
+                            href="https://github.com/nramos0/"
+                            target="_blank"
+                            rel="noreferer noopener"
+                        >
+                            https://github.com/nramos0/
                         </Link>
                     </Text>
                     <Text>
