@@ -6,6 +6,7 @@ import Library from '../../library/Library/Library';
 import AddArticle from '../../add-article/AddArticle/AddArticle';
 import Reader from '../../read/Reader/Reader';
 import Settings from '../../settings/Settings/Settings';
+import About from '../../about/About/About';
 
 const InnerApp: React.FC = () => {
     const history = useHistory();
@@ -36,6 +37,9 @@ const InnerApp: React.FC = () => {
             </Route>
             <Route path="/app/add-article">
                 <AddArticle />
+            </Route>
+            <Route path="/app/about">
+                <About />
             </Route>
             <Route path="/app/settings">
                 <Settings />

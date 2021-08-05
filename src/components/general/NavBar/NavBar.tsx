@@ -13,6 +13,7 @@ const NavBar: React.FC = () => {
             <NavItem location="/app/settings" floatBottom={true}>
                 {t('settings')}
             </NavItem>
+            <NavItem location="/app/about">{t('about')}</NavItem>
             <LogoutNavItem />
         </>
     );
