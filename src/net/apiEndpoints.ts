@@ -5,7 +5,7 @@ interface APIConfig {
 }
 
 const config: APIConfig = {
-    protocol: 'http://',
+    protocol: process.env.NODE_ENV === 'development' ? 'http://' : 'https://',
     root:
         process.env.NODE_ENV === 'development'
             ? '127.0.0.1'
