@@ -3,6 +3,7 @@ import { request } from '../request';
 
 interface RegisterReqProps {
     username: string;
+    display_name: string;
     password: string;
     study_lang: string;
     display_lang: string;

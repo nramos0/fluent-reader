@@ -5,6 +5,8 @@
   "create-an-account": "Create an Account",
   "username": "Username",
   "username-info": "The unique ID you'll use to log in. Must be at least 2 characters long.",
+  "display-name": "Display Name",
+  "display-name-info": "The name other users will see on your profile and uploaded articles.",
   "password": "Password",
   "password-info": "The password you'll use to log in. Must be at least 8 characters long.",
   "password-confirm": "Confirm Password",

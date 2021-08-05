@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
 import * as Yup from 'yup';
 import UsernameField from '../UsernameField/UsernameField';
+import DisplayNameField from '../DisplayNameField/DisplayNameField';
 import PasswordField from '../PasswordField/PasswordField';
 import PasswordConfirmField from '../PasswordConfirmField/PasswordConfirmField';
 import StudyLangField from '../StudyLangField/StudyLangField';
@@ -18,6 +19,7 @@ interface Props {
 
 interface CreateAccountFormValues {
     username: string;
+    displayName: string;
     password: string;
     passwordConfirm: string;
     studyLang: string;
@@ -26,6 +28,7 @@ interface CreateAccountFormValues {
 
 const createAccountFormInitialValues: CreateAccountFormValues = {
     username: '',
+    displayName: '',
     password: '',
     passwordConfirm: '',
     studyLang: 'default',
@@ -38,14 +41,18 @@ const CreateAccountForm = ({ returnToLogin }: Props) => {
     const showToast = useToast();
 
     const validationSchema = useMemo(() => {
-        const required = t('required');
-        const tooShort = t('too-short');
-        const tooLong = t('too-long');
+        const required = t('common:required');
+        const tooShort = t('common:too-short');
+        const tooLong = t('common:too-long');
 
         return Yup.object().shape({
             username: Yup.string()
                 .required(required)
                 .min(2, tooShort)
+                .max(100, tooLong),
+            displayName: Yup.string()
+                .required(required)
+                .min(1, tooShort)
                 .max(100, tooLong),
             password: Yup.string()
                 .required(required)
@@ -80,6 +87,7 @@ const CreateAccountForm = ({ returnToLogin }: Props) => {
 
             const promise = register({
                 username: values.username,
+                display_name: values.displayName,
                 password: values.password,
                 study_lang: values.studyLang!,
                 display_lang: values.displayLang!,
@@ -126,7 +134,10 @@ const CreateAccountForm = ({ returnToLogin }: Props) => {
                         {t('create-an-account')}
                     </Heading>
 
-                    <UsernameField name="username" hasInfo={true} />
+                    <Flex direction="row" width="100%">
+                        <UsernameField name="username" hasInfo={true} />
+                        <DisplayNameField name="displayName" hasInfo={true} />
+                    </Flex>
 
                     <Flex direction="row" width="100%">
                         <PasswordField name="password" hasInfo={true} />

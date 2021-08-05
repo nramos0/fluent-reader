@@ -9,23 +9,22 @@ import {
 import { useField, FieldHookConfig } from 'formik';
 import { useTranslation } from 'react-i18next';
 
-const UsernameField = (
+const DisplayNameField = (
     props: { hasInfo: boolean } & FieldHookConfig<string>
 ) => {
     const [field, meta] = useField(props);
     const { t } = useTranslation('account');
     return (
         <FormControl
-            id="username"
-            mr={5}
+            id="displayName"
             mb={3}
             isInvalid={meta.error !== undefined && meta.touched}
         >
-            <FormLabel htmlFor="username">{t('username')}</FormLabel>
-            <Input {...field} type="text" id="username" />
+            <FormLabel htmlFor="displayName">{t('display-name')}</FormLabel>
+            <Input {...field} type="text" id="displayName" />
             {props.hasInfo ? (
                 <FormHelperText textAlign="left">
-                    {t('username-info')}
+                    {t('display-name-info')}
                 </FormHelperText>
             ) : null}
             <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -33,4 +32,4 @@ const UsernameField = (
     );
 };
 
-export default UsernameField;
+export default DisplayNameField;
