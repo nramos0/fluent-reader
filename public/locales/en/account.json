@@ -12,9 +12,9 @@
   "password-confirm": "Confirm Password",
   "password-confirm-info": "Please retype the same password for confirmation.",
   "study-lang": "Study Language",
-  "study-lang-info": "Select the language you want to study",
+  "study-lang-info": "Select the language you want to study.",
   "display-lang": "Display Language",
-  "display-lang-info": "Select the app's display language",
+  "display-lang-info": "Select the app's display language.",
   "to-login-prompt": "Already have an account?",
   "to-login": "Click here to login.",
   "to-register-prompt": "Don't have an account?",
@@ -30,7 +30,7 @@
   "pass-need-lower": "Password must contain at least one lowercase letter.",
   "pass-need-upper": "Password must contain at least one uppercase letter.",
   "pass-need-digit": "Password must contain at least one number.",
-  "pass-must-match": "Passwords must match",
-  "must-select-study-lang": "Please select a study language",
-  "must-select-display-lang": "Please select a display language"
+  "pass-must-match": "Passwords must match.",
+  "must-select-study-lang": "Please select a study language.",
+  "must-select-display-lang": "Please select a display language."
 }

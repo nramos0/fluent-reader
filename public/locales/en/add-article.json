@@ -1,7 +1,7 @@
 {
   "must-select-language": "Please select a language.",
-  "create-fail-title": "Article creation error",
-  "create-fail-desc": "There was an error while creating your article",
+  "create-fail-title": "Article creation error.",
+  "create-fail-desc": "There was an error while creating your article.",
   "create-success-title": "Article created successfully!",
   "create-success-desc": "You can now view the article in your library.",
   "create-article": "Create Article",
