@@ -77,6 +77,7 @@ const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
                         page={currPage}
                         pageOffset={readerStore.pageOffsetMap[currPageIndex]}
                         stopWordMap={store.readArticle.stop_word_map}
+                        lang={store.readArticle.lang}
                     />
                 )}
 

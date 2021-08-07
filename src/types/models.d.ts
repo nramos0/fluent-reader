@@ -39,7 +39,7 @@ declare interface Article {
     is_system: boolean;
     is_private: boolean;
 
-    lang: string;
+    lang: Language;
     tags: string[];
 
     word_count: number;

@@ -39,9 +39,10 @@ interface Props {
     page: string[];
     pageOffset: number;
     stopWordMap: Dictionary<boolean>;
+    lang: Language;
 }
 
-const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap }) => {
+const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
     const store = useStore();
     const readerStore = useReaderStore();
 
@@ -197,7 +198,7 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap }) => {
             flex={1}
             padding="10px 20px 0px 20px"
             mb="10px"
-            fontSize="22px"
+            fontSize={lang === 'zh' ? '26px' : '22px'}
             overflowY="auto"
             textAlign="left"
             userSelect="none"
