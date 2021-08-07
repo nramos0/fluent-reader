@@ -1,6 +1,6 @@
 export const sampleData: SimpleArticle[] = [
     {
-        id: 2,
+        id: -1,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -16,7 +16,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -2,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -32,7 +32,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -3,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -48,7 +48,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -4,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -64,7 +64,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -5,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -80,7 +80,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -6,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -96,7 +96,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -7,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
@@ -112,7 +112,7 @@ export const sampleData: SimpleArticle[] = [
         tags: ['cat', 'dog'],
     },
     {
-        id: 2,
+        id: -8,
         title: 'Cooler Article',
         author: null,
         unique_word_count: 31,
