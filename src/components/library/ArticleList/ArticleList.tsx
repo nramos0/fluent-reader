@@ -273,6 +273,7 @@ const ArticleList: React.FC = () => {
                         article={article}
                         onRemoveSuccess={onRemove}
                         onAdd={onAdd}
+                        key={article.id}
                     />
                 </Skeleton>
             ))}
