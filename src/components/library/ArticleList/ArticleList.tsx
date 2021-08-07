@@ -263,8 +263,12 @@ const ArticleList: React.FC = () => {
                     {t('common:next')}
                 </Button>
             </Flex>
-            {data.map((article, index) => (
-                <Skeleton key={index} isLoaded={ready && !isLoading} mb={3}>
+            {data.map((article) => (
+                <Skeleton
+                    key={article.id}
+                    isLoaded={ready && !isLoading}
+                    mb={3}
+                >
                     <Article
                         article={article}
                         onRemoveSuccess={onRemove}

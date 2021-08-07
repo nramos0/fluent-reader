@@ -105,7 +105,7 @@ const TagField = (props: FieldHookConfig<string[]>) => {
                             mb={1}
                             fontSize="sm"
                             borderRadius="lg"
-                            key={index}
+                            key={tag}
                             userSelect="none"
                             onDoubleClick={() => removeTag(index)}
                         >

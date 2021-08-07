@@ -8,7 +8,7 @@ interface Props {
 const ArticleTags: React.FC<Props> = ({ tags }) => {
     return tags.length > 0 ? (
         <Flex direction="row" align="center" mt={2} wrap="wrap">
-            {tags.map((tag, index) => (
+            {tags.map((tag) => (
                 <Text
                     mr={2}
                     mb={2}
@@ -20,7 +20,7 @@ const ArticleTags: React.FC<Props> = ({ tags }) => {
                     color="white"
                     borderRadius="lg"
                     fontSize="smaller"
-                    key={index}
+                    key={tag}
                 >
                     {tag}
                 </Text>
