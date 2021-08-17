@@ -4,10 +4,15 @@ interface APIConfig {
     prefix: string;
 }
 
+const forceRemoteAPI = false;
+
 const config: APIConfig = {
-    protocol: process.env.NODE_ENV === 'development' ? 'http://' : 'https://',
+    protocol:
+        process.env.NODE_ENV === 'development' && !forceRemoteAPI
+            ? 'http://'
+            : 'https://',
     root:
-        process.env.NODE_ENV === 'development'
+        process.env.NODE_ENV === 'development' && !forceRemoteAPI
             ? '127.0.0.1'
             : 'fluentreader.cc:2244',
     prefix: '',
@@ -31,6 +36,14 @@ const getUserDataEndpoint = (inner: string) => {
 
 const getUserDataStatusEndpoint = (inner: string) => {
     return getUserDataEndpoint(`/status${inner}`);
+};
+
+const getUserDataReadEndpoint = (inner: string) => {
+    return getUserDataEndpoint(`/read${inner}`);
+};
+
+const getUserDataMarkArticleEndpoint = (inner: string) => {
+    return getUserDataEndpoint(`/mark_article${inner}`);
 };
 
 // article
@@ -60,6 +73,12 @@ export const ENDPOINTS = {
             status: {
                 _: getUserDataStatusEndpoint('/'),
                 batch: getUserDataStatusEndpoint('/batch/'),
+            },
+            read: {
+                _: getUserDataReadEndpoint('/{article_id}'),
+            },
+            mark_article: {
+                _: getUserDataMarkArticleEndpoint('/'),
             },
             definition: getUserDataEndpoint('/definition/'),
         },

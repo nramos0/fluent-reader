@@ -81,7 +81,7 @@ declare type LibraryType =
     | 'user-created'
     | 'all-user';
 
-type UnderlineColor =
+type MarkColor =
     | 'red'
     | 'orange'
     | 'yellow'
@@ -91,12 +91,17 @@ type UnderlineColor =
     | 'gray'
     | 'black';
 
-declare interface RangeSelect {
-    start: number;
-    end: number;
+declare interface Mark {
+    mark_type: 'underline'; // | 'highlight';
+    selection: RangeSelect;
+    color: MarkColor;
 }
 
-declare interface UnderlineRange {
-    selection: RangeSelect;
-    color: UnderlineColor;
+declare interface ArticleReadData {
+    fruser_id: number;
+    article_id: number;
+    learned_words: {
+        [word: string]: string;
+    }[];
+    underlines: Mark[];
 }

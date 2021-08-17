@@ -10,7 +10,7 @@ const line = (
 
 const PEN_BOX_SIZE = '20px';
 
-const PenBox: React.FC<{ color: UnderlineColor; mr?: number }> = observer(
+const PenBox: React.FC<{ color: MarkColor; mr?: number }> = observer(
     ({ color, mr = 1 }) => {
         const readerStore = useReaderStore();
 
@@ -32,8 +32,8 @@ const PenBox: React.FC<{ color: UnderlineColor; mr?: number }> = observer(
     }
 );
 
-const colors1: UnderlineColor[] = ['red', 'orange', 'yellow', 'green'];
-const colors2: UnderlineColor[] = ['blue', 'purple', 'gray', 'black'];
+const colors1: MarkColor[] = ['red', 'orange', 'yellow', 'green'];
+const colors2: MarkColor[] = ['blue', 'purple', 'gray', 'black'];
 
 const Pen: React.FC = () => {
     const { t } = useTranslation('reader');

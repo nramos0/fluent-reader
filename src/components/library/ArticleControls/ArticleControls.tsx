@@ -12,6 +12,7 @@ import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
 import { useSaveArticle } from '../../../net/requests/saveArticle';
 import { useRemoveArticle } from '../../../net/requests/removeArticle';
+import { getArticleReadData } from '../../../net/requests/getArticleReadData';
 
 interface Props {
     article: SimpleArticle;
@@ -36,21 +37,38 @@ const ArticleControls: React.FC<Props> = ({
     const onOpen = useCallback(async () => {
         setIsLoading(true);
 
-        const promise = article.is_system
+        const getArticlePromise = article.is_system
             ? getFullSysArticle({ id: article.id }, token)
             : getFullUserArticle({ id: article.id }, token);
 
+        const getReadDataPromise = getArticleReadData(
+            {
+                article_id: article.id,
+            },
+            token
+        );
+
+        const promise = Promise.all([getArticlePromise, getReadDataPromise]);
+
         loadInfo.loadUntilResolve(promise);
 
-        const [err, data] = await to(promise);
+        const [getArticleErr, getArticleData] = await to(getArticlePromise);
+        const [getReadDataErr, getReadDataData] = await to(getReadDataPromise);
 
-        setIsLoading(false);
-
-        if (err !== null || data === undefined) {
+        if (
+            getArticleErr !== null ||
+            getArticleData === undefined ||
+            getReadDataErr !== null ||
+            getReadDataData === undefined
+        ) {
             return;
         }
 
-        store.setReadArticle(data.data.article);
+        store.setReadArticle(getArticleData.data.article);
+        store.setArticleReadData(getReadDataData.data.data);
+
+        setIsLoading(false);
+
         history.push('/app/read');
     }, [article.id, article.is_system, history, loadInfo, store, token]);
 

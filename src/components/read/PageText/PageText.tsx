@@ -103,23 +103,14 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
 
     const onUnderline = useCallback(
         (start: number, end: number) => {
-            const newRanges =
-                readerStore.underlineRanges === null
-                    ? []
-                    : [...readerStore.underlineRanges];
-
-            const selection: RangeSelect = {
-                start: start + pageOffset,
-                end: end + pageOffset,
-            };
-
-            newRanges.push({
-                selection,
+            readerStore.addUnderline({
+                selection: {
+                    start: start + pageOffset,
+                    end: end + pageOffset,
+                },
                 color: readerStore.penColor,
+                mark_type: 'underline',
             });
-
-            readerStore.setUnderlineRanges(newRanges);
-            readerStore.computeUnderlineMap();
         },
         [pageOffset, readerStore]
     );

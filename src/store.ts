@@ -199,6 +199,11 @@ export const store: Store = observable({
         this.readArticle = article;
     },
 
+    articleReadData: null,
+    setArticleReadData(data) {
+        this.articleReadData = data;
+    },
+
     i18n: null,
 
     setI18n(val) {

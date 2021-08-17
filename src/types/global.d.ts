@@ -39,6 +39,9 @@ declare interface Store {
     readArticle: Article | null;
     setReadArticle: (article: Article) => void;
 
+    articleReadData: ArticleReadData | null;
+    setArticleReadData: (data: ArticleReadData) => void;
+
     i18n: i18n | null;
     setI18n: (val: any) => void;
 

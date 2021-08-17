@@ -7,6 +7,7 @@ import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { markArticle } from '../../../net/requests/markArticle';
 
 const binarySearch = <T extends unknown>(
     arr: T[],
@@ -79,12 +80,13 @@ interface ReaderStore {
 
     penEnabled: boolean;
     togglePenEnabled: () => void;
-    penColor: UnderlineColor;
-    setPenColor: (color: UnderlineColor) => void;
+    penColor: MarkColor;
+    setPenColor: (color: MarkColor) => void;
 
-    underlineRanges: UnderlineRange[] | null;
-    setUnderlineRanges: (ranges: UnderlineRange[]) => void;
-    underlineMap: Dictionary<UnderlineColor | undefined> | null;
+    underlineRanges: Mark[] | null;
+    setUnderlineRanges: (ranges: Mark[]) => void;
+    addUnderline: (mark: Mark) => void;
+    underlineMap: Dictionary<MarkColor | undefined> | null;
     computeUnderlineMap: () => boolean;
 
     pageOffsetMap: number[] | null;
@@ -268,9 +270,36 @@ const readerStore = observable({
     },
 
     underlineRanges: null,
-    setUnderlineRanges(ranges: UnderlineRange[]) {
+    setUnderlineRanges(ranges) {
         this.underlineRanges = ranges;
     },
+
+    addUnderline(mark) {
+        if (this.store === null || this.store.readArticle === null) {
+            return;
+        }
+
+        const newRanges =
+            this.underlineRanges === null ? [] : [...this.underlineRanges];
+
+        newRanges.push(mark);
+
+        this.underlineRanges = newRanges;
+        this.computeUnderlineMap();
+
+        if (this.store.articleReadData) {
+            this.store.articleReadData.underlines = newRanges;
+        }
+
+        markArticle(
+            {
+                article_id: this.store.readArticle.id,
+                mark,
+            },
+            this.store.token
+        );
+    },
+
     underlineMap: {},
     computeUnderlineMap() {
         if (
@@ -289,7 +318,7 @@ const readerStore = observable({
             length += pages[i].length;
         }
 
-        const underlineMap: Dictionary<UnderlineColor | undefined> = {};
+        const underlineMap: Dictionary<MarkColor | undefined> = {};
         underlineMap[length] = undefined; // extend the array
 
         const underlines = this.underlineRanges;

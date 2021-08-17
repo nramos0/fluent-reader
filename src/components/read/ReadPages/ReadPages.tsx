@@ -27,6 +27,7 @@ const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
     const pageCountM1 = pages.length - 1;
     const currPage = pages[currPageIndex];
 
+    const store = useStore();
     const readerStore = useReaderStore();
 
     useEffect(() => {
@@ -42,8 +43,10 @@ const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
     useEffect(() => {
         readerStore.setWordIndexMap(wordIndexMap);
         readerStore.computePageOffsetMap(pages);
+
+        readerStore.setUnderlineRanges(store.articleReadData?.underlines ?? []);
         readerStore.computeUnderlineMap();
-    }, [pages, readerStore, wordIndexMap]);
+    }, [pages, readerStore, store.articleReadData?.underlines, wordIndexMap]);
 
     useEffect(() => {
         readerStore.computePageIndexRange(currPageIndex, currPage.length);
@@ -54,7 +57,6 @@ const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
         readerStore.pageOffsetMap,
     ]);
 
-    const store = useStore();
     return (
         <Flex
             direction="column"
