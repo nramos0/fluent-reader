@@ -79,6 +79,7 @@ const About: React.FC = () => {
                         />
                     </Text>
                     <Text>{t('designer-credit')}</Text>
+                    <Text>{t('translator-credit')}</Text>
                 </Flex>
             </ScrollBox>
         </Flex>
