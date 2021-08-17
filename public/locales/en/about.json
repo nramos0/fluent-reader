@@ -9,6 +9,9 @@
   "designer": "Designer",
   "porter": "E.L. Porter",
   "designer-credit": "$t(designer): $t(porter)",
+  "translator": "Translator",
+  "kendall": "Kendall Shao",
+  "translator-credit": "$t(translator): $t(kendall)",
   "credits-1": "The code for Fluent Reader was written by Nicholas, and the original designs for the website in addition to feature ideas were created and given by E.L. Porter. Extensive feature-related suggestions and ideas were given by app tester Kendall Shao.",
   "email": "Email",
   "github": "Github"

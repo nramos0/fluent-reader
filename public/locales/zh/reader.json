@@ -1,17 +1,17 @@
 {
   "dictionary": "词典",
-  "status": "状态",
-  "known": "已熟悉",
+  "status": "状态（或：熟练程度）",
+  "known": "已掌握",
   "learning": "学习中",
-  "new": "新手",
+  "new": "生词",
   "set-status": "设置状态",
-  "click-word-to-search": "点击词语可以修改其状态并查询定义！",
+  "click-word-to-search": "点击词语可以修改其状态并查询词义！",
   "definition": "定义",
   "definition-search": "定义搜索",
   "your-lang-dicts": "*词典",
   "native-dicts": "*词典",
-  "type-definition": "在这里输入词语的定义...",
+  "type-definition": "在此处输入词语的定义...",
   "no-article-open": "当前没有文章被打开，请在文章资料库中选择文章打开！",
-  "should-page-to-known": "跳到下一页时，将当前页面的全部新手词改为已熟悉",
-  "pen": "Pen"
+  "should-page-to-known": "跳到下一页时，将当前页面的全部生词改为已熟悉",
+  "pen": "钢笔"
 }
