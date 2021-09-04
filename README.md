@@ -36,15 +36,19 @@ You can find a more detailed and clear guide on how to use Fluent Reader [here](
 
 If you need help using Fluent Reader, or if you have questions, concerns, bug reports, etc, you can file an issue in this repository's Issue Tracker, or you can email me at [xoen000@163.com](mailto::xoen000@163.com) in English or Chinese.
 
-## Dependencies
-
-To be run locally, the frontend requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to be installed. The backend requries [Rust](https://www.rust-lang.org/).
-
 ## Contributing
 
 If you're interested in contributing to Fluent Reader, please email me at [xoen000@163.com](mailto::xoen000@163.com) in English or Chinese. There is not any solid documentation yet, but I would be happy to help you find something to do and get started.
 
+## Running your own server
+
+Note that there is nothing stopping you from running a Fluent Reader server of your own, either locally on your own computer or on the internet somewhere. This way you could potentially get much faster response times from the server, or you could have your own "private" Fluent Reader server that only contains your own articles. If you're interested in doing this but aren't sure how, feel free to contact me!
+
 ## Installation
+
+### Dependencies
+
+To be run locally, the frontend requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to be installed. The backend requries [Rust](https://www.rust-lang.org/).
 
 ### Frontend
 
