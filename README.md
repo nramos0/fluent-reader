@@ -1,46 +1,61 @@
-# Getting Started with Create React App
+# Fluent Reader
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Fluent Reader is a free, open-source web application for assisted reading of articles, books, or other material written in foreign languages. When reading things in another language, it's common to run into words or expressions that we don't know, but it can be annoying to constantly need to search for definitions online manually. Fluent Reader helps remedy this by automating this process. Users can easily search up definitions of words that they don't know from a list of different online dictionaries automatically and record statuses of individual words, which is used to determine the number of words in the foreign language that users know, as well as the number and percentage of known (or unknown) words in new articles.
 
-## Available Scripts
+-   **Technology stack**: The frontend is written in Typescript with React, and the backend is written in Rust with Actix Web.
+-   **Status**: Fluent Reader is currently in a very early Alpha state. It is usable, but contains many limitations and lacks many potential features.
+-   Fluent Reader is currently live [https://fluentreader.cc](https://fluentreader.cc). Note that the server is located in China, so you may experience slower load times in places that are farther away.
 
-In the project directory, you can run:
+Below is the reader page in the app.
 
-### `yarn start`
+![](app.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Words that the user has not seen or marked before in the app are highlighted in blue, meaning "new", words that the user has seen before but doesn't fully know yet are highlighted in red, meaning "learning", and words that the user has marked as knowing are not highlighted.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+On the right side is the dictionary, where the user can look up words, save definitions for them, and set the current status of a particular word.
 
-### `yarn test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   Support for reading English texts
+-   Import any article by pasting text
+-   Find public articles published officially on Fluent Reader (System Library) and articles published by other users (All User Articles Library)
+-   Save articles from the "System" or "All User" libraries to "Saved" library
+-   Highlight words in different colors based on status (New: Blue, Learning: Red, Known: No Color)
+-   Change word status on demand
+-   Search for word definitions in a new tab in one click
+-   Save custom definitions for different words
+-   Underline words or phrases in different colors with the Pen tool
+-   Set all "new" words on a page to "known" by moving to the next page with "Paging changes words to known" setting
+-   UI in English and Chinese
 
-### `yarn build`
+## Getting help
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+If you need help with using Fluent Reader, feel free to contact me at [xoen000@163.com](mailto::xoen000@163.com) in English or Chinese.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Dependencies
 
-### `yarn eject`
+To be run locally, the frontend requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to be installed. The backend requries [Rust](https://www.rust-lang.org/).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Installation
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Frontend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The frontend was bootstrapped with [Create React App](https://create-react-app.dev/), so the following steps can get the frontend running locally:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+-   In the root directory of the frontend, run `yarn install`
+-   `yarn start`
 
-## Learn More
+### Backend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The frontend was bootstrapped with [Create React App](https://create-react-app.dev/), so the following steps can get the frontend running locally:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+-   In the root directory of the backend, run `yarn install`
+-   `yarn start`
+
+Note: The backend uses a `package.json` with `yarn` for the `start` script and `lint-staged`/`husky`, to allow for pre-commit formatting. The `yarn start` script runs `cargo watch`, so the code will be recompiled on save.
+
+## License
+
+Both the frontend and backend code for Fluent Reader are licensed under the GNU General Public License (Version 3).
