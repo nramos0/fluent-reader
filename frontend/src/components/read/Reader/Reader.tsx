@@ -81,7 +81,7 @@ interface ReaderStore {
     penEnabled: boolean;
     togglePenEnabled: () => void;
     penColor: MarkColor;
-    setPenColor: (color: MarkColor) => void;
+    setPenColor: (color: MarkColor, enablePen?: boolean) => void;
 
     underlineRanges: Mark[] | null;
     setUnderlineRanges: (ranges: Mark[]) => void;
@@ -265,8 +265,12 @@ const readerStore = observable({
 
     penColor: 'black',
 
-    setPenColor(color) {
+    setPenColor(color, enablePen = false) {
         this.penColor = color;
+
+        if (enablePen) {
+            this.penEnabled = true;
+        }
     },
 
     underlineRanges: null,
@@ -390,7 +394,8 @@ const useStoreBind = () => {
 };
 
 const StoreBind: React.FC = observer(() => {
-    return useStoreBind();
+    useStoreBind();
+    return null;
 });
 
 const ArticleEffect: React.FC = observer(() => {

@@ -3,6 +3,7 @@ import { Box, Text, Flex, Switch } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { useReaderStore } from '../Reader/Reader';
+import { DeleteIcon } from '@chakra-ui/icons';
 
 const line = (
     <Box width="100%" height="1px" bgColor="#d16161" borderRadius="5px" />
@@ -25,7 +26,7 @@ const PenBox: React.FC<{ color: MarkColor; mr?: number }> = observer(
                     cursor: 'pointer',
                 }}
                 onClick={() => {
-                    readerStore.setPenColor(color);
+                    readerStore.setPenColor(color, true);
                 }}
             />
         );
@@ -53,16 +54,26 @@ const Pen: React.FC = () => {
                         }}
                     />
                 </Flex>
-                <Flex direction="column">
-                    <Flex direction="row" align="center" mb={1}>
-                        {colors1.map((color) => (
-                            <PenBox key={color} color={color} />
-                        ))}
+                <Flex direction="row" align="center">
+                    <Flex direction="column">
+                        <Flex direction="row" align="center" mb={1}>
+                            {colors1.map((color) => (
+                                <PenBox key={color} color={color} />
+                            ))}
+                        </Flex>
+                        <Flex direction="row" align="center">
+                            {colors2.map((color) => (
+                                <PenBox key={color} color={color} />
+                            ))}
+                        </Flex>
                     </Flex>
-                    <Flex direction="row" align="center">
-                        {colors2.map((color) => (
-                            <PenBox key={color} color={color} />
-                        ))}
+                    <Flex direction="column">
+                        <DeleteIcon
+                            boxSize={6}
+                            _hover={{
+                                cursor: 'pointer',
+                            }}
+                        />
                     </Flex>
                 </Flex>
             </Flex>

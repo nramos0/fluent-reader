@@ -12,6 +12,7 @@ import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
 import { useSaveArticle } from '../../../net/requests/saveArticle';
 import { useRemoveArticle } from '../../../net/requests/removeArticle';
+// import { useDeleteArticle } from '../../../net/requests/deleteArticle';
 import { getArticleReadData } from '../../../net/requests/getArticleReadData';
 
 interface Props {
@@ -139,6 +140,36 @@ const ArticleControls: React.FC<Props> = ({
         setIsLoading(false);
     }, [article.id, loadInfo, onRemoveSuccess, removeMutation, showToast, t]);
 
+    // const deleteMutation = useDeleteArticle();
+    // const onDelete = useCallback(async () => {
+    //     setIsLoading(true);
+
+    //     const promise = deleteMutation.mutateAsync({
+    //         article_id: article.id,
+    //     });
+    //     loadInfo.loadUntilResolve(promise);
+
+    //     const [err, data] = await promise;
+    //     if (err && data === undefined) {
+    //         showToast({
+    //             description: t('article-remove-error'),
+    //             status: 'error',
+    //             duration: 5000,
+    //             isClosable: true,
+    //         });
+    //     } else {
+    //         // err === null && data !== undefined
+    //         onRemoveSuccess(article.id);
+    //         showToast({
+    //             description: t('article-remove-success'),
+    //             status: 'success',
+    //             duration: 5000,
+    //             isClosable: true,
+    //         });
+    //     }
+    //     setIsLoading(false);
+    // }, [article.id, deleteMutation, loadInfo, onRemoveSuccess, showToast, t]);
+
     return (
         <Flex direction="row" p="3px 0px" justify="flex-start">
             <Button
@@ -198,7 +229,7 @@ const ArticleControls: React.FC<Props> = ({
                     {t('remove')}
                 </Button>
             )}
-            {/* {libraryInfo.libraryType === 'user-created' && (
+            {/* {article.uploader_id === store.getUser().id && (
                 <Button
                     bgColor="#661919"
                     color="white"
@@ -211,7 +242,7 @@ const ArticleControls: React.FC<Props> = ({
                         borderColor: '#ccc',
                         bgColor: '#ccc',
                     }}
-                    onClick={onRemove}
+                    onClick={onDelete}
                     disabled={isLoading}
                     ml={3}
                 >
