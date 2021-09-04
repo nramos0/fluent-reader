@@ -1,0 +1,10 @@
+.git
+postgres-data
+src
+.gitignore
+Cargo.lock
+Cargo.toml
+database.sql
+docker-compose.yml
+Dockerfile
+notes.txt

@@ -1,0 +1,7 @@
+/target
+*.env
+postgres-data
+node_modules
+.husky
+.DS_Store
+notes.txt

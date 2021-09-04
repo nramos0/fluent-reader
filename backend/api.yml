@@ -1,0 +1,750 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title: Fluent Reader Server
+servers:
+  - url: "http://localhost"
+paths:
+  /user:
+    get:
+      summary: "Returns a list of at most 10 users ordered by ascending id"
+      operationId: getUserList
+      tags:
+        - user
+      parameters:
+        - name: offset
+          in: query
+          description: The number of users to skip in the database list
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: "Successful fetch of user list"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SimpleUser"
+                  count:
+                    type: integer
+                    format: int32
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      summary: "Update a user's information"
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: A new username
+                password:
+                  type: string
+                  description: A new password
+                study_lang:
+                  type: string
+                  description: A new study language setting
+                display_lang:
+                  type: string
+                  description: A new display language setting
+      responses:
+        "200":
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+  /user/log:
+    post:
+      summary: "Log into the system and get a token"
+      operationId: login
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: The username to login with
+                password:
+                  type: string
+                  description: The password to login with
+      responses:
+        "200":
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  refresh_token:
+                    type: string
+        "401":
+          description: "Login unsuccessful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/reg:
+    post:
+      summary: "Register for an account"
+      operationId: register
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - study_lang
+                - display_lang
+              properties:
+                username:
+                  type: string
+                  description: The username to register with
+                password:
+                  type: string
+                  description: The password to register with
+                study_lang:
+                  type: string
+                  description: The user's study language code
+                display_lang:
+                  type: string
+                  description: The user's preferred display language code
+      responses:
+        "201":
+          description: "Registration successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/SimpleUser"
+        "400":
+          description: "Registration unsuccessful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: "Registration unsuccessful: User with username exists"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/refresh:
+    post:
+      summary: "Refresh a user's token using the previous token and a refresh token"
+      operationId: refresh
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - refresh_token
+              properties:
+                token:
+                  type: string
+                  description: An expired token that matches the user to login
+                refresh_token:
+                  type: string
+                  description: The user's current unique refresh token
+      responses:
+        "200":
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: "Login unsuccessful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /user/data:
+    get:
+      summary: "Get user's word status and word definition data"
+      operationId: getWordData
+      tags:
+        - userData
+      responses:
+        "200":
+          description: "Fetch successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/WordData"
+
+        "401":
+          description: "Login unsuccessful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/data/status:
+    put:
+      summary: "Update a word's status"
+      operationId: updateWordStatus
+      tags:
+        - userData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - lang
+                - word
+                - status
+              properties:
+                lang:
+                  type: string
+                word:
+                  type: string
+                status:
+                  type: string
+      responses:
+        "200":
+          description: "Update successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Message"
+  /user/data/definition:
+    put:
+      summary: "Update a word's definition"
+      operationId: updateWordDefinition
+      tags:
+        - userData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - lang
+                - word
+                - definition
+              properties:
+                lang:
+                  type: string
+                word:
+                  type: string
+                definition:
+                  type: string
+      responses:
+        "200":
+          description: "Update successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Message"
+  /article:
+    post:
+      summary: "Post an article"
+      operationId: postArticle
+      tags:
+        - article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - content
+                - language
+                - is_private
+              properties:
+                title:
+                  type: string
+                  description: The article's title
+                author:
+                  type: string
+                  description: The article's author
+                content:
+                  type: string
+                  description: The article's content
+                language:
+                  type: string
+                  description: The language the article is written in
+                tags:
+                  type: array
+                  items:
+                    type: string
+                is_private:
+                  type: boolean
+      responses:
+        "201":
+          description: "Article creation successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  article:
+                    $ref: "#/components/schemas/SimpleArticle"
+  /article/system/list:
+    get:
+      summary: "Returns a list of system library articles"
+      operationId: getSystemArticleList
+      tags:
+        - article
+      parameters:
+        - name: offset
+          in: query
+          description: The number of articles to skip in the database list
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: lang
+          in: query
+          description: The language of the returned articles, either zh or en
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: A search query to query the articles by title/tag. If this parameter is specified, lang must also be specified
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful fetch of article list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleArticleList"
+  /article/system/single/{article_id}:
+    get:
+      summary: "Returns all data for a single system article with the given id"
+      operationId: getFullSystemArticle
+      tags:
+        - article
+      parameters:
+        - name: article_id
+          in: path
+          description: The id of the article to fetch
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: "Successful fetch of single system article"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+  /article/user/list:
+    get:
+      summary: "Returns a list of articles uploaded by a given user"
+      operationId: getUserUploadedArticleList
+      tags:
+        - article
+      parameters:
+        - name: user_id
+          in: query
+          description: The id of the user to fetch all uploaded articles from. Defaults to the user id of the auth token's user
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: offset
+          in: query
+          description: The number of articles to skip in the database list
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: lang
+          in: query
+          description: The language of the returned articles, either zh or en
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: A search query to query the articles by title/tag. If this parameter is specified, lang must also be specified
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful fetch of article list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleArticleList"
+  /article/user/all/list:
+    get:
+      summary: "Returns a list of all user-uploaded articles (non-system articles)"
+      operationId: getAllUserUploadedArticleList
+      tags:
+        - article
+      parameters:
+        - name: offset
+          in: query
+          description: The number of articles to skip in the database list
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: lang
+          in: query
+          description: The language of the returned articles, either zh or en
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: A search query to query the articles by title/tag. If this parameter is specified, lang must also be specified
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful fetch of article list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleArticleList"
+  /article/user/single/{article_id}:
+    get:
+      summary: "Returns all data for a single user article with the given id"
+      operationId: getFullUserArticle
+      tags:
+        - article
+      parameters:
+        - name: article_id
+          in: path
+          description: The id of the article to fetch
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: "Successful fetch of single user article"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+  /article/user/saved/list:
+    get:
+      summary: "Returns a list of all articles saved by the authenticated user"
+      operationId: getSavedArticleList
+      tags:
+        - article
+      parameters:
+        - name: offset
+          in: query
+          description: The number of articles to skip in the database list
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: lang
+          in: query
+          description: The language of the returned articles, either zh or en
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: A search query to query the articles by title/tag. If this parameter is specified, lang must also be specified
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful fetch of article list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleArticleList"
+  /article/user/saved/single:
+    put:
+      summary: "Save an article to the user's saved list"
+      operationId: saveArticle
+      tags:
+        - article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - article_id
+              properties:
+                article_id:
+                  type: integer
+                  format: int32
+                  description: The id of the article to save
+      responses:
+        "200":
+          description: "Article saved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+    delete:
+      summary: "Delete an article from the user's saved list"
+      operationId: deleteSavedArticle
+      tags:
+        - article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - article_id
+              properties:
+                article_id:
+                  type: integer
+                  format: int32
+                  description: The id of the article to remove from the user's saved list
+      responses:
+        "200":
+          description: "Article deleted successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - pass
+        - created_on
+        - study_lang
+        - display_lang
+        - refresh_token
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+        pass:
+          type: string
+        created_on:
+          $ref: "#/components/schemas/Timestamp"
+        study_lang:
+          type: string
+        display_lang:
+          type: string
+        refresh_token:
+          type: string
+    SimpleUser:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+    Timestamp:
+      type: object
+      required:
+        - secs_since_epoch
+        - nanos_since_epoch
+      properties:
+        secs_since_epoch:
+          type: integer
+          format: int64
+        nanos_since_epoch:
+          type: integer
+          format: int64
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+    Message:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    Article:
+      type: object
+      required:
+        - id
+        - title
+        - content
+        - content_length
+        - created_on
+        - is_system
+        - uploader_id
+        - tags
+        - is_private
+      properties:
+        id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        content_length:
+          type: integer
+          format: int32
+        created_on:
+          $ref: "#/components/schemas/Timestamp"
+        is_system:
+          type: boolean
+        uploader_id:
+          type: integer
+          format: int32
+        tags:
+          type: array
+          items:
+            type: string
+        is_private:
+          type: boolean
+    SimpleArticle:
+      type: object
+      required:
+        - id
+        - title
+        - content_length
+        - created_on
+        - is_system
+      properties:
+        id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        author:
+          type: string
+        content_length:
+          type: integer
+          format: int32
+        created_on:
+          $ref: "#/components/schemas/Timestamp"
+        is_system:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+    SimpleArticleList:
+      type: object
+      properties:
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/SimpleArticle"
+        count:
+          type: integer
+          format: int32
+
+    WordStatusInnerLangData:
+      type: object
+      required:
+        - known
+        - learning
+      properties:
+        known:
+          type: object
+        learning:
+          type: object
+    WordStatusData:
+      type: object
+      required:
+        - en
+        - zh
+      properties:
+        en:
+          $ref: "#/components/schemas/WordStatusInnerLangData"
+        zh:
+          $ref: "#/components/schemas/WordStatusInnerLangData"
+    WordDefinitionData:
+      type: object
+      required:
+        - en
+        - zh
+      properties:
+        en:
+          type: object
+        zh:
+          type: object
+    WordData:
+      type: object
+      required:
+        - word_status_data
+        - word_definition_data
+      properties:
+        word_status_data:
+          $ref: "#/components/schemas/WordStatusData"
+        word_definition_data:
+          $ref: "#/components/schemas/WordDefinitionData"

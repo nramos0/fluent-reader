@@ -1,0 +1,30 @@
+version: "3.1"
+services:
+  postgres:
+    container_name: postgres
+    image: groonga/pgroonga:latest-alpine-10-slim
+    restart: always
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - backend
+    env_file:
+      - "db.env"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+  app:
+    container_name: app
+    build: .
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+    environment:
+      PG.HOST: postgres
+networks:
+  backend:
