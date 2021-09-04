@@ -49,7 +49,7 @@ The frontend was bootstrapped with [Create React App](https://create-react-app.d
 
 ### Backend
 
-The frontend was bootstrapped with [Create React App](https://create-react-app.dev/), so the following steps can get the frontend running locally:
+The following steps can get the backend running locally:
 
 -   In the root directory of the backend, run `yarn install`
 -   `yarn start`
