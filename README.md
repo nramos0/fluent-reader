@@ -30,9 +30,7 @@ On the right side is the dictionary, where the user can look up words, save defi
 
 ## Getting help
 
-If you need help with using Fluent Reader, feel free to contact me at [xoen000@163.com](mailto::xoen000@163.com) in English or Chinese.
-
-If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
+If you need help using Fluent Reader, or if you have questions, concerns, bug reports, etc, you can file an issue in this repository's Issue Tracker, or you can email me at [xoen000@163.com](mailto::xoen000@163.com) in English or Chinese.
 
 ## Dependencies
 
