@@ -1,6 +1,6 @@
 # Fluent Reader
 
-Fluent Reader is a free, open-source web application for assisted reading of articles, books, or other material written in foreign languages. When reading things in another language, it's common to run into words or expressions that we don't know, but it can be annoying to constantly need to search for definitions online manually. Fluent Reader helps remedy this by automating this process and giving other tools to improve language learning efficiency. 
+Fluent Reader is a free, open-source web application for assisted reading of articles, books, or other material written in foreign languages. When reading things in another language, it's common to run into words or expressions that we don't know, but it can be annoying to constantly need to search for definitions online manually. Fluent Reader helps remedy this by automating this process and giving other tools to improve language learning efficiency.
 
 -   **Technology stack**: The frontend is written in Typescript with React, and the backend is written in Rust with Actix Web.
 -   **Status**: Fluent Reader is currently in a very early Alpha state. It is usable, but contains many limitations and lacks many potential features.
@@ -27,6 +27,10 @@ On the right side is the dictionary, where the user can look up words, save defi
 -   Underline words or phrases in different colors with the Pen tool
 -   Set all "new" words on a page to "known" by moving to the next page with "Paging changes words to known" setting
 -   UI in English and Chinese
+
+## User Manual
+
+You can find a more detailed and clear guide on how to use Fluent Reader [here](USER_MANUAL.md);
 
 ## Getting help
 
