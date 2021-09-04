@@ -40,6 +40,10 @@ If you need help using Fluent Reader, or if you have questions, concerns, bug re
 
 To be run locally, the frontend requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to be installed. The backend requries [Rust](https://www.rust-lang.org/).
 
+## Contributing
+
+If you're interested in contributing to Fluent Reader, please email me at [xoen000@163.com](mailto::xoen000@163.com) in English or Chinese. There is not any solid documentation yet, but I would be happy to help you find something to do and get started.
+
 ## Installation
 
 ### Frontend
