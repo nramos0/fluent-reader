@@ -16,7 +16,8 @@ On the right side is the dictionary, where the user can look up words, save defi
 
 ## Features
 
--   Support for reading English texts
+-   Support for reading English and Chinese texts
+-   UI in English and Chinese
 -   Import any article by pasting text
 -   Find public articles published officially on Fluent Reader (System Library) and articles published by other users (All User Articles Library)
 -   Save articles from the "System" or "All User" libraries to "Saved" library
@@ -26,7 +27,6 @@ On the right side is the dictionary, where the user can look up words, save defi
 -   Save custom definitions for different words
 -   Underline words or phrases in different colors with the Pen tool
 -   Set all "new" words on a page to "known" by moving to the next page with "Paging changes words to known" setting
--   UI in English and Chinese
 
 ## User Manual
 
