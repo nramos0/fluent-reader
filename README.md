@@ -30,7 +30,7 @@ On the right side is the dictionary, where the user can look up words, save defi
 
 ## User Manual
 
-You can find a more detailed and clear guide on how to use Fluent Reader [here](USER_MANUAL.md);
+You can find a more detailed and clear guide on how to use Fluent Reader [here](USER_MANUAL.md).
 
 ## Getting help
 
