@@ -19,5 +19,7 @@
   "article-remove-success": "Article removed successfully.",
   "article-fetch-error": "There was an error fetching articles.",
   "article-saved-before": "You've already saved this article.",
-  "article-saved-success": "Article saved successfully."
+  "article-saved-success": "Article saved successfully.",
+  "delete-article-confirm": "Delete Article Confirmation",
+  "delete-article-confirm-desc": "Are you sure you want to delete this article?"
 }

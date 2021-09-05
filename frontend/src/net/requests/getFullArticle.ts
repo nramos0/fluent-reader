@@ -5,20 +5,23 @@ import { prepareURL } from '../apiUtil';
 import { request } from '../request';
 import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
 
-type GetFullSysArticleReqProps = {
+type GetFullArticleReqProps = {
     id: number;
+    isSystem: boolean;
 };
 
-type GetFullSysArticleResData = {
+type GetFullArticleResData = {
     article: Article;
 };
 
-export const getFullSysArticle: API.Request<
-    GetFullSysArticleReqProps,
-    GetFullSysArticleResData
-> = async (data, token) => {
+export const getFullArticle: API.Request<
+    GetFullArticleReqProps,
+    GetFullArticleResData
+> = async ({ isSystem, ...data }, token) => {
     const url = prepareURL(
-        ENDPOINTS.article.system.single,
+        isSystem
+            ? ENDPOINTS.article.system.single
+            : ENDPOINTS.article.user.single,
         [],
         [],
         ['article_id'],
@@ -30,18 +33,18 @@ export const getFullSysArticle: API.Request<
     });
 };
 
-export const useGetFullSysArticle = (
-    query: GetFullSysArticleReqProps,
+export const useGetFullArticle = (
+    query: GetFullArticleReqProps,
     fn?: {
-        onSuccess?: API.OnSuccessFn<GetFullSysArticleResData>;
+        onSuccess?: API.OnSuccessFn<GetFullArticleResData>;
         onError?: API.OnFailureFn;
     }
 ) => {
     const { token } = useAuth();
-    return useQuery<AxiosResponse<GetFullSysArticleResData>, AxiosError>(
-        ['getFullSysArticle', query.id],
+    return useQuery<AxiosResponse<GetFullArticleResData>, AxiosError>(
+        ['getFullArticle', query.id],
         () => {
-            return getFullSysArticle(query, token);
+            return getFullArticle(query, token);
         },
         {
             enabled: false,

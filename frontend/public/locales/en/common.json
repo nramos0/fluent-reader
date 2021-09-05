@@ -21,5 +21,7 @@
   "too-long": "Too long.",
   "page": "Page",
   "prev": "Previous",
-  "next": "Next"
+  "next": "Next",
+  "open": "Open",
+  "close": "Close"
 }

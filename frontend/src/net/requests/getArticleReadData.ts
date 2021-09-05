@@ -32,7 +32,6 @@ export const getArticleReadData: API.Request<
 
 export const useGetArticleReadData = (
     query: GetArticleReadDataReqProps,
-    libraryType: LibraryType,
     fn?: {
         onSuccess?: API.OnSuccessFn<GetArticleReadDataResData>;
         onError?: API.OnFailureFn;
@@ -42,7 +41,7 @@ export const useGetArticleReadData = (
     return useQuery<AxiosResponse<GetArticleReadDataResData>, AxiosError>(
         ['getArticleReadData', query.article_id],
         () => {
-            return getArticleReadData(query, token, libraryType);
+            return getArticleReadData(query, token);
         },
         {
             onSuccess: fn?.onSuccess,

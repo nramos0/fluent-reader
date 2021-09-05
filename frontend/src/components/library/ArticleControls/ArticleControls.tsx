@@ -1,10 +1,19 @@
 import React, { useCallback, useState } from 'react';
-import { Flex, Button, useToast } from '@chakra-ui/react';
+import {
+    Flex,
+    Button,
+    useToast,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+} from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
-import { useAuth } from '../../general/AuthWrapper/AuthWrapper';
-import { getFullSysArticle } from '../../../net/requests/getFullSysArticle';
-import { getFullUserArticle } from '../../../net/requests/getFullUserArticle';
 import to from 'await-to-js';
 import { useHistory } from 'react-router-dom';
 import { useStore } from '../../../hooks/useStore';
@@ -12,8 +21,9 @@ import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
 import { useSaveArticle } from '../../../net/requests/saveArticle';
 import { useRemoveArticle } from '../../../net/requests/removeArticle';
-// import { useDeleteArticle } from '../../../net/requests/deleteArticle';
-import { getArticleReadData } from '../../../net/requests/getArticleReadData';
+import { useDeleteArticle } from '../../../net/requests/deleteArticle';
+import { useGetArticleReadData } from '../../../net/requests/getArticleReadData';
+import { useGetFullArticle } from '../../../net/requests/getFullArticle';
 
 interface Props {
     article: SimpleArticle;
@@ -34,20 +44,20 @@ const ArticleControls: React.FC<Props> = ({
     const store = useStore();
     const libraryInfo = useLibraryInfo();
 
-    const { token } = useAuth();
+    const { refetch: getFullArticle } = useGetFullArticle({
+        id: article.id,
+        isSystem: article.is_system,
+    });
+
+    const { refetch: getArticleReadData } = useGetArticleReadData({
+        article_id: article.id,
+    });
+
     const onOpen = useCallback(async () => {
         setIsLoading(true);
 
-        const getArticlePromise = article.is_system
-            ? getFullSysArticle({ id: article.id }, token)
-            : getFullUserArticle({ id: article.id }, token);
-
-        const getReadDataPromise = getArticleReadData(
-            {
-                article_id: article.id,
-            },
-            token
-        );
+        const getArticlePromise = getFullArticle();
+        const getReadDataPromise = getArticleReadData();
 
         const promise = Promise.all([getArticlePromise, getReadDataPromise]);
 
@@ -59,19 +69,21 @@ const ArticleControls: React.FC<Props> = ({
         if (
             getArticleErr !== null ||
             getArticleData === undefined ||
+            getArticleData.data === undefined ||
             getReadDataErr !== null ||
-            getReadDataData === undefined
+            getReadDataData === undefined ||
+            getReadDataData.data === undefined
         ) {
             return;
         }
 
-        store.setReadArticle(getArticleData.data.article);
-        store.setArticleReadData(getReadDataData.data.data);
+        store.setReadArticle(getArticleData.data.data.article);
+        store.setArticleReadData(getReadDataData.data.data.data);
 
         setIsLoading(false);
 
         history.push('/app/read');
-    }, [article.id, article.is_system, history, loadInfo, store, token]);
+    }, [getArticleReadData, getFullArticle, history, loadInfo, store]);
 
     const showToast = useToast();
 
@@ -140,35 +152,41 @@ const ArticleControls: React.FC<Props> = ({
         setIsLoading(false);
     }, [article.id, loadInfo, onRemoveSuccess, removeMutation, showToast, t]);
 
-    // const deleteMutation = useDeleteArticle();
-    // const onDelete = useCallback(async () => {
-    //     setIsLoading(true);
+    const deleteMutation = useDeleteArticle();
+    const onDelete = useCallback(async () => {
+        setIsLoading(true);
 
-    //     const promise = deleteMutation.mutateAsync({
-    //         article_id: article.id,
-    //     });
-    //     loadInfo.loadUntilResolve(promise);
+        const promise = deleteMutation.mutateAsync({
+            article_id: article.id,
+        });
+        loadInfo.loadUntilResolve(promise);
 
-    //     const [err, data] = await promise;
-    //     if (err && data === undefined) {
-    //         showToast({
-    //             description: t('article-remove-error'),
-    //             status: 'error',
-    //             duration: 5000,
-    //             isClosable: true,
-    //         });
-    //     } else {
-    //         // err === null && data !== undefined
-    //         onRemoveSuccess(article.id);
-    //         showToast({
-    //             description: t('article-remove-success'),
-    //             status: 'success',
-    //             duration: 5000,
-    //             isClosable: true,
-    //         });
-    //     }
-    //     setIsLoading(false);
-    // }, [article.id, deleteMutation, loadInfo, onRemoveSuccess, showToast, t]);
+        const [err, data] = await promise;
+        if (err && data === undefined) {
+            showToast({
+                description: t('article-remove-error'),
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        } else {
+            // err === null && data !== undefined
+            onRemoveSuccess(article.id);
+            showToast({
+                description: t('article-remove-success'),
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+        setIsLoading(false);
+    }, [article.id, deleteMutation, loadInfo, onRemoveSuccess, showToast, t]);
+
+    const {
+        isOpen: deleteModalIsOpen,
+        onOpen: deleteModalOnOpen,
+        onClose: deleteModalOnClose,
+    } = useDisclosure();
 
     return (
         <Flex direction="row" p="3px 0px" justify="flex-start">
@@ -195,16 +213,36 @@ const ArticleControls: React.FC<Props> = ({
                     {t('remove')}
                 </Button>
             )}
-            {/* {article.uploader_id === store.getUser().id && (
+            {article.uploader_id === store.getUser().id && (
                 <Button
                     variant="type2"
-                    onClick={onDelete}
+                    onClick={deleteModalOnOpen}
                     disabled={isLoading}
                     ml={3}
                 >
                     {t('delete')}
                 </Button>
-            )} */}
+            )}
+            <Modal
+                onClose={deleteModalOnClose}
+                isOpen={deleteModalIsOpen}
+                isCentered={true}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>{t('delete-article-confirm')}</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>{t('delete-article-confirm-desc')}</ModalBody>
+                    <ModalFooter>
+                        <Button onClick={deleteModalOnClose} mr={3}>
+                            {t('common:cancel')}
+                        </Button>
+                        <Button onClick={onDelete} colorScheme="red">
+                            {t('delete')}
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Flex>
     );
 };
