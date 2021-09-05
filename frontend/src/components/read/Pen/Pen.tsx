@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Flex, Switch } from '@chakra-ui/react';
+import { Box, Text, Flex, Switch, IconButton } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { useReaderStore } from '../Reader/Reader';
@@ -48,14 +48,14 @@ const Pen: React.FC = () => {
                         {t('pen')}
                     </Text>
                     <Switch
-                        isChecked={readerStore.penEnabled}
+                        isChecked={readerStore.penState !== 'disabled'}
                         onChange={() => {
                             readerStore.togglePenEnabled();
                         }}
                     />
                 </Flex>
                 <Flex direction="row" align="center">
-                    <Flex direction="column">
+                    <Flex direction="column" mr={2}>
                         <Flex direction="row" align="center" mb={1}>
                             {colors1.map((color) => (
                                 <PenBox key={color} color={color} />
@@ -68,11 +68,19 @@ const Pen: React.FC = () => {
                         </Flex>
                     </Flex>
                     <Flex direction="column">
-                        <DeleteIcon
-                            boxSize={6}
-                            _hover={{
-                                cursor: 'pointer',
+                        <IconButton
+                            aria-label="Delete marks"
+                            onClick={() => {
+                                readerStore.setPenDelete();
                             }}
+                            variant="outline"
+                            border="1px solid transparent"
+                            borderColor={
+                                readerStore.penState === 'delete'
+                                    ? 'c1'
+                                    : 'transparent'
+                            }
+                            icon={<DeleteIcon boxSize={6} />}
                         />
                     </Flex>
                 </Flex>
@@ -80,11 +88,14 @@ const Pen: React.FC = () => {
             <Box
                 height="4px"
                 width="100%"
-                bgColor={readerStore.penColor}
+                bgColor={
+                    readerStore.penState !== 'delete'
+                        ? readerStore.penColor
+                        : 'transparent'
+                }
                 borderRadius="15px"
                 mb={2}
             />
-
             {line}
         </>
     );

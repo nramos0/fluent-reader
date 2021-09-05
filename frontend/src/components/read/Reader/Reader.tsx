@@ -8,6 +8,7 @@ import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { markArticle } from '../../../net/requests/markArticle';
+import { deleteMark } from '../../../net/requests/deleteMark';
 
 const binarySearch = <T extends unknown>(
     arr: T[],
@@ -78,15 +79,19 @@ interface ReaderStore {
     doesPageSkipMoveToKnown: boolean;
     toggleDoesPageSkipMoveToKnown: () => void;
 
-    penEnabled: boolean;
+    penState: 'disabled' | 'enabled' | 'delete';
     togglePenEnabled: () => void;
+    setPenDelete: () => void;
     penColor: MarkColor;
     setPenColor: (color: MarkColor, enablePen?: boolean) => void;
 
     underlineRanges: Mark[] | null;
     setUnderlineRanges: (ranges: Mark[]) => void;
     addUnderline: (mark: Mark) => void;
-    underlineMap: Dictionary<MarkColor | undefined> | null;
+    removeUnderline: (index: number, articleId: number) => void;
+    underlineMap: Dictionary<
+        { color: MarkColor; index: number } | undefined
+    > | null;
     computeUnderlineMap: () => boolean;
 
     pageOffsetMap: number[] | null;
@@ -257,10 +262,14 @@ const readerStore = observable({
         this.doesPageSkipMoveToKnown = !this.doesPageSkipMoveToKnown;
     },
 
-    penEnabled: false,
+    penState: 'disabled',
 
     togglePenEnabled() {
-        this.penEnabled = !this.penEnabled;
+        this.penState = this.penState !== 'disabled' ? 'disabled' : 'enabled';
+    },
+
+    setPenDelete() {
+        this.penState = 'delete';
     },
 
     penColor: 'black',
@@ -269,7 +278,7 @@ const readerStore = observable({
         this.penColor = color;
 
         if (enablePen) {
-            this.penEnabled = true;
+            this.penState = 'enabled';
         }
     },
 
@@ -304,6 +313,24 @@ const readerStore = observable({
         );
     },
 
+    removeUnderline(index, articleId) {
+        if (this.underlineRanges === null) {
+            return;
+        }
+
+        this.underlineRanges.splice(index, 1);
+        this.underlineRanges = this.underlineRanges.concat();
+        this.computeUnderlineMap();
+
+        deleteMark(
+            {
+                article_id: articleId,
+                index,
+            },
+            this.store?.token
+        );
+    },
+
     underlineMap: {},
     computeUnderlineMap() {
         if (
@@ -322,7 +349,9 @@ const readerStore = observable({
             length += pages[i].length;
         }
 
-        const underlineMap: Dictionary<MarkColor | undefined> = {};
+        const underlineMap: Dictionary<
+            { color: MarkColor; index: number } | undefined
+        > = {};
         underlineMap[length] = undefined; // extend the array
 
         const underlines = this.underlineRanges;
@@ -332,7 +361,10 @@ const readerStore = observable({
             const underline = underlines[i];
             const range = underline.selection;
             for (let j = range.start; j <= range.end; ++j) {
-                underlineMap[j] = underline.color;
+                underlineMap[j] = {
+                    color: underline.color,
+                    index: i,
+                };
             }
         }
 

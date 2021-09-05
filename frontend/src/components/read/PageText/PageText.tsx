@@ -47,7 +47,8 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
     const readerStore = useReaderStore();
 
     /**
-     * Todo: move this work to the backend
+     * Consider underlining as a side effect instead of
+     * being coupled with recomputing both classNameMap and wordStatusMap
      */
     const { classNameMap, wordStatusMap } = useMemo(() => {
         const wordCount = page.length;
@@ -66,7 +67,7 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
                 classNameMap[i] = '';
                 if (underlineMap[i + pageOffset] !== undefined) {
                     classNameMap[i] += ` underline-${
-                        underlineMap[i + pageOffset]
+                        underlineMap[i + pageOffset]?.color
                     }`;
                 }
                 continue;
@@ -91,7 +92,9 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
             classNameMap[i] = className;
 
             if (underlineMap[i + pageOffset] !== undefined) {
-                classNameMap[i] += ` underline-${underlineMap[i + pageOffset]}`;
+                classNameMap[i] += ` underline-${
+                    underlineMap[i + pageOffset]?.color
+                }`;
             }
         }
 
@@ -124,36 +127,57 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
     }, [readerStore, wordStatusMap]);
 
     useEffect(() => {
+        if (readerStore.wordStatusMap === null) {
+            return;
+        }
+
         // find first word that is not a stop word and select it on page change
         const pageLength = page.length;
         for (let i = 0; i < pageLength; ++i) {
             if (stopWordMap[i + pageOffset]) {
                 continue;
             }
-            readerStore.setCurrentWord(page[i], wordStatusMap[i], String(i));
+            readerStore.setCurrentWord(
+                page[i],
+                readerStore.wordStatusMap[i],
+                String(i)
+            );
             return;
         }
 
         readerStore.clearCurrentWord();
-    }, [page, pageOffset, readerStore, stopWordMap, wordStatusMap]);
+    }, [page, pageOffset, readerStore, stopWordMap]);
 
     const onClick: OnClickFunction = useCallback(
         (e) => {
             if (readerStore.wordStatusMap === null) {
                 return;
             }
-
             const element = e.target;
 
             const word = element.innerText as string;
             const index = element.id;
+
+            if (
+                readerStore.penState === 'delete' &&
+                readerStore.underlineMap !== null
+            ) {
+                const underline = readerStore.underlineMap[index];
+                if (underline && store.readArticle) {
+                    readerStore.removeUnderline(
+                        underline.index,
+                        store.readArticle.id
+                    );
+                }
+            }
+
             readerStore.setCurrentWord(
                 word,
                 readerStore.wordStatusMap[index],
                 index
             );
         },
-        [readerStore]
+        [readerStore, store.readArticle]
     );
 
     const onDoubleClick: OnClickFunction = useCallback(
