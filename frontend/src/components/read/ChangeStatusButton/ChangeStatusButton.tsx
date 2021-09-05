@@ -15,20 +15,8 @@ const StatusButton: React.FC<{ display: string; newStatus: WordStatus }> = ({
     return (
         <Button
             size="sm"
-            bgColor="#661919"
-            color="white"
             m="0px 5px 0px 5px"
-            border="1px solid transparent"
-            _hover={{
-                bg: '#FFFFFF',
-                color: '#661919',
-                border: '1px solid #661919',
-            }}
-            _active={{
-                bg: '#FFFFFF',
-                color: '#661919',
-                border: '1px solid #661919',
-            }}
+            variant="type3"
             display={display}
             onClick={() => {
                 if (readerStore.currentWord !== null) {

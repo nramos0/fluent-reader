@@ -454,17 +454,7 @@ const Reader: React.FC<{}> = () => {
                         </Text>
                         <Button
                             size="lg"
-                            bgColor="#661919"
-                            color="white"
-                            border="2px solid #661919"
-                            _hover={{
-                                bgColor: 'white',
-                                color: '#661919',
-                            }}
-                            _active={{
-                                borderColor: '#ccc',
-                                bgColor: '#ccc',
-                            }}
+                            variant="type1"
                             onClick={() => {
                                 history.push('/app/library');
                             }}

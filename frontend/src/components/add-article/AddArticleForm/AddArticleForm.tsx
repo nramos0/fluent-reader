@@ -143,23 +143,13 @@ const AddArticleForm = () => {
                             !!props.errors.language ||
                             !!props.errors.isPrivate
                         }
-                        bgColor="#661919"
-                        color="white"
                         w="100%"
                         type="button"
-                        border="2px solid #661919"
+                        variant="type1"
                         onClick={() => {
                             props.submitForm().then(() => {
                                 props.validateForm();
                             });
-                        }}
-                        _hover={{
-                            bgColor: 'white',
-                            color: '#661919',
-                        }}
-                        _active={{
-                            borderColor: '#ccc',
-                            bgColor: '#ccc',
                         }}
                     >
                         {t('create-article')}

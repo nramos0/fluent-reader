@@ -172,36 +172,12 @@ const ArticleControls: React.FC<Props> = ({
 
     return (
         <Flex direction="row" p="3px 0px" justify="flex-start">
-            <Button
-                bgColor="#661919"
-                color="white"
-                border="2px solid white"
-                _hover={{
-                    bgColor: 'white',
-                    color: '#661919',
-                }}
-                _active={{
-                    borderColor: '#ccc',
-                    bgColor: '#ccc',
-                }}
-                onClick={onOpen}
-                disabled={isLoading}
-            >
+            <Button variant="type2" onClick={onOpen} disabled={isLoading}>
                 {t('open')}
             </Button>
             {libraryInfo.libraryType !== 'user-saved' && (
                 <Button
-                    bgColor="#661919"
-                    color="white"
-                    border="2px solid white"
-                    _hover={{
-                        bgColor: 'white',
-                        color: '#661919',
-                    }}
-                    _active={{
-                        borderColor: '#ccc',
-                        bgColor: '#ccc',
-                    }}
+                    variant="type2"
                     onClick={onSave}
                     disabled={isLoading}
                     ml={3}
@@ -211,17 +187,7 @@ const ArticleControls: React.FC<Props> = ({
             )}
             {libraryInfo.libraryType === 'user-saved' && (
                 <Button
-                    bgColor="#661919"
-                    color="white"
-                    border="2px solid white"
-                    _hover={{
-                        bgColor: 'white',
-                        color: '#661919',
-                    }}
-                    _active={{
-                        borderColor: '#ccc',
-                        bgColor: '#ccc',
-                    }}
+                    variant="type2"
                     onClick={onRemove}
                     disabled={isLoading}
                     ml={3}
@@ -231,17 +197,7 @@ const ArticleControls: React.FC<Props> = ({
             )}
             {/* {article.uploader_id === store.getUser().id && (
                 <Button
-                    bgColor="#661919"
-                    color="white"
-                    border="2px solid white"
-                    _hover={{
-                        bgColor: 'white',
-                        color: '#661919',
-                    }}
-                    _active={{
-                        borderColor: '#ccc',
-                        bgColor: '#ccc',
-                    }}
+                    variant="type2"
                     onClick={onDelete}
                     disabled={isLoading}
                     ml={3}
