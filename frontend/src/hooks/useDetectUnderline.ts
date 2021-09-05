@@ -13,6 +13,7 @@ function useMouseEvent(
     }, [handler, type]);
 }
 
+// currently only works for adding new underlines
 const useDetectUnderline = (
     onUnderline: (start: number, end: number) => void
 ) => {
@@ -26,12 +27,15 @@ const useDetectUnderline = (
 
     const onMouseUp = useCallback(
         (e: MouseEvent) => {
-            if (e.target === null || !readerStore.penEnabled) {
+            if (e.target === null || readerStore.penState !== 'enabled') {
                 return;
             }
 
             const target = e.target as any;
-            if (target.className.includes('word')) {
+            if (
+                typeof target.className === 'string' &&
+                target.className.includes('word')
+            ) {
                 setUnderlineState((prev) => {
                     return {
                         ...prev,
@@ -40,17 +44,20 @@ const useDetectUnderline = (
                 });
             }
         },
-        [readerStore.penEnabled]
+        [readerStore]
     );
 
     const onMouseDown = useCallback(
         (e: MouseEvent) => {
-            if (e.target === null || !readerStore.penEnabled) {
+            if (e.target === null || readerStore.penState !== 'enabled') {
                 return;
             }
 
             const target = e.target as any;
-            if (target.className.includes('word')) {
+            if (
+                typeof target.className === 'string' &&
+                target.className.includes('word')
+            ) {
                 setUnderlineState({
                     isUnderlining: true,
                     start: parseInt(target.id),
@@ -58,7 +65,7 @@ const useDetectUnderline = (
                 });
             }
         },
-        [readerStore.penEnabled]
+        [readerStore]
     );
 
     useMouseEvent(onMouseUp, 'mouseup');
