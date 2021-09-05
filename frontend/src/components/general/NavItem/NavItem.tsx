@@ -21,7 +21,7 @@ const NavItem: React.FC<Props> = (props) => {
             mt={props.floatBottom ? 'auto' : 'inherit'}
             fontSize={{ base: 'x-small', sm: 'sm', lg: 'lg' }}
             bgColor={isSelected ? '#d16161' : 'white'}
-            color={isSelected ? 'white' : '#661919'}
+            color={isSelected ? 'white' : 'c1'}
             width="100%"
             textAlign="right"
             _hover={{

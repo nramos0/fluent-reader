@@ -61,19 +61,7 @@ const DefinitionSearch: React.FC<{}> = () => {
             <MenuButton
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
-                bgColor="#661919"
-                color="#FFFFFF"
-                border="1px solid transparent"
-                _hover={{
-                    bg: '#FFFFFF',
-                    color: '#661919',
-                    border: '1px solid #661919',
-                }}
-                _active={{
-                    bg: '#FFFFFF',
-                    color: '#661919',
-                    border: '1px solid #661919',
-                }}
+                variant="type3"
             >
                 {t('definition-search')}
             </MenuButton>

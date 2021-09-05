@@ -14,7 +14,7 @@ const LibraryOptions: React.FC<{}> = () => {
             width="100%"
             borderRadius="15px"
             bgColor="white"
-            color="#661919"
+            color="c1"
             direction="row"
             justify="center"
             p="10px 20px"
@@ -31,7 +31,7 @@ const LibraryOptions: React.FC<{}> = () => {
                             library.libraryType = e.target.value as LibraryType;
                         });
                     }}
-                    focusBorderColor="#661919"
+                    focusBorderColor="c1"
                 >
                     <option disabled={true}>{t('select-a-library')}</option>
                     <option value="system">{t('system-lib')}</option>

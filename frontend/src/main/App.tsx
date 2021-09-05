@@ -125,7 +125,7 @@ function App() {
         <Box
             w="100vw"
             h="100vh"
-            bgGradient="linear(to-b, #c15151, #c70505, #b82e2e, #902323, #661919)"
+            bgGradient="linear(to-b, #c15151, #c70505, #b82e2e, #902323, c1)"
         >
             <Box className="App" h="inherit">
                 <AppContext.Provider value={contextData}>

@@ -27,12 +27,13 @@ const Article: React.FC<Props> = ({ article, onRemoveSuccess, onAdd }) => {
             mr={3}
             borderRadius="15px"
             bgColor="white"
-            border="2px solid #661919"
+            border="2px solid transparent"
+            borderColor="c1"
             cursor="pointer"
-            color="#661919"
+            color="c1"
             _hover={{
                 color: 'white',
-                bgColor: '#661919',
+                bgColor: 'c1',
             }}
             transition="color linear 200ms, background-color linear 200ms"
             w="100%"
@@ -44,7 +45,7 @@ const Article: React.FC<Props> = ({ article, onRemoveSuccess, onAdd }) => {
                 aria-label={t('aria:article-title-tooltip')}
                 noOfLines={5}
                 borderRadius="lg"
-                color="#661919"
+                color="c1"
                 bgColor="white"
             >
                 <Heading

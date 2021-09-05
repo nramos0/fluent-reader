@@ -449,7 +449,7 @@ const Reader: React.FC<{}> = () => {
                         fontSize="20px"
                         fontWeight="bold"
                     >
-                        <Text mb={3} color="#661919">
+                        <Text mb={3} color="c1">
                             {t('no-article-open')}
                         </Text>
                         <Button

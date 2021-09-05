@@ -1,11 +1,15 @@
 const type1 = (): any => {
     return {
-        bgColor: '#661919',
+        bgColor: 'c1',
         color: 'white',
-        border: '2px solid #661919',
+
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: 'c1',
+
         _hover: {
             bgColor: 'white',
-            color: '#661919',
+            color: 'c1',
         },
         _active: {
             borderColor: '#ccc',
@@ -16,16 +20,18 @@ const type1 = (): any => {
 
 const type2 = () => {
     const base = type1();
-    base.border = '2px solid white';
+    base.borderColor = 'white';
     return base;
 };
 
 const type3 = () => {
     const base = type1();
 
-    base.border = '1px solid transparent';
-    base._hover.border = '1px solid #661919';
-    base._active.border = '1px solid #661919';
+    base.borderWidth = '1px';
+    base.borderColor = 'transparent';
+
+    base._hover.borderColor = 'c1';
+    base._active.borderColor = 'c1';
 
     return base;
 };

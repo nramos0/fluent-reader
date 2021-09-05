@@ -43,7 +43,7 @@ const About: React.FC = () => {
             align="center"
             flex={1}
             bgColor="white"
-            color="#661919"
+            color="c1"
             borderRadius="lg"
             m="50px 100px"
             textAlign="left"

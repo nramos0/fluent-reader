@@ -12,7 +12,9 @@ const theme = extendTheme({
     components: {
         Button: Button,
     },
-    colors: {},
+    colors: {
+        c1: '#661919',
+    },
     styles: {
         global: (props) => ({
             'html, body': {

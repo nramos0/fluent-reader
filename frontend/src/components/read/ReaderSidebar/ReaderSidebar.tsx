@@ -11,7 +11,7 @@ const ReaderSidebar: React.FC<{}> = () => {
             flex={3}
             height="90%"
             borderRadius="lg"
-            color="#661919"
+            color="c1"
             overflowY="auto"
             direction="column"
             align="center"

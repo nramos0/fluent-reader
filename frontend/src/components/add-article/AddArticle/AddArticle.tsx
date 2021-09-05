@@ -16,7 +16,7 @@ const AddArticle: React.FC = () => {
                     direction="column"
                     width="100%"
                     bgColor="white"
-                    color="#661919"
+                    color="c1"
                     p={3}
                     borderRadius="lg"
                     flex={1}

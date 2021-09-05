@@ -30,7 +30,7 @@ const Library: React.FC = () => {
                         p="5px 10px"
                         borderRadius="15px"
                         bg="white"
-                        color="#661919"
+                        color="c1"
                         textAlign="center"
                         fontSize="4xl"
                         width="100%"

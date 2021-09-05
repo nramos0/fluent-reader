@@ -98,7 +98,7 @@ const TagField = (props: FieldHookConfig<string[]>) => {
                 <Flex direction="row" wrap="wrap" mb={2}>
                     {tags.map((tag, index) => (
                         <Text
-                            bgColor="#661919"
+                            bgColor="c1"
                             color="white"
                             p={1}
                             mr={1}
