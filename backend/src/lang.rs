@@ -153,11 +153,7 @@ pub fn get_article_main_data(
                 }
             }
         } else {
-            match stop_word_map.get_mut(&lowercase) {
-                Some(_) | None => {
-                    stop_word_map.insert(index.to_string(), json!(true));
-                }
-            }
+            stop_word_map.insert(index.to_string(), json!(true));
         }
     }
 

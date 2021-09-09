@@ -38,13 +38,6 @@ pub fn handle_pass_hash(
         Err(_) => return Err("Failed to hash password"),
     };
 
-    // overwrite the plaintext password memory before dropping it
-    // by reassigning the new hashed password string to it
-    let password_bytes = unsafe { json.password.as_bytes_mut() };
-    for item in password_bytes {
-        *item = 0;
-    }
-
     json.password = hashed;
 
     Ok(())
