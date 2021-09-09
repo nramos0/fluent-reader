@@ -2,8 +2,10 @@ pub mod save_data;
 
 use crate::db;
 use crate::lang;
-use crate::models;
-use crate::response::*;
+use crate::models::db::user::*;
+use crate::models::net::article::*;
+use crate::response;
+use crate::response::get_success;
 use crate::util;
 
 use actix_web::{delete, get, web, HttpResponse, Responder};
@@ -12,14 +14,14 @@ use deadpool_postgres::{Client, Pool};
 #[get("/article/user/list/")]
 pub async fn get_single_user_article_list(
     db_pool: web::Data<Pool>,
-    query: web::Query<models::net::GetUserArticlesRequest>,
-    auth_user: models::db::ClaimsUser,
+    query: web::Query<GetUserArticlesRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_fetch_articles_error();
+            return response::article::get_fetch_articles_error();
         }
     };
 
@@ -46,22 +48,22 @@ pub async fn get_single_user_article_list(
     .await;
 
     match result {
-        Ok(articles) => HttpResponse::Ok().json(models::net::GetArticlesResponse::new(articles)),
-        Err(_) => article_res::get_fetch_articles_error(),
+        Ok(articles) => HttpResponse::Ok().json(GetArticlesResponse::new(articles)),
+        Err(_) => response::article::get_fetch_articles_error(),
     }
 }
 
 #[get("/article/user/all/list/")]
 pub async fn get_all_user_article_list(
     db_pool: web::Data<Pool>,
-    query: web::Query<models::net::GetArticlesRequest>,
-    auth_user: models::db::ClaimsUser,
+    query: web::Query<GetArticlesRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_fetch_articles_error();
+            return response::article::get_fetch_articles_error();
         }
     };
 
@@ -82,8 +84,8 @@ pub async fn get_all_user_article_list(
     .await;
 
     match result {
-        Ok(articles) => HttpResponse::Ok().json(models::net::GetArticlesResponse::new(articles)),
-        Err(_) => article_res::get_fetch_articles_error(),
+        Ok(articles) => HttpResponse::Ok().json(GetArticlesResponse::new(articles)),
+        Err(_) => response::article::get_fetch_articles_error(),
     }
 }
 
@@ -91,14 +93,14 @@ pub async fn get_all_user_article_list(
 pub async fn get_full_article(
     db_pool: web::Data<Pool>,
     web::Path(article_id): web::Path<i32>,
-    query: web::Query<models::net::GetFullArticleQuery>,
-    auth_user: models::db::ClaimsUser,
+    query: web::Query<GetFullArticleQuery>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_fetch_article_error();
+            return response::article::get_fetch_article_error();
         }
     };
 
@@ -111,23 +113,19 @@ pub async fn get_full_article(
         .await
         {
             Ok(article_opt) => match article_opt {
-                Some(article) => {
-                    HttpResponse::Ok().json(models::net::GetEditArticleResponse::new(article))
-                }
-                None => article_res::get_article_not_found(),
+                Some(article) => HttpResponse::Ok().json(GetEditArticleResponse::new(article)),
+                None => response::article::get_article_not_found(),
             },
-            Err(_) => article_res::get_fetch_article_error(),
+            Err(_) => response::article::get_fetch_article_error(),
         };
     }
 
     match db::article::user::get_user_article(&client, &article_id, &auth_user.id).await {
         Ok(article_opt) => match article_opt {
-            Some(article) => {
-                HttpResponse::Ok().json(models::net::GetFullArticleResponse::new(article))
-            }
-            None => article_res::get_article_not_found(),
+            Some(article) => HttpResponse::Ok().json(GetFullArticleResponse::new(article)),
+            None => response::article::get_article_not_found(),
         },
-        Err(_) => article_res::get_fetch_article_error(),
+        Err(_) => response::article::get_fetch_article_error(),
     }
 }
 
@@ -135,13 +133,13 @@ pub async fn get_full_article(
 pub async fn delete_article(
     db_pool: web::Data<Pool>,
     web::Path(article_id): web::Path<i32>,
-    auth_user: models::db::ClaimsUser,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_delete_article_error();
+            return response::article::get_delete_article_error();
         }
     };
 
@@ -149,21 +147,21 @@ pub async fn delete_article(
 
     match result {
         Ok(()) => get_success(),
-        Err(_) => article_res::get_delete_article_error(),
+        Err(_) => response::article::get_delete_article_error(),
     }
 }
 
 #[get("/article/user/saved/list/")]
 pub async fn get_saved_article_list(
     db_pool: web::Data<Pool>,
-    query: web::Query<models::net::GetArticlesRequest>,
-    auth_user: models::db::ClaimsUser,
+    query: web::Query<GetArticlesRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_fetch_articles_error();
+            return response::article::get_fetch_articles_error();
         }
     };
 
@@ -182,7 +180,7 @@ pub async fn get_saved_article_list(
     .await;
 
     match result {
-        Ok(articles) => HttpResponse::Ok().json(models::net::GetArticlesResponse::new(articles)),
-        Err(_) => article_res::get_fetch_articles_error(),
+        Ok(articles) => HttpResponse::Ok().json(GetArticlesResponse::new(articles)),
+        Err(_) => response::article::get_fetch_articles_error(),
     }
 }

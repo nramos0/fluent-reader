@@ -1,7 +1,7 @@
 pub mod word_data;
 
 use crate::db::*;
-use crate::models;
+use crate::models::db::user::*;
 use deadpool_postgres::Client;
 use futures::future;
 use std::io;
@@ -10,10 +10,7 @@ use tokio_postgres::types;
 use tokio_postgres::Statement;
 use types::ToSql;
 
-pub async fn get_user(
-    client: &Client,
-    username: &String,
-) -> Result<Option<models::db::User>, &'static str> {
+pub async fn get_user(client: &Client, username: &String) -> Result<Option<User>, &'static str> {
     let statement = client
         .prepare("SELECT * FROM fruser WHERE username = $1")
         .await
@@ -21,7 +18,7 @@ pub async fn get_user(
 
     match client.query_opt(&statement, &[username]).await {
         Ok(ref row) => match row {
-            Some(ref user) => match models::db::User::from_row_ref(user) {
+            Some(ref user) => match User::from_row_ref(user) {
                 Ok(user) => Ok(Some(user)),
                 Err(err) => {
                     eprintln!("{}", err);
@@ -37,10 +34,7 @@ pub async fn get_user(
     }
 }
 
-pub async fn get_user_by_id(
-    client: &Client,
-    user_id: &i32,
-) -> Result<Option<models::db::User>, &'static str> {
+pub async fn get_user_by_id(client: &Client, user_id: &i32) -> Result<Option<User>, &'static str> {
     let statement = client
         .prepare("SELECT * FROM fruser WHERE id = $1")
         .await
@@ -48,7 +42,7 @@ pub async fn get_user_by_id(
 
     match client.query_opt(&statement, &[user_id]).await {
         Ok(ref row) => match row {
-            Some(ref user) => match models::db::User::from_row_ref(user) {
+            Some(ref user) => match User::from_row_ref(user) {
                 Ok(user) => Ok(Some(user)),
                 Err(err) => {
                     eprintln!("{}", err);
@@ -67,7 +61,7 @@ pub async fn get_user_by_id(
 pub async fn update_user(
     client: &Client,
     user_id: &i32,
-    update: &models::db::UpdateUserOpt,
+    update: &UpdateUserOpt,
 ) -> Result<(), &'static str> {
     let mut params: [&'_ (dyn ToSql + Sync); 7] = [&0; 7];
     let mut current_param: usize = 0;
@@ -149,10 +143,7 @@ pub async fn update_user(
     }
 }
 
-pub async fn get_users(
-    client: &Client,
-    offset: &i64,
-) -> Result<Vec<models::db::SimpleUser>, io::Error> {
+pub async fn get_users(client: &Client, offset: &i64) -> Result<Vec<SimpleUser>, io::Error> {
     let statement = client
         .prepare("SELECT id, username FROM fruser ORDER BY id LIMIT 10 OFFSET $1")
         .await
@@ -163,8 +154,8 @@ pub async fn get_users(
         .await
         .expect("Error getting users")
         .iter()
-        .map(|row| models::db::SimpleUser::from_row_ref(row).unwrap())
-        .collect::<Vec<models::db::SimpleUser>>();
+        .map(|row| SimpleUser::from_row_ref(row).unwrap())
+        .collect::<Vec<SimpleUser>>();
 
     Ok(users)
 }
@@ -201,7 +192,7 @@ pub async fn create_user(
     password: &String,
     study_lang: &String,
     display_lang: &String,
-) -> Result<models::db::SimpleUser, &'static str> {
+) -> Result<SimpleUser, &'static str> {
     let user_err = Err("Error creating user");
 
     let trans = match client.transaction().await {
@@ -220,7 +211,7 @@ pub async fn create_user(
         }
     };
 
-    let user: models::db::SimpleUser = match trans
+    let user: SimpleUser = match trans
         .query_one(
             &insert_user,
             &[
@@ -234,7 +225,7 @@ pub async fn create_user(
         )
         .await
     {
-        Ok(result) => match models::db::SimpleUser::from_row_ref(&result) {
+        Ok(result) => match SimpleUser::from_row_ref(&result) {
             Ok(user) => user,
             Err(err) => {
                 eprintln!("{}", err);

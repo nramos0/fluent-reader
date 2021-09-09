@@ -1,4 +1,4 @@
-use crate::models;
+use crate::models::db::user_data::*;
 use deadpool_postgres::Client;
 use serde_json::json;
 use tokio_pg_mapper::FromTokioPostgresRow;
@@ -9,7 +9,7 @@ use types::{ToSql, Type};
 pub async fn get_user_word_data(
     client: &Client,
     user_id: &i32,
-) -> Result<models::db::UserWordData, &'static str> {
+) -> Result<UserWordData, &'static str> {
     let statement = match client
         .prepare(
             r#"
@@ -28,7 +28,7 @@ pub async fn get_user_word_data(
     };
 
     match client.query_one(&statement, &[user_id]).await {
-        Ok(result) => match models::db::UserWordData::from_row_ref(&result) {
+        Ok(result) => match UserWordData::from_row_ref(&result) {
             Ok(word_data) => Ok(word_data),
             Err(err) => {
                 eprintln!("{}", err);
@@ -341,7 +341,7 @@ pub async fn create_read_data(
     client: &Client,
     user_id: &i32,
     article_id: &i32,
-) -> Result<models::db::ReadData, &'static str> {
+) -> Result<ReadData, &'static str> {
     let insert_statement = client
         .prepare(
             r#"
@@ -373,7 +373,7 @@ pub async fn create_read_data(
         .query_one(&insert_statement, &[&user_id, &article_id])
         .await
     {
-        Ok(row) => match models::db::ReadData::from_row_ref(&row) {
+        Ok(row) => match ReadData::from_row_ref(&row) {
             Ok(read_data) => Ok(read_data),
             Err(err) => {
                 eprintln!("{}", err);
@@ -397,7 +397,7 @@ pub async fn get_read_data(
     client: &Client,
     user_id: &i32,
     article_id: &i32,
-) -> Result<models::db::ReadData, &'static str> {
+) -> Result<ReadData, &'static str> {
     let statement = client
         .prepare(
             r#"
@@ -412,7 +412,7 @@ pub async fn get_read_data(
 
     match client.query_opt(&statement, &[&user_id, &article_id]).await {
         Ok(row_opt) => match row_opt {
-            Some(row) => match models::db::ReadData::from_row_ref(&row) {
+            Some(row) => match ReadData::from_row_ref(&row) {
                 Ok(read_data) => Ok(read_data),
                 Err(err) => {
                     eprintln!("{}", err);
@@ -435,7 +435,7 @@ pub async fn mark_article(
     client: &Client,
     user_id: &i32,
     article_id: &i32,
-    mark: &models::db::Mark,
+    mark: &Mark,
 ) -> Result<(), &'static str> {
     let statement = client
         .prepare(

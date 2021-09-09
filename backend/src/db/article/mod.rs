@@ -2,7 +2,7 @@ pub mod system;
 pub mod user;
 
 use crate::db::*;
-use crate::models;
+use crate::models::db::article::*;
 use deadpool_postgres::Client;
 use tokio_pg_mapper::FromTokioPostgresRow;
 use tokio_postgres::types;
@@ -10,10 +10,10 @@ use types::{ToSql, Type};
 
 pub async fn create_article(
     trans: &deadpool_postgres::Transaction<'_>,
-    article_meta_data: models::db::ArticleMetadata,
-    article_main_data: models::db::ArticleMainData,
+    article_meta_data: ArticleMetadata,
+    article_main_data: ArticleMainData,
     words: Vec<String>,
-) -> Result<models::db::NewArticle, &'static str> {
+) -> Result<NewArticle, &'static str> {
     let statement = match trans
         .prepare(
             r#"
@@ -102,7 +102,7 @@ pub async fn create_article(
         )
         .await
     {
-        Ok(result) => match models::db::NewArticle::from_row_ref(&result) {
+        Ok(result) => match NewArticle::from_row_ref(&result) {
             Ok(article) => Ok(article),
             Err(err) => {
                 eprintln!("{}", err);
@@ -120,8 +120,8 @@ pub async fn edit_article(
     trans: &deadpool_postgres::Transaction<'_>,
     article_id: i32,
     user_id: i32,
-    update_metadata_opt: models::db::UpdateArticleMetadataOpt,
-    main_data_opt: Option<models::db::ArticleMainData>,
+    update_metadata_opt: UpdateArticleMetadataOpt,
+    main_data_opt: Option<ArticleMainData>,
     words_opt: Option<Vec<String>>,
 ) -> Result<(), &'static str> {
     let mut params: [&'_ (dyn ToSql + Sync); 18] = [&0; 18];
@@ -204,7 +204,7 @@ pub async fn edit_article(
             current_param += 1;
             types.push(Type::TEXT_ARRAY);
 
-            let models::db::ArticleMainData {
+            let ArticleMainData {
                 content,
 
                 word_count,

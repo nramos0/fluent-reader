@@ -1,42 +1,41 @@
 use crate::db;
-use crate::models;
-use crate::response::*;
+use crate::models::db::user::*;
+use crate::models::net::user_data::*;
+use crate::response;
+use crate::response::get_success;
 
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use deadpool_postgres::{Client, Pool};
 
 #[get("/user/data/")]
-pub async fn get_user_word_data(
-    db_pool: web::Data<Pool>,
-    auth_user: models::db::ClaimsUser,
-) -> impl Responder {
+pub async fn get_user_word_data(db_pool: web::Data<Pool>, auth_user: ClaimsUser) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_fetch_data_error();
+            return response::user::get_fetch_data_error();
         }
     };
 
     let result = db::user::word_data::get_user_word_data(&client, &auth_user.id).await;
 
     match result {
-        Ok(data) => HttpResponse::Ok().json(models::net::GetWordDataResponse::new(data)),
-        Err(_) => user_res::get_fetch_data_error(),
+        Ok(data) => HttpResponse::Ok().json(GetWordDataResponse::new(data)),
+        Err(_) => response::user::get_fetch_data_error(),
     }
 }
 
 #[put("/user/data/status/")]
 pub async fn update_word_status(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::UpdateWordStatusRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<UpdateWordStatusRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_update_word_status_error();
+            return response::user::get_update_word_status_error();
         }
     };
 
@@ -51,21 +50,21 @@ pub async fn update_word_status(
 
     match result {
         Ok(()) => get_success(),
-        Err(_) => user_res::get_update_word_status_error(),
+        Err(_) => response::user::get_update_word_status_error(),
     }
 }
 
 #[put("/user/data/status/batch/")]
 pub async fn batch_update_word_status(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::BatchUpdateWordStatusRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<BatchUpdateWordStatusRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_update_word_status_error();
+            return response::user::get_update_word_status_error();
         }
     };
 
@@ -80,21 +79,21 @@ pub async fn batch_update_word_status(
 
     match result {
         Ok(()) => get_success(),
-        Err(_) => user_res::get_update_word_status_error(),
+        Err(_) => response::user::get_update_word_status_error(),
     }
 }
 
 #[put("/user/data/definition/")]
 pub async fn update_word_definition(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::UpdateWordDefinitionRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<UpdateWordDefinitionRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_update_word_definition_error();
+            return response::user::get_update_word_definition_error();
         }
     };
 
@@ -109,7 +108,7 @@ pub async fn update_word_definition(
 
     match result {
         Ok(()) => get_success(),
-        Err(_) => user_res::get_update_word_definition_error(),
+        Err(_) => response::user::get_update_word_definition_error(),
     }
 }
 
@@ -117,13 +116,13 @@ pub async fn update_word_definition(
 pub async fn create_read_data(
     db_pool: web::Data<Pool>,
     web::Path(article_id): web::Path<i32>,
-    auth_user: models::db::ClaimsUser,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_create_read_data_error();
+            return response::user::get_create_read_data_error();
         }
     };
 
@@ -133,9 +132,9 @@ pub async fn create_read_data(
         Ok(_) => get_success(),
         Err(err) => {
             if err == "exists" {
-                user_res::get_read_data_exists_error()
+                response::user::get_read_data_exists_error()
             } else {
-                user_res::get_create_read_data_error()
+                response::user::get_create_read_data_error()
             }
         }
     }
@@ -145,13 +144,13 @@ pub async fn create_read_data(
 pub async fn get_read_data(
     db_pool: web::Data<Pool>,
     web::Path(article_id): web::Path<i32>,
-    auth_user: models::db::ClaimsUser,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_fetch_read_data_error();
+            return response::user::get_fetch_read_data_error();
         }
     };
 
@@ -162,7 +161,7 @@ pub async fn get_read_data(
         Err(get_read_data_err) => {
             if get_read_data_err != "missing" {
                 eprintln!("{}", get_read_data_err);
-                return user_res::get_fetch_read_data_error();
+                return response::user::get_fetch_read_data_error();
             }
 
             let create_read_data_result =
@@ -172,29 +171,29 @@ pub async fn get_read_data(
                 Ok(read_data) => read_data,
                 Err(create_read_data_err) => {
                     if create_read_data_err == "exists" {
-                        return user_res::get_read_data_exists_error();
+                        return response::user::get_read_data_exists_error();
                     } else {
-                        return user_res::get_create_read_data_error();
+                        return response::user::get_create_read_data_error();
                     }
                 }
             }
         }
     };
 
-    HttpResponse::Ok().json(models::net::GetReadDataResponse::new(read_data))
+    HttpResponse::Ok().json(GetReadDataResponse::new(read_data))
 }
 
 #[post("/user/data/mark_article/")]
 pub async fn mark_article(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::MarkArticleRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<MarkArticleRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::get_mark_article_error();
+            return response::user::get_mark_article_error();
         }
     };
 
@@ -206,7 +205,7 @@ pub async fn mark_article(
         Ok(()) => get_success(),
         Err(err) => {
             eprintln!("{}", err);
-            user_res::get_mark_article_error()
+            response::user::get_mark_article_error()
         }
     }
 }
@@ -214,14 +213,14 @@ pub async fn mark_article(
 #[delete("/user/data/mark_article/")]
 pub async fn delete_mark(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::DeleteMarkRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<DeleteMarkRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return user_res::delete_mark_error();
+            return response::user::delete_mark_error();
         }
     };
 
@@ -232,7 +231,7 @@ pub async fn delete_mark(
         Ok(()) => get_success(),
         Err(err) => {
             eprintln!("{}", err);
-            user_res::delete_mark_error()
+            response::user::delete_mark_error()
         }
     }
 }

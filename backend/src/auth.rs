@@ -1,5 +1,6 @@
 use crate::app_config::CONFIG;
 use crate::models;
+use crate::models::db::user::*;
 use actix_web::{web, HttpRequest};
 use argon2::{self, Config as ArgonConfig};
 use chrono::Utc;
@@ -21,7 +22,7 @@ lazy_static! {
 }
 
 pub fn handle_pass_hash(
-    json: &mut web::Json<models::net::RegisterRequest>,
+    json: &mut web::Json<models::net::user::RegisterRequest>,
 ) -> Result<(), &'static str> {
     let hash_config = ArgonConfig {
         hash_length: CONFIG.server.pass_hash_length,
@@ -50,8 +51,8 @@ pub fn handle_pass_hash(
 }
 
 pub fn attempt_user_login(
-    json: web::Json<models::net::LoginRequest>,
-    user: &models::db::User,
+    json: web::Json<models::net::user::LoginRequest>,
+    user: &User,
 ) -> Result<String, &'static str> {
     let matches = argon2::verify_encoded(&user.pass, json.password.as_bytes()).unwrap();
     if matches {
@@ -61,9 +62,9 @@ pub fn attempt_user_login(
     }
 }
 
-pub fn get_token(user: &models::db::User) -> String {
-    let claims = models::db::TokenClaims {
-        user: models::db::ClaimsUser::from_user(&user),
+pub fn get_token(user: &User) -> String {
+    let claims = TokenClaims {
+        user: ClaimsUser::from_user(&user),
         exp: Utc::now()
             .checked_add_signed(*EXPIRATION_DURATION)
             .expect("invalid timestamp")
@@ -72,23 +73,19 @@ pub fn get_token(user: &models::db::User) -> String {
     encode(&HEADER, &claims, &ENCODING_KEY).unwrap()
 }
 
-pub fn attempt_token_auth(
-    token: &str,
-) -> Result<models::db::ClaimsUser, jsonwebtoken::errors::Error> {
-    match decode::<models::db::TokenClaims>(&token, &DECODING_KEY, &VALIDATION) {
+pub fn attempt_token_auth(token: &str) -> Result<ClaimsUser, jsonwebtoken::errors::Error> {
+    match decode::<TokenClaims>(&token, &DECODING_KEY, &VALIDATION) {
         Ok(token_data) => Ok(token_data.claims.user),
         Err(err) => Err(err),
     }
 }
 
-pub fn check_can_refresh_token(
-    token: &str,
-) -> Result<models::db::ClaimsUser, jsonwebtoken::errors::Error> {
+pub fn check_can_refresh_token(token: &str) -> Result<ClaimsUser, jsonwebtoken::errors::Error> {
     match attempt_token_auth(token) {
         Ok(user) => Ok(user),
         Err(err) => match err.kind() {
             jsonwebtoken::errors::ErrorKind::ExpiredSignature => {
-                match dangerous_insecure_decode::<models::db::TokenClaims>(&token) {
+                match dangerous_insecure_decode::<TokenClaims>(&token) {
                     Ok(token_data) => Ok(token_data.claims.user),
                     Err(err) => Err(err),
                 }
@@ -98,7 +95,7 @@ pub fn check_can_refresh_token(
     }
 }
 
-pub fn attempt_req_token_auth(req: &HttpRequest) -> Result<models::db::ClaimsUser, &'static str> {
+pub fn attempt_req_token_auth(req: &HttpRequest) -> Result<ClaimsUser, &'static str> {
     if let Some(header_value) = req.headers().get("authorization") {
         let header_str = header_value.to_str().unwrap_or("");
         if !header_str.starts_with("Bearer ") {

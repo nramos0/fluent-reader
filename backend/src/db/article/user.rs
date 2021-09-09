@@ -1,5 +1,5 @@
 use crate::db::*;
-use crate::models;
+use crate::models::db::article::*;
 use deadpool_postgres::Client;
 use std::io;
 use tokio_pg_mapper::FromTokioPostgresRow;
@@ -11,7 +11,7 @@ pub async fn get_user_article(
     client: &Client,
     article_id: &i32,
     user_id: &i32,
-) -> Result<Option<models::db::ReadArticle>, &'static str> {
+) -> Result<Option<ReadArticle>, &'static str> {
     let statement = client
         .prepare(
             r#"
@@ -41,7 +41,7 @@ pub async fn get_user_article(
 
     match client.query_opt(&statement, &[article_id, user_id]).await {
         Ok(ref row_opt) => match row_opt {
-            Some(ref row) => match models::db::ReadArticle::from_row_ref(row) {
+            Some(ref row) => match ReadArticle::from_row_ref(row) {
                 Ok(article) => Ok(Some(article)),
                 Err(err) => {
                     eprintln!("{}", err);
@@ -61,7 +61,7 @@ pub async fn get_user_article_for_edit(
     client: &Client,
     article_id: &i32,
     user_id: &i32,
-) -> Result<Option<models::db::EditArticle>, &'static str> {
+) -> Result<Option<EditArticle>, &'static str> {
     let statement = client
         .prepare(
             r#"
@@ -85,7 +85,7 @@ pub async fn get_user_article_for_edit(
 
     match client.query_opt(&statement, &[article_id, user_id]).await {
         Ok(ref row_opt) => match row_opt {
-            Some(ref row) => match models::db::EditArticle::from_row_ref(row) {
+            Some(ref row) => match EditArticle::from_row_ref(row) {
                 Ok(article) => Ok(Some(article)),
                 Err(err) => {
                     eprintln!("{}", err);
@@ -205,7 +205,7 @@ pub async fn get_user_saved_article_list(
     lang: &Option<String>,
     search: &Option<String>,
     limit: &Option<i64>,
-) -> Result<Vec<models::db::SimpleArticle>, io::Error> {
+) -> Result<Vec<SimpleArticle>, io::Error> {
     let order_by_str = if search.is_some() {
         "pgroonga_score(a.tableoid, a.ctid)"
     } else {
@@ -250,8 +250,8 @@ pub async fn get_user_saved_article_list(
         .await
         .expect("Error getting articles")
         .iter()
-        .map(|row| models::db::SimpleArticle::from_row_ref(row).unwrap())
-        .collect::<Vec<models::db::SimpleArticle>>();
+        .map(|row| SimpleArticle::from_row_ref(row).unwrap())
+        .collect::<Vec<SimpleArticle>>();
 
     Ok(articles)
 }
@@ -264,7 +264,7 @@ pub async fn get_user_uploaded_article_list(
     lang: &Option<String>,
     search: &Option<String>,
     limit: &Option<i64>,
-) -> Result<Vec<models::db::SimpleArticle>, io::Error> {
+) -> Result<Vec<SimpleArticle>, io::Error> {
     let order_by_str = if search.is_some() {
         "pgroonga_score(tableoid, ctid)"
     } else {
@@ -306,8 +306,8 @@ pub async fn get_user_uploaded_article_list(
         .await
         .expect("Error getting articles")
         .iter()
-        .map(|row| models::db::SimpleArticle::from_row_ref(row).unwrap())
-        .collect::<Vec<models::db::SimpleArticle>>();
+        .map(|row| SimpleArticle::from_row_ref(row).unwrap())
+        .collect::<Vec<SimpleArticle>>();
 
     Ok(articles)
 }
@@ -319,7 +319,7 @@ pub async fn get_all_user_uploaded_article_list(
     lang: &Option<String>,
     search: &Option<String>,
     limit: &Option<i64>,
-) -> Result<Vec<models::db::SimpleArticle>, io::Error> {
+) -> Result<Vec<SimpleArticle>, io::Error> {
     let order_by_str = if search.is_some() {
         "pgroonga_score(tableoid, ctid)"
     } else {
@@ -373,8 +373,8 @@ pub async fn get_all_user_uploaded_article_list(
         .await
         .expect("Error getting articles")
         .iter()
-        .map(|row| models::db::SimpleArticle::from_row_ref(row).unwrap())
-        .collect::<Vec<models::db::SimpleArticle>>();
+        .map(|row| SimpleArticle::from_row_ref(row).unwrap())
+        .collect::<Vec<SimpleArticle>>();
 
     Ok(articles)
 }

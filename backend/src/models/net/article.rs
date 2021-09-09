@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-use super::db::*;
+use crate::models::db::article::*;
+
 // get article list
 #[derive(Deserialize)]
 pub struct GetArticlesRequest {

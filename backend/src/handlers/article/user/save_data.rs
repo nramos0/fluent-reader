@@ -1,6 +1,8 @@
 use crate::db;
-use crate::models;
-use crate::response::*;
+use crate::models::db::user::ClaimsUser;
+use crate::models::net::article::*;
+use crate::response;
+use crate::response::get_success;
 
 use actix_web::{delete, put, web, Responder};
 use deadpool_postgres::{Client, Pool};
@@ -8,14 +10,14 @@ use deadpool_postgres::{Client, Pool};
 #[put("/article/user/saved/single/")]
 pub async fn save_article(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::ArticleRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<ArticleRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let mut client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_save_article_error();
+            return response::article::get_save_article_error();
         }
     };
 
@@ -23,7 +25,7 @@ pub async fn save_article(
         Ok(trans) => trans,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_save_article_error();
+            return response::article::get_save_article_error();
         }
     };
 
@@ -32,16 +34,16 @@ pub async fn save_article(
 
     if let Err(err) = trans.commit().await {
         eprintln!("{}", err);
-        return article_res::get_save_article_error();
+        return response::article::get_save_article_error();
     }
 
     match result {
         Ok(()) => get_success(),
         Err(err) => {
             if err == "exists" {
-                article_res::get_save_article_exists_error()
+                response::article::get_save_article_exists_error()
             } else {
-                article_res::get_save_article_error()
+                response::article::get_save_article_error()
             }
         }
     }
@@ -50,14 +52,14 @@ pub async fn save_article(
 #[delete("/article/user/saved/single/")]
 pub async fn remove_saved_article(
     db_pool: web::Data<Pool>,
-    json: web::Json<models::net::ArticleRequest>,
-    auth_user: models::db::ClaimsUser,
+    json: web::Json<ArticleRequest>,
+    auth_user: ClaimsUser,
 ) -> impl Responder {
     let client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
-            return article_res::get_delete_article_error();
+            return response::article::get_delete_article_error();
         }
     };
 
@@ -67,6 +69,6 @@ pub async fn remove_saved_article(
 
     match result {
         Ok(()) => get_success(),
-        Err(_) => article_res::get_delete_article_error(),
+        Err(_) => response::article::get_delete_article_error(),
     }
 }

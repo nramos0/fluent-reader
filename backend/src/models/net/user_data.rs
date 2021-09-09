@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::db::*;
+use crate::models::db::user_data::*;
 
 #[derive(Serialize)]
 pub struct GetWordDataResponse {

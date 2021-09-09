@@ -202,7 +202,7 @@ const ArticleControls: React.FC<Props> = ({
             });
         } else {
             // err === null && data !== undefined
-            onEditSuccess(article.id);
+            onRemoveSuccess(article.id);
             showToast({
                 description: t('article-remove-success'),
                 status: 'success',
@@ -211,7 +211,7 @@ const ArticleControls: React.FC<Props> = ({
             });
         }
         setIsLoading(false);
-    }, [article.id, deleteMutation, loadInfo, onEditSuccess, showToast, t]);
+    }, [article.id, deleteMutation, loadInfo, onRemoveSuccess, showToast, t]);
 
     const {
         isOpen: deleteModalIsOpen,
