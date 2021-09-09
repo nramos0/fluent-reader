@@ -6,7 +6,7 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct StatusResponse {
-    pub status: String,
+    pub status: &'static str,
 }
 
 #[derive(Serialize)]
