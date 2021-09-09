@@ -9,7 +9,7 @@
     "lint-staged": "^10.5.4"
   },
   "scripts": {
-    "start": "sudo cargo watch -x 'run --bin fluent-reader-server'",
+    "start": "cargo watch -x 'run --bin fluent-reader-server'",
     "postinstall": "husky install && husky add .husky/pre-commit \"yarn lint-staged\"",
     "deploy": "git pull; cargo build --release; docker-compose down; docker-compose up -d --build;"
   },

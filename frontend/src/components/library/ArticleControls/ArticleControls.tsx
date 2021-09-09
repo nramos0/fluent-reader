@@ -20,6 +20,7 @@ import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
 import { useSaveArticle } from '../../../net/requests/saveArticle';
+import { useEditArticle } from '../../../net/requests/useEditArticle';
 import { useRemoveArticle } from '../../../net/requests/removeArticle';
 import { useDeleteArticle } from '../../../net/requests/deleteArticle';
 import { useGetArticleReadData } from '../../../net/requests/getArticleReadData';
@@ -152,6 +153,36 @@ const ArticleControls: React.FC<Props> = ({
         setIsLoading(false);
     }, [article.id, loadInfo, onRemoveSuccess, removeMutation, showToast, t]);
 
+    const editMutation = useEditArticle();
+    const onEdit = useCallback(async () => {
+        setIsLoading(true);
+
+        const promise = editMutation.mutateAsync({
+            article_id: article.id,
+        });
+        loadInfo.loadUntilResolve(promise);
+
+        const [err, data] = await promise;
+        if (err && data === undefined) {
+            showToast({
+                description: t('article-edit-error'),
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        } else {
+            // err === null && data !== undefined
+            onRemoveSuccess(article.id);
+            showToast({
+                description: t('article-edit-success'),
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+        setIsLoading(false);
+    }, [article.id, loadInfo, onRemoveSuccess, editMutation, showToast, t]);
+
     const deleteMutation = useDeleteArticle();
     const onDelete = useCallback(async () => {
         setIsLoading(true);
@@ -171,7 +202,7 @@ const ArticleControls: React.FC<Props> = ({
             });
         } else {
             // err === null && data !== undefined
-            onRemoveSuccess(article.id);
+            onEditSuccess(article.id);
             showToast({
                 description: t('article-remove-success'),
                 status: 'success',
@@ -180,7 +211,7 @@ const ArticleControls: React.FC<Props> = ({
             });
         }
         setIsLoading(false);
-    }, [article.id, deleteMutation, loadInfo, onRemoveSuccess, showToast, t]);
+    }, [article.id, deleteMutation, loadInfo, onEditSuccess, showToast, t]);
 
     const {
         isOpen: deleteModalIsOpen,
@@ -214,14 +245,24 @@ const ArticleControls: React.FC<Props> = ({
                 </Button>
             )}
             {article.uploader_id === store.getUser().id && (
-                <Button
-                    variant="type2"
-                    onClick={deleteModalOnOpen}
-                    disabled={isLoading}
-                    ml={3}
-                >
-                    {t('delete')}
-                </Button>
+                <>
+                    <Button
+                        variant="type2"
+                        onClick={deleteModalOnOpen}
+                        disabled={isLoading}
+                        ml={3}
+                    >
+                        {t('edit')}
+                    </Button>
+                    <Button
+                        variant="type2"
+                        onClick={deleteModalOnOpen}
+                        disabled={isLoading}
+                        ml={3}
+                    >
+                        {t('delete')}
+                    </Button>
+                </>
             )}
             <Modal
                 onClose={deleteModalOnClose}
