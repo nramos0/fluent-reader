@@ -11,7 +11,7 @@ interface Props {
 const NavItem: React.FC<Props> = (props) => {
     const location = useLocation();
 
-    const isSelected = location.pathname === props.location;
+    const isSelected = location.pathname.includes(props.location);
     return (
         <Link
             as={RouterLink}

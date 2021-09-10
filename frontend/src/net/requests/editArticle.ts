@@ -5,7 +5,7 @@ import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
 import { ENDPOINTS } from '../apiEndpoints';
 import { request } from '../request';
 
-interface EditArticleReqProps {
+export interface EditArticleReqProps {
     article_id: number;
     title?: string;
     author?: string;
@@ -14,6 +14,8 @@ interface EditArticleReqProps {
     language?: string;
     tags?: Array<string>;
     is_private?: boolean;
+
+    [key: string]: string | string[] | number | boolean | undefined;
 }
 
 interface EditArticleResData {

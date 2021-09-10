@@ -20,7 +20,6 @@ import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
 import { useSaveArticle } from '../../../net/requests/saveArticle';
-import { useEditArticle } from '../../../net/requests/useEditArticle';
 import { useRemoveArticle } from '../../../net/requests/removeArticle';
 import { useDeleteArticle } from '../../../net/requests/deleteArticle';
 import { useGetArticleReadData } from '../../../net/requests/getArticleReadData';
@@ -153,35 +152,11 @@ const ArticleControls: React.FC<Props> = ({
         setIsLoading(false);
     }, [article.id, loadInfo, onRemoveSuccess, removeMutation, showToast, t]);
 
-    const editMutation = useEditArticle();
     const onEdit = useCallback(async () => {
-        setIsLoading(true);
-
-        const promise = editMutation.mutateAsync({
-            article_id: article.id,
+        history.push(`/app/edit-article/${article.id}`, {
+            autoEditNavigate: true,
         });
-        loadInfo.loadUntilResolve(promise);
-
-        const [err, data] = await promise;
-        if (err && data === undefined) {
-            showToast({
-                description: t('article-edit-error'),
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        } else {
-            // err === null && data !== undefined
-            onRemoveSuccess(article.id);
-            showToast({
-                description: t('article-edit-success'),
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-        setIsLoading(false);
-    }, [article.id, loadInfo, onRemoveSuccess, editMutation, showToast, t]);
+    }, [article.id, history]);
 
     const deleteMutation = useDeleteArticle();
     const onDelete = useCallback(async () => {
@@ -248,7 +223,7 @@ const ArticleControls: React.FC<Props> = ({
                 <>
                     <Button
                         variant="type2"
-                        onClick={deleteModalOnOpen}
+                        onClick={onEdit}
                         disabled={isLoading}
                         ml={3}
                     >

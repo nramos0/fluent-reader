@@ -8,9 +8,20 @@ import Reader from '../../read/Reader/Reader';
 import Settings from '../../settings/Settings/Settings';
 import About from '../../about/About/About';
 
+const validLocations = [
+    '/app/library',
+    '/app/read',
+    '/app/add-article',
+    '/app/edit-article',
+    '/app/about/',
+    '/app/settings',
+];
+
 const InnerApp: React.FC = () => {
     const history = useHistory();
     const location = useLocation();
+
+    console.log(location);
 
     useEffect(() => {
         const lastPage = localStorage.getItem('lastPage');
@@ -18,9 +29,15 @@ const InnerApp: React.FC = () => {
         if (lastPage === null) {
             history.push('/app/library');
         } else {
-            history.push(lastPage);
+            if (
+                !validLocations.some((validPath) =>
+                    location.pathname.includes(validPath)
+                )
+            ) {
+                history.push(lastPage);
+            }
         }
-    }, [history]);
+    }, [history, location.pathname]);
 
     useEffect(() => {
         localStorage.setItem('lastPage', location.pathname);
@@ -36,6 +53,9 @@ const InnerApp: React.FC = () => {
                 <Reader />
             </Route>
             <Route path="/app/add-article">
+                <AddArticle />
+            </Route>
+            <Route path="/app/edit-article/:id">
                 <AddArticle />
             </Route>
             <Route path="/app/about">

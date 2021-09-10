@@ -48,8 +48,6 @@ declare interface Store {
     user: SimpleUser | null;
     getUser: () => SimpleUser;
     setUser: (user: SimpleUser) => void;
-
-    editArticle: Article | null;
 }
 
 declare type Language = 'en' | 'zh';

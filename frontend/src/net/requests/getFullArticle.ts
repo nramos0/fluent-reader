@@ -5,25 +5,26 @@ import { prepareURL } from '../apiUtil';
 import { request } from '../request';
 import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
 
-type GetFullArticleReqProps = {
+interface GetFullArticleReqProps {
     id: number;
     isSystem: boolean;
-};
+    onlyEditInfo?: boolean;
+}
 
-type GetFullArticleResData = {
+interface GetFullArticleResData {
     article: Article;
-};
+}
 
 export const getFullArticle: API.Request<
     GetFullArticleReqProps,
     GetFullArticleResData
-> = async ({ isSystem, ...data }, token) => {
+> = async ({ isSystem, onlyEditInfo, ...data }, token) => {
     const url = prepareURL(
         isSystem
             ? ENDPOINTS.article.system.single
             : ENDPOINTS.article.user.single,
-        [],
-        [],
+        ['only_edit_info'],
+        [onlyEditInfo ? 'true' : undefined],
         ['article_id'],
         [data.id]
     );
@@ -42,7 +43,7 @@ export const useGetFullArticle = (
 ) => {
     const { token } = useAuth();
     return useQuery<AxiosResponse<GetFullArticleResData>, AxiosError>(
-        ['getFullArticle', query.id],
+        ['getFullArticle', query.id, query.isSystem, query.onlyEditInfo],
         () => {
             return getFullArticle(query, token);
         },

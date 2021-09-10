@@ -4,7 +4,12 @@
   "create-fail-desc": "There was an error while creating your article.",
   "create-success-title": "Article created successfully!",
   "create-success-desc": "You can now view the article in your library.",
+  "edit-fail-title": "Article edit error.",
+  "edit-fail-desc": "There was an error while editing your article.",
+  "edit-success-title": "Article edited successfully!",
+  "edit-success-desc": "You can now view the edited article in your library.",
   "create-article": "Create Article",
+  "edit-article": "Edit Article",
   "title": "Title",
   "title-info": "The article's title. It should clearly identify or describe the article so that you can find it easily.",
   "author": "Author",
@@ -23,5 +28,7 @@
   "no-tags": "No tags",
   "reached-tag-limit": "An article can only have a maximum of 8 tags.",
   "empty-tag": "Cannot add an empty tag.",
-  "tag-exists": "That tag already exists."
+  "tag-exists": "That tag already exists.",
+  "edit-no-change-title": "Article hasn't changed.",
+  "edit-no-change-desc": "Please change the article's info before submitting"
 }
