@@ -70,7 +70,7 @@ pub async fn get_user_article_for_edit(
                     
                 is_private,
 
-                lang, tags, 
+                lang, tags
 
                 FROM article 
             WHERE 
