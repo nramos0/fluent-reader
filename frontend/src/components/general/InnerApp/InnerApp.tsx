@@ -13,7 +13,7 @@ const validLocations = [
     '/app/read',
     '/app/add-article',
     '/app/edit-article',
-    '/app/about/',
+    '/app/about',
     '/app/settings',
 ];
 
