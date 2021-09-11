@@ -1,11 +1,14 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import { Text } from '@chakra-ui/react';
-import { useStore } from '../../../hooks/useStore';
-import { useMemo } from 'react';
 import { observer } from 'mobx-react';
-import { useReaderStore } from '../Reader/Reader';
-import './PageText.css';
 import useDetectUnderline from '../../../hooks/useDetectUnderline';
+import { useOnClick } from '../../../hooks/reader/useOnClick';
+import { useOnDoubleClick } from '../../../hooks/reader/useOnDoubleClick';
+import { useSyncWordStatusMap } from '../../../hooks/reader/useSyncWordStatusMap';
+import { useWordDisplayMaps } from '../../../hooks/reader/useWordDisplayMaps';
+import './PageText.css';
+import { useOnUnderline } from '../../../hooks/reader/useOnUnderline';
+import { useSelectPageFirstWord } from '../../../hooks/reader/useSelectPageFirstWord';
 
 interface WordProps {
     word: string;
@@ -43,167 +46,21 @@ interface Props {
 }
 
 const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
-    const store = useStore();
-    const readerStore = useReaderStore();
-
-    /**
-     * Consider underlining as a side effect instead of
-     * being coupled with recomputing both classNameMap and wordStatusMap
-     */
-    const { classNameMap, wordStatusMap } = useMemo(() => {
-        const wordCount = page.length;
-
-        const underlineMap = readerStore.underlineMap!;
-
-        const classNameMap: string[] = [];
-        classNameMap[wordCount] = ''; // extend array (1 extra)
-
-        const wordStatusMap: WordStatus[] = [];
-        wordStatusMap[wordCount] = 'new'; // extend array (1 extra)
-
-        for (let i = 0; i < wordCount; ++i) {
-            const word = page[i];
-            if (stopWordMap[i + pageOffset]) {
-                classNameMap[i] = '';
-                if (underlineMap[i + pageOffset] !== undefined) {
-                    classNameMap[i] += ` underline-${
-                        underlineMap[i + pageOffset]?.color
-                    }`;
-                }
-                continue;
-            }
-
-            const status = store.getWordStatus(word);
-            wordStatusMap[i] = status;
-
-            let className = '';
-            switch (status) {
-                case 'known':
-                    className = 'word';
-                    break;
-                case 'new':
-                    className = 'word new';
-                    break;
-                case 'learning':
-                    className = 'word learning';
-                    break;
-            }
-
-            classNameMap[i] = className;
-
-            if (underlineMap[i + pageOffset] !== undefined) {
-                classNameMap[i] += ` underline-${
-                    underlineMap[i + pageOffset]?.color
-                }`;
-            }
-        }
-
-        return {
-            classNameMap: classNameMap,
-            wordStatusMap: wordStatusMap,
-        };
-    }, [page, pageOffset, readerStore.underlineMap, stopWordMap, store]);
-
-    const onUnderline = useCallback(
-        (start: number, end: number) => {
-            readerStore.addUnderline({
-                selection: {
-                    start: start + pageOffset,
-                    end: end + pageOffset,
-                },
-                color: readerStore.penColor,
-                mark_type: 'underline',
-            });
-        },
-        [pageOffset, readerStore]
+    const { classNameMap, wordStatusMap } = useWordDisplayMaps(
+        page,
+        pageOffset,
+        stopWordMap
     );
 
+    useSyncWordStatusMap(wordStatusMap);
+
+    const onUnderline = useOnUnderline(pageOffset);
     useDetectUnderline(onUnderline);
 
-    useEffect(() => {
-        // no need to separate into two effects.
-        // one changes iff the other changes.
-        readerStore.wordStatusMap = wordStatusMap;
-    }, [readerStore, wordStatusMap]);
+    useSelectPageFirstWord(page, pageOffset, stopWordMap);
 
-    useEffect(() => {
-        if (readerStore.wordStatusMap === null) {
-            return;
-        }
-
-        // find first word that is not a stop word and select it on page change
-        const pageLength = page.length;
-        for (let i = 0; i < pageLength; ++i) {
-            if (stopWordMap[i + pageOffset]) {
-                continue;
-            }
-            readerStore.setCurrentWord(
-                page[i],
-                readerStore.wordStatusMap[i],
-                String(i)
-            );
-            return;
-        }
-
-        readerStore.clearCurrentWord();
-    }, [page, pageOffset, readerStore, stopWordMap]);
-
-    const onClick: OnClickFunction = useCallback(
-        (e) => {
-            if (readerStore.wordStatusMap === null) {
-                return;
-            }
-            const element = e.target;
-
-            const word = element.innerText as string;
-            const index = element.id;
-
-            if (
-                readerStore.penState === 'delete' &&
-                readerStore.underlineMap !== null
-            ) {
-                const underline = readerStore.underlineMap[index];
-                if (underline && store.readArticle) {
-                    readerStore.removeUnderline(
-                        underline.index,
-                        store.readArticle.id
-                    );
-                }
-            }
-
-            readerStore.setCurrentWord(
-                word,
-                readerStore.wordStatusMap[index],
-                index
-            );
-        },
-        [readerStore, store.readArticle]
-    );
-
-    const onDoubleClick: OnClickFunction = useCallback(
-        (e) => {
-            if (readerStore.wordStatusMap === null) {
-                return;
-            }
-
-            const word = e.target.innerText as string;
-            const index = e.target.id;
-            const status = readerStore.wordStatusMap[index];
-
-            const newStatus =
-                status === 'new'
-                    ? 'learning'
-                    : status === 'learning'
-                    ? 'known'
-                    : 'learning';
-
-            if (readerStore.currentWord !== null) {
-                store.updateWordStatus(word, newStatus, false);
-                readerStore.updateWordStatus(newStatus);
-            }
-        },
-        [readerStore, store]
-    );
+    const onClick = useOnClick();
+    const onDoubleClick = useOnDoubleClick();
 
     return (
         <Text

@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Flex,
-    Box,
-    Text,
-    NumberInput,
-    NumberInputField,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
-    NumberInputStepper,
-} from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Flex, Box } from '@chakra-ui/react';
 import PageText from '../PageText/PageText';
 import PageFooter from '../PageFooter/PageFooter';
 import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
-import { useTranslation } from 'react-i18next';
 import { useStore } from '../../../hooks/useStore';
+import PageStepper from '../PageStepper';
+import { useInitPageVisit } from '../../../hooks/reader/useInitPageVisit';
+import { useSyncPageIndex } from '../../../hooks/reader/useSyncPageIndex';
+import { useSyncWordIndexMap } from '../../../hooks/reader/useSyncWordIndexMap';
+import { useComputePageOffsetMap } from '../../../hooks/reader/useComputePageOffsetMap';
+import { useSyncUnderlineRanges } from '../../../hooks/reader/useSyncUnderlineRanges';
+import { useComputeUnderlineMap } from '../../../hooks/reader/useComputeUnderlineMap';
+import { useComputePageIndexRange } from '../../../hooks/reader/useComputePageIndexRange';
 
 interface Props {
     pages: string[][];
@@ -22,40 +20,25 @@ interface Props {
 }
 
 const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
-    const { t } = useTranslation();
     const [currPageIndex, setCurrPageIndex] = useState(0);
     const pageCountM1 = pages.length - 1;
     const currPage = pages[currPageIndex];
 
+    useSyncPageIndex(currPageIndex);
+    useInitPageVisit(currPageIndex);
+    useSyncWordIndexMap(wordIndexMap);
+    useComputePageOffsetMap(pages);
+
+    // these two must be run in order, computing the underline map
+    // requires the underlines from the article object be synced
+    // into the readerStore
+    useSyncUnderlineRanges();
+    useComputeUnderlineMap();
+
+    useComputePageIndexRange(currPageIndex, currPage.length);
+
     const store = useStore();
     const readerStore = useReaderStore();
-
-    useEffect(() => {
-        readerStore.setPageIndex(currPageIndex);
-    }, [currPageIndex, readerStore]);
-
-    useEffect(() => {
-        if (readerStore.visitedPageIndices[currPageIndex] === undefined) {
-            readerStore.visitedPageIndices[currPageIndex] = 1;
-        }
-    }, [currPageIndex, readerStore.visitedPageIndices]);
-
-    useEffect(() => {
-        readerStore.setWordIndexMap(wordIndexMap);
-        readerStore.computePageOffsetMap(pages);
-
-        readerStore.setUnderlineRanges(store.articleReadData?.underlines ?? []);
-        readerStore.computeUnderlineMap();
-    }, [pages, readerStore, store.articleReadData?.underlines, wordIndexMap]);
-
-    useEffect(() => {
-        readerStore.computePageIndexRange(currPageIndex, currPage.length);
-    }, [
-        currPage.length,
-        currPageIndex,
-        readerStore,
-        readerStore.pageOffsetMap,
-    ]);
 
     return (
         <Flex
@@ -84,32 +67,11 @@ const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
                 )}
 
             <Box w="100%" border="thin solid #d16161" />
-            <Flex align="center" direction="row" height="5%" p="5px">
-                <Text as="span" mr={1}>
-                    {t('page')}
-                </Text>
-                <NumberInput
-                    value={currPageIndex + 1}
-                    onChange={(newPageIndex) => {
-                        const intIndex = parseInt(newPageIndex, 10);
-                        if (intIndex > 0 && intIndex <= pages.length) {
-                            setCurrPageIndex(intIndex - 1);
-                        }
-                    }}
-                    min={1}
-                    max={pages.length}
-                    size="xs"
-                    w="50px"
-                >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput>
-
-                <Text ml={1}> / {pages.length}</Text>
-            </Flex>
+            <PageStepper
+                currPageIndex={currPageIndex}
+                setCurrPageIndex={setCurrPageIndex}
+                pages={pages}
+            />
             <PageFooter
                 currPage={currPage}
                 currPageIndex={currPageIndex}
