@@ -9,6 +9,7 @@ import { useWordDisplayMaps } from '../../../hooks/reader/useWordDisplayMaps';
 import './PageText.css';
 import { useOnUnderline } from '../../../hooks/reader/useOnUnderline';
 import { useSelectPageFirstWord } from '../../../hooks/reader/useSelectPageFirstWord';
+import { useMarkDeletionHandler } from '../../../hooks/reader/useMarkDeletionHandler';
 
 interface WordProps {
     word: string;
@@ -56,11 +57,12 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
 
     const onUnderline = useOnUnderline(pageOffset);
     useDetectUnderline(onUnderline);
+    const markDeletionHandler = useMarkDeletionHandler(pageOffset);
+
+    const onClick = useOnClick(markDeletionHandler);
+    const onDoubleClick = useOnDoubleClick();
 
     useSelectPageFirstWord(page, pageOffset, stopWordMap);
-
-    const onClick = useOnClick();
-    const onDoubleClick = useOnDoubleClick();
 
     return (
         <Text

@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 import { useReaderStore } from '../../components/read/Reader/Reader';
-import { useStore } from '../useStore';
 
-export const useOnClick = () => {
-    const store = useStore();
+export const useOnClick = (markDeletionHandler: (index: number) => void) => {
     const readerStore = useReaderStore();
+
     return useCallback<OnClickFunction>(
         (e) => {
             if (readerStore.wordStatusMap === null) {
@@ -13,27 +12,31 @@ export const useOnClick = () => {
             const element = e.target;
 
             const word = element.innerText as string;
-            const index = element.id;
+            const index = element.id as string;
 
-            if (
-                readerStore.penState === 'delete' &&
-                readerStore.underlineMap !== null
-            ) {
-                const underline = readerStore.underlineMap[index];
-                if (underline && store.readArticle) {
-                    readerStore.removeUnderline(
-                        underline.index,
-                        store.readArticle.id
-                    );
+            const indexInt = (() => {
+                try {
+                    return Number.parseInt(index);
+                } catch (err) {
+                    return undefined;
                 }
+            })();
+
+            if (indexInt === undefined) {
+                console.error(
+                    `Got non-integer index '${index}' for word '${word}'`
+                );
+                return;
             }
+
+            markDeletionHandler(indexInt);
 
             readerStore.setCurrentWord(
                 word,
-                readerStore.wordStatusMap[index],
+                readerStore.wordStatusMap[indexInt],
                 index
             );
         },
-        [readerStore, store.readArticle]
+        [markDeletionHandler, readerStore]
     );
 };
