@@ -39,6 +39,26 @@ const Word: React.FC<WordProps> = ({
     );
 };
 
+const PageTextWrapper: React.FC<{ lang: Language }> = ({ children, lang }) => {
+    return (
+        <Text
+            as="pre"
+            whiteSpace="pre-wrap"
+            wordBreak="break-word"
+            flex={1}
+            padding="10px 20px 0px 20px"
+            mb="10px"
+            fontSize={lang === 'zh' ? '26px' : '22px'}
+            overflowY="auto"
+            textAlign="left"
+            userSelect="none"
+            id="reader-text"
+        >
+            {children}
+        </Text>
+    );
+};
+
 interface Props {
     page: string[];
     pageOffset: number;
@@ -65,19 +85,7 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
     useSelectPageFirstWord(page, pageOffset, stopWordMap);
 
     return (
-        <Text
-            as="pre"
-            whiteSpace="pre-wrap"
-            wordBreak="break-word"
-            flex={1}
-            padding="10px 20px 0px 20px"
-            mb="10px"
-            fontSize={lang === 'zh' ? '26px' : '22px'}
-            overflowY="auto"
-            textAlign="left"
-            userSelect="none"
-            id="reader-text"
-        >
+        <PageTextWrapper lang={lang}>
             {page.map((word, index) => (
                 <Word
                     word={word}
@@ -91,10 +99,11 @@ const PageText: React.FC<Props> = ({ page, pageOffset, stopWordMap, lang }) => {
                             : onDoubleClick
                     }
                     index={index}
+                    // words will never change order reactively
                     key={index}
                 />
             ))}
-        </Text>
+        </PageTextWrapper>
     );
 };
 
