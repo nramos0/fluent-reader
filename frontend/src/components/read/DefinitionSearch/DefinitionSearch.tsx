@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
 import sites, { Site } from '../../../config/sites';
-import { useReaderStore } from '../Reader/Reader';
+import { useReaderStore } from '../../../store/readerStore';
 
 const DictionaryItem: React.FC<Site> = observer((dict) => {
     const readerStore = useReaderStore();

@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, Text, Flex, Switch, IconButton } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
-import { useReaderStore } from '../Reader/Reader';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { useReaderStore } from '../../../store/readerStore';
 
 const line = (
     <Box width="100%" height="1px" bgColor="#d16161" borderRadius="5px" />

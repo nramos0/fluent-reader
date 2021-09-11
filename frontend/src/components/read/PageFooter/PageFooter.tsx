@@ -1,8 +1,8 @@
 import React from 'react';
 import { Flex, Button } from '@chakra-ui/react';
-import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
+import { useReaderStore } from '../../../store/readerStore';
 
 interface Props {
     currPage: string[];

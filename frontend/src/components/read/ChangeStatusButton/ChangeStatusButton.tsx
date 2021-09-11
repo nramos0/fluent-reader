@@ -3,7 +3,7 @@ import { Button, Flex } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
-import { useReaderStore } from '../Reader/Reader';
+import { useReaderStore } from '../../../store/readerStore';
 
 const StatusButton: React.FC<{ display: string; newStatus: WordStatus }> = ({
     display,

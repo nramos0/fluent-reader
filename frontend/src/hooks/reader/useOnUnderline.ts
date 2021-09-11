@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useReaderStore } from '../../components/read/Reader/Reader';
+import { useReaderStore } from '../../store/readerStore';
 
 export const useOnUnderline = (pageOffset: number) => {
     const readerStore = useReaderStore();

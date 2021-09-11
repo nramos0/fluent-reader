@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Text, Switch } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
-import { useReaderStore } from '../Reader/Reader';
+import { useReaderStore } from '../../../store/readerStore';
 
 const AuxiliaryControls: React.FC = () => {
     const { t } = useTranslation('reader');

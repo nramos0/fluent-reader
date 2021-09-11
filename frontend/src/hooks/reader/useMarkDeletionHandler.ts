@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useReaderStore } from '../../components/read/Reader/Reader';
+import { useReaderStore } from '../../store/readerStore';
 import { useStore } from '../useStore';
 
 export const useMarkDeletionHandler = (pageOffset: number) => {

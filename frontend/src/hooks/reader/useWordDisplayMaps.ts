@@ -1,4 +1,4 @@
-import { useReaderStore } from '../../components/read/Reader/Reader';
+import { useReaderStore } from '../../store/readerStore';
 import { useMemo } from 'react';
 import { useStore } from '../useStore';
 

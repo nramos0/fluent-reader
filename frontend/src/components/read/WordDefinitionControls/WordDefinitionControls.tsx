@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import DefinitionSearch from '../DefinitionSearch/DefinitionSearch';
 import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
-import { useReaderStore } from '../Reader/Reader';
+import { useReaderStore } from '../../../store/readerStore';
 
 const WordDefinitionControls: React.FC = () => {
     const { t } = useTranslation('reader');

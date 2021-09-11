@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { Flex, Box } from '@chakra-ui/react';
 import PageText from '../PageText/PageText';
 import PageFooter from '../PageFooter/PageFooter';
-import { useReaderStore } from '../Reader/Reader';
 import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
 import PageStepper from '../PageStepper';
-import { useInitPageVisit } from '../../../hooks/reader/useInitPageVisit';
+import { useHandleVisitedPages } from '../../../hooks/reader/useInitPageVisit';
 import { useSyncPageIndex } from '../../../hooks/reader/useSyncPageIndex';
 import { useSyncWordIndexMap } from '../../../hooks/reader/useSyncWordIndexMap';
 import { useComputePageOffsetMap } from '../../../hooks/reader/useComputePageOffsetMap';
 import { useSyncUnderlineRanges } from '../../../hooks/reader/useSyncUnderlineRanges';
 import { useComputeUnderlineMap } from '../../../hooks/reader/useComputeUnderlineMap';
 import { useComputePageIndexRange } from '../../../hooks/reader/useComputePageIndexRange';
+import { useReaderStore } from '../../../store/readerStore';
 
 interface Props {
     pages: string[][];
@@ -25,7 +25,7 @@ const ReadPages: React.FC<Props> = ({ pages, wordIndexMap }) => {
     const currPage = pages[currPageIndex];
 
     useSyncPageIndex(currPageIndex);
-    useInitPageVisit(currPageIndex);
+    useHandleVisitedPages(currPageIndex);
     useSyncWordIndexMap(wordIndexMap);
     useComputePageOffsetMap(pages);
 

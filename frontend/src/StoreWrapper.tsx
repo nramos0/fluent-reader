@@ -1,4 +1,4 @@
-import StoreContext, { store } from './store';
+import StoreContext, { store } from './store/store';
 
 const StoreWrapper: React.FC = (props) => {
     return (
