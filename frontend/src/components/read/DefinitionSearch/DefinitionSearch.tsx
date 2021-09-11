@@ -46,7 +46,7 @@ const DictionaryItem: React.FC<Site> = observer((dict) => {
     );
 });
 
-const DefinitionSearch: React.FC<{}> = () => {
+const DefinitionSearch: React.FC = () => {
     const { t } = useTranslation('reader');
     const store = useStore();
 

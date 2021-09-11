@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import { useStore } from '../../../hooks/useStore';
 import { useReaderStore } from '../Reader/Reader';
 
-const WordDefinitionControls: React.FC<{}> = () => {
+const WordDefinitionControls: React.FC = () => {
     const { t } = useTranslation('reader');
 
     const store = useStore();

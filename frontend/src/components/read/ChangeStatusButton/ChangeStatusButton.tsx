@@ -34,7 +34,7 @@ const StatusButton: React.FC<{ display: string; newStatus: WordStatus }> = ({
     );
 };
 
-const ChangeStatusButton: React.FC<{}> = () => {
+const ChangeStatusButton: React.FC = () => {
     const readerStore = useReaderStore();
 
     const wordStatus =

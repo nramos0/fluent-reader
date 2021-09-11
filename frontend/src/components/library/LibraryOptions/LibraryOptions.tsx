@@ -5,7 +5,7 @@ import { useLibraryInfo } from '../Library/Library';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 
-const LibraryOptions: React.FC<{}> = () => {
+const LibraryOptions: React.FC = () => {
     const { t } = useTranslation('library');
     const library = useLibraryInfo();
 

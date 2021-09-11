@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import LoginForm from '../LoginForm/LoginForm';
 import CreateAccountForm from '../CreateAccountForm/CreateAccountForm';
 
-const AccountPage: React.FC<{}> = () => {
+const AccountPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
 
     const { t } = useTranslation('account');

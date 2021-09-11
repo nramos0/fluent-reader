@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import Dictionary from '../Dictionary/Dictionary';
 import Pen from '../Pen/Pen';
 
-const ReaderSidebar: React.FC<{}> = () => {
+const ReaderSidebar: React.FC = () => {
     return (
         <Flex
             backgroundColor="#fff"

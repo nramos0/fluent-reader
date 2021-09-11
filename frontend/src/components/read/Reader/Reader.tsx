@@ -448,7 +448,7 @@ const ArticleEffect: React.FC = observer(() => {
     return null;
 });
 
-const Reader: React.FC<{}> = () => {
+const Reader: React.FC = () => {
     const { t } = useTranslation('reader');
 
     const history = useHistory();

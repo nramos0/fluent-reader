@@ -16,7 +16,7 @@ export const useAuth = () => {
 };
 
 // binds the auth store token to the store
-const TokenBind: React.FC<{}> = observer(() => {
+const TokenBind: React.FC = observer(() => {
     const store = useStore();
     const auth = useAuth();
 
@@ -27,7 +27,7 @@ const TokenBind: React.FC<{}> = observer(() => {
     return null;
 });
 
-const AuthWrapper: React.FC<{}> = (props) => {
+const AuthWrapper: React.FC = (props) => {
     const [token, setToken] = useState(() => {
         return localStorage.getItem('token') || '';
     });
