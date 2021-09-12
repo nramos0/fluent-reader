@@ -14,20 +14,26 @@ interface Props {
 const DataFetch: React.FC<Props> = ({ fetch, setHasData }) => {
     const store = useStore();
 
-    const { fetch: fetchWordData } = useGetWordData();
-    const { fetch: fetchUser } = useGetUser();
+    const { refetch: fetchWordData } = useGetWordData();
+    const { refetch: fetchUser } = useGetUser();
     const loadInfo = useLoadInfo();
 
     useEffect(() => {
         if (fetch) {
             loadInfo.loadUntilResolve(
                 Promise.all([fetchWordData(), fetchUser()])
-                    .then(([wordData, user]) => {
-                        if (wordData === null || user === null) {
+                    .then(([wordDataResult, userResult]) => {
+                        if (
+                            wordDataResult === null ||
+                            wordDataResult.data === undefined ||
+                            userResult === null ||
+                            userResult.data === undefined
+                        ) {
                             throw new Error('data is null');
                         }
 
-                        store.setWordData(wordData);
+                        const user = userResult.data.data.user;
+                        store.setWordData(wordDataResult.data.data.data);
                         store.setUser(user);
                         i18nInitPromise.then(() => {
                             i18n.changeLanguage(user.display_lang);

@@ -1,8 +1,8 @@
 import { ENDPOINTS } from '../apiEndpoints';
 import { request } from '../request';
 import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
-import { useCallback, useState } from 'react';
-import to from 'await-to-js';
+import { useQuery } from 'react-query';
+import { AxiosError, AxiosResponse } from 'axios';
 
 type GetWordDataReqProps = {};
 
@@ -21,25 +21,45 @@ export const getWordData: API.Request<
     });
 };
 
-export const useGetWordData = () => {
-    const auth = useAuth();
-    const [wordData, setWordData] = useState<WordData | null>(null);
-    const [promise, setPromise] = useState<Promise<unknown> | null>(null);
-    const fetch = useCallback(() => {
-        const fetch = async () => {
-            const [err, data] = await to(getWordData({}, auth.token));
-            if (err !== null || data === undefined) {
-                return null;
+export const useGetWordData = (fn?: {
+    onSuccess?: (data?: AxiosResponse<GetWordDataResData>) => void;
+    onError?: API.OnFailureFn;
+}) => {
+    const { token } = useAuth();
+    return useQuery<AxiosResponse<GetWordDataResData> | undefined, AxiosError>(
+        ['getWordData'],
+        () => {
+            if (!token) {
+                return undefined;
             }
 
-            setWordData(data.data.data);
+            console.log('getting word data with token ', token);
 
-            return data.data.data;
-        };
-        const promise = fetch();
-        setPromise(promise);
-        return promise;
-    }, [auth.token]);
+            return getWordData({}, token);
+        },
+        {
+            onSuccess: fn?.onSuccess,
+            onError: fn?.onError,
+            enabled: false,
+        }
+    );
+    // const [wordData, setWordData] = useState<WordData | null>(null);
+    // const [promise, setPromise] = useState<Promise<unknown> | null>(null);
+    // const fetch = useCallback(() => {
+    //     const fetch = async () => {
+    //         const [err, data] = await to(getWordData({}, auth.token));
+    //         if (err !== null || data === undefined) {
+    //             return null;
+    //         }
 
-    return { wordData, promise, fetch };
+    //         setWordData(data.data.data);
+
+    //         return data.data.data;
+    //     };
+    //     const promise = fetch();
+    //     setPromise(promise);
+    //     return promise;
+    // }, [auth.token]);
+
+    // return { wordData, promise, fetch };
 };

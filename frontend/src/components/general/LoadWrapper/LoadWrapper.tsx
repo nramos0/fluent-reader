@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import to from 'await-to-js';
 import { Center, Spinner, Flex } from '@chakra-ui/react';
+import { useMemo } from 'react';
 
 type LoadUntilResolve = <T extends unknown>(promise: Promise<T>) => void;
 
@@ -52,17 +53,20 @@ const LoadWrapper: React.FC<Props> = (props) => {
         setIsLoading(false);
     }, []);
 
+    const loadInfoContextVal = useMemo(
+        () => ({
+            loadUntilResolve: loadUntilResolve,
+            isLoading: isLoading,
+        }),
+        [isLoading, loadUntilResolve]
+    );
+
     if (isInitialLoad || !ready) {
         return null;
     }
 
     return (
-        <LoadContext.Provider
-            value={{
-                loadUntilResolve: loadUntilResolve,
-                isLoading: isLoading,
-            }}
-        >
+        <LoadContext.Provider value={loadInfoContextVal}>
             {isLoading ? (
                 <Flex
                     pos="absolute"
