@@ -33,8 +33,6 @@ export const useGetWordData = (fn?: {
                 return undefined;
             }
 
-            console.log('getting word data with token ', token);
-
             return getWordData({}, token);
         },
         {
