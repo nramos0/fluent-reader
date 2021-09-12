@@ -10,7 +10,7 @@ import About from '../../about/About/About';
 import { useSyncPageToStorage } from '../../../hooks/innerApp/useSyncPageToStorage';
 import { useReturnToLastPage } from '../../../hooks/innerApp/useReturnToLastPage';
 
-enum AppLocation {
+export enum AppLocation {
     Library = '/app/library',
     Read = '/app/read',
     AddArticle = '/app/add-article',
