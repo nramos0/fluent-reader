@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { useGetWordData } from '../../net/requests';
-import { useGetUser } from '../../net/requests/getUser';
+import { useGetUser } from '../../net/requests/user/getUser';
 import { useStore } from '../../hooks/useStore';
 import i18n, { i18nInitPromise } from '../../i18n';
 import { useLoadInfo } from '../general/LoadWrapper/LoadWrapper';

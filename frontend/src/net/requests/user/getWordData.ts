@@ -1,6 +1,6 @@
-import { ENDPOINTS } from '../apiEndpoints';
-import { request } from '../request';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { request } from '../../request';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
 import { useQuery } from 'react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
@@ -41,23 +41,4 @@ export const useGetWordData = (fn?: {
             enabled: false,
         }
     );
-    // const [wordData, setWordData] = useState<WordData | null>(null);
-    // const [promise, setPromise] = useState<Promise<unknown> | null>(null);
-    // const fetch = useCallback(() => {
-    //     const fetch = async () => {
-    //         const [err, data] = await to(getWordData({}, auth.token));
-    //         if (err !== null || data === undefined) {
-    //             return null;
-    //         }
-
-    //         setWordData(data.data.data);
-
-    //         return data.data.data;
-    //     };
-    //     const promise = fetch();
-    //     setPromise(promise);
-    //     return promise;
-    // }, [auth.token]);
-
-    // return { wordData, promise, fetch };
 };

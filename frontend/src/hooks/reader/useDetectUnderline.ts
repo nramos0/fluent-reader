@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useReaderStore } from '../store/readerStore';
+import { useReaderStore } from '../../store/readerStore';
 
 function useMouseEvent(
     handler: (e: MouseEvent) => void,

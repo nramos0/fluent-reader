@@ -1,6 +1,6 @@
-import { ENDPOINTS } from '../apiEndpoints';
-import { request } from '../request';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { request } from '../../request';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
 import { AxiosResponse, AxiosError } from 'axios';
 import { useQuery } from 'react-query';
 

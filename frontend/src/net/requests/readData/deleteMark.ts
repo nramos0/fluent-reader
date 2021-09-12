@@ -1,9 +1,9 @@
 import to from 'await-to-js';
 import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
-import { ENDPOINTS } from '../apiEndpoints';
-import { request } from '../request';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { request } from '../../request';
 
 interface DeleteMarkReqProps {
     index: number;

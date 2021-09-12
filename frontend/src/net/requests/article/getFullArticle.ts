@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
 import { AxiosResponse, AxiosError } from 'axios';
-import { ENDPOINTS } from '../apiEndpoints';
-import { prepareURL } from '../apiUtil';
-import { request } from '../request';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { prepareURL } from '../../apiUtil';
+import { request } from '../../request';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
 
 interface GetFullArticleReqProps {
     id: number;

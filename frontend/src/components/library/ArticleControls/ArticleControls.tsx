@@ -19,11 +19,11 @@ import { useHistory } from 'react-router-dom';
 import { useStore } from '../../../hooks/useStore';
 import { observer } from 'mobx-react';
 import { useLibraryInfo } from '../Library/Library';
-import { useSaveArticle } from '../../../net/requests/saveArticle';
-import { useRemoveArticle } from '../../../net/requests/removeArticle';
-import { useDeleteArticle } from '../../../net/requests/deleteArticle';
-import { useGetArticleReadData } from '../../../net/requests/getArticleReadData';
-import { useGetFullArticle } from '../../../net/requests/getFullArticle';
+import { useSaveArticle } from '../../../net/requests/saveData/saveArticle';
+import { useRemoveArticle } from '../../../net/requests/saveData/removeArticle';
+import { useDeleteArticle } from '../../../net/requests/article/deleteArticle';
+import { useGetArticleReadData } from '../../../net/requests/readData/getArticleReadData';
+import { useGetFullArticle } from '../../../net/requests/article/getFullArticle';
 
 interface Props {
     article: SimpleArticle;

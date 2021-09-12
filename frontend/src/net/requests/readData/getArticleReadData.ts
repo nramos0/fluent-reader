@@ -1,9 +1,9 @@
-import { ENDPOINTS } from '../apiEndpoints';
-import { request } from '../request';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { request } from '../../request';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
 import { useQuery } from 'react-query';
 import { AxiosResponse, AxiosError } from 'axios';
-import { prepareURL } from '../apiUtil';
+import { prepareURL } from '../../apiUtil';
 
 type GetArticleReadDataReqProps = {
     article_id: number;

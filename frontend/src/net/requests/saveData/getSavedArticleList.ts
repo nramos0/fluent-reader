@@ -1,9 +1,9 @@
-import { ENDPOINTS } from '../apiEndpoints';
-import { request } from '../request';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { request } from '../../request';
 import { useQuery } from 'react-query';
 import { AxiosError, AxiosResponse } from 'axios';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
-import { prepareURL } from '../apiUtil';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
+import { prepareURL } from '../../apiUtil';
 
 type GetSavedArticleListReqProps = {
     offset?: number;

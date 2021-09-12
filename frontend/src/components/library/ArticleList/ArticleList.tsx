@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Flex, Text, Skeleton, Button } from '@chakra-ui/react';
 import Article from '../Article/Article';
-import { useGetArticleList } from '../../../net/requests/getArticleList';
+import { useGetArticleList } from '../../../net/requests/article/getArticleList';
 import { useLibraryInfo } from '../Library/Library';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';

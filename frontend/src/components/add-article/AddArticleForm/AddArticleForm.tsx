@@ -11,16 +11,16 @@ import PrivateField from '../PrivateField/PrivateField';
 import TagField from '../TagField/TagField';
 import ContentField from '../ContentField/ContentField';
 import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
-import { createArticle } from '../../../net/requests/createArticle';
+import { createArticle } from '../../../net/requests/article/createArticle';
 import { useAuth } from '../../general/AuthWrapper/AuthWrapper';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
     EditArticleReqProps,
     useEditArticle,
-} from '../../../net/requests/editArticle';
+} from '../../../net/requests/article/editArticle';
 import { useEffect } from 'react';
 import { useStore } from '../../../hooks/useStore';
-import { useGetFullArticle } from '../../../net/requests/getFullArticle';
+import { useGetFullArticle } from '../../../net/requests/article/getFullArticle';
 import { useState } from 'react';
 
 interface AddArticleFormValues {

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { observable } from 'mobx';
-import { markArticle } from '../net/requests/markArticle';
-import { deleteMark } from '../net/requests/deleteMark';
+import { markArticle } from '../net/requests/readData/markArticle';
+import { deleteMark } from '../net/requests/readData/deleteMark';
 
 const binarySearch = <T extends unknown>(
     arr: T[],

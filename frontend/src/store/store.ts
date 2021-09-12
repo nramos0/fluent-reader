@@ -1,8 +1,8 @@
 import React from 'react';
 import { observable } from 'mobx';
 import { updateWordStatus, updateWordStatusBatch } from '../net/requests/index';
-import { updateWordDefinition } from '../net/requests/updateWordDefinition';
-import { updateUser } from '../net/requests/updateUser';
+import { updateWordDefinition } from '../net/requests/user/updateWordDefinition';
+import { updateUser } from '../net/requests/user/updateUser';
 
 const definitionUpdateCooldown = 1500;
 

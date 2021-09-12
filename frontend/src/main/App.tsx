@@ -12,7 +12,7 @@ import AccountPage from '../components/account/AccountPage/AccountPage';
 
 import { i18nInitPromise } from '../i18n';
 import { useAuth } from '../components/general/AuthWrapper/AuthWrapper';
-import { authenticate } from '../net/requests/auth';
+import { authenticate } from '../net/requests/auth/auth';
 import { observer } from 'mobx-react';
 import { useContext } from 'react';
 

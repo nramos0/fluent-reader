@@ -11,7 +11,7 @@ import PasswordConfirmField from '../PasswordConfirmField/PasswordConfirmField';
 import StudyLangField from '../StudyLangField/StudyLangField';
 import DisplayLangField from '../DisplayLangField/DisplayLangField';
 import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
-import { register } from '../../../net/requests/register';
+import { register } from '../../../net/requests/auth/register';
 
 interface Props {
     returnToLogin: () => void;

@@ -1,5 +1,5 @@
-import { ENDPOINTS } from '../apiEndpoints';
-import { request } from '../request';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { request } from '../../request';
 
 interface LoginReqProps {
     username: string;

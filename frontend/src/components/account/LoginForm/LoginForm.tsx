@@ -6,7 +6,7 @@ import to from 'await-to-js';
 import UsernameField from '../UsernameField/UsernameField';
 import PasswordField from '../PasswordField/PasswordField';
 import { useLoadInfo } from '../../general/LoadWrapper/LoadWrapper';
-import { login } from '../../../net/requests/login';
+import { login } from '../../../net/requests/auth/login';
 import { useAuth } from '../../general/AuthWrapper/AuthWrapper';
 import { useAppContext } from '../../../main/App';
 

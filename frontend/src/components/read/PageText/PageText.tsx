@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
-import useDetectUnderline from '../../../hooks/useDetectUnderline';
+import useDetectUnderline from '../../../hooks/reader/useDetectUnderline';
 import { useOnClick } from '../../../hooks/reader/useOnClick';
 import { useOnDoubleClick } from '../../../hooks/reader/useOnDoubleClick';
 import { useSyncWordStatusMap } from '../../../hooks/reader/useSyncWordStatusMap';

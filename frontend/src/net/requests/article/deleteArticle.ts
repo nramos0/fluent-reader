@@ -1,10 +1,10 @@
 import { to } from 'await-to-js';
 import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
-import { useAuth } from '../../components/general/AuthWrapper/AuthWrapper';
-import { ENDPOINTS } from '../apiEndpoints';
-import { prepareURL } from '../apiUtil';
-import { request } from '../request';
+import { useAuth } from '../../../components/general/AuthWrapper/AuthWrapper';
+import { ENDPOINTS } from '../../apiEndpoints';
+import { prepareURL } from '../../apiUtil';
+import { request } from '../../request';
 
 interface DeleteArticleReqProps {
     article_id: number;

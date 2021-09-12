@@ -1,10 +1,10 @@
-import { authenticate } from './auth';
-import { createArticle } from './createArticle';
-import { login } from './login';
-import { register } from './register';
-import { updateWordStatus } from './updateWordStatus';
-import { updateWordStatusBatch } from './updateWordStatusBatch';
-import { getWordData, useGetWordData } from './getWordData';
+import { authenticate } from './auth/auth';
+import { createArticle } from './article/createArticle';
+import { login } from './auth/login';
+import { register } from './auth/register';
+import { updateWordStatus } from './user/updateWordStatus';
+import { updateWordStatusBatch } from './user/updateWordStatusBatch';
+import { getWordData, useGetWordData } from './user/getWordData';
 
 export {
     authenticate,
