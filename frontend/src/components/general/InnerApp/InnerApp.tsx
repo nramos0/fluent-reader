@@ -21,8 +21,6 @@ const InnerApp: React.FC = () => {
     const history = useHistory();
     const location = useLocation();
 
-    console.log(location);
-
     useEffect(() => {
         const lastPage = localStorage.getItem('lastPage');
 
