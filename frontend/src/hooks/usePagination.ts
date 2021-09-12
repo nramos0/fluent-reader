@@ -5,11 +5,7 @@ interface PageCache<T> {
     [index: number]: T[];
 }
 
-export default function usePagination<T>(
-    data: T[],
-    nPerPage: number,
-    initialPage = 0
-) {
+const usePagination = <T>(data: T[], nPerPage: number, initialPage = 0) => {
     const {
         currentPage,
         setCurrentPage,
@@ -54,11 +50,13 @@ export default function usePagination<T>(
 
     return {
         data: paginatedData,
-        currentPage: currentPage,
-        setCurrentPage: setCurrentPage,
-        lastPage: lastPage,
-        pageCount: pageCount,
-        decrementPage: decrementPage,
-        incrementPage: incrementPage,
+        currentPage,
+        setCurrentPage,
+        lastPage,
+        pageCount,
+        decrementPage,
+        incrementPage,
     };
-}
+};
+
+export default usePagination;

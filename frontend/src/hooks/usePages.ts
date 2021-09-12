@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export default function usePages(initialPage = 0) {
+const usePages = (initialPage = 0) => {
     const [currentPage, setCurrentPage] = useState(initialPage);
     const [lastPage, setLastPage] = useState(initialPage - 1);
     const [pageCount, setPageCount] = useState<number>(0);
@@ -31,12 +31,14 @@ export default function usePages(initialPage = 0) {
     }, []);
 
     return {
-        currentPage: currentPage,
-        lastPage: lastPage,
-        setCurrentPage: setCurrentPage,
-        pageCount: pageCount,
-        setPageCount: setPageCount,
-        decrementPage: decrementPage,
-        incrementPage: incrementPage,
+        currentPage,
+        lastPage,
+        setCurrentPage,
+        pageCount,
+        setPageCount,
+        decrementPage,
+        incrementPage,
     };
-}
+};
+
+export default usePages;

@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 
-export const useChangeMonitor = <T>(value: T, name: string) => {
+export const useChangeMonitor = <T>(
+    value: T,
+    name: string,
+    disabled?: boolean
+) => {
     useEffect(() => {
-        console.log(`value ${name} changed: `, value);
-    }, [name, value]);
+        !disabled && console.log(`value ${name} changed: `, value);
+    }, [disabled, name, value]);
 };
