@@ -188,6 +188,12 @@ pub async fn get_article_list_word_status_counts(
         })
         .collect::<Vec<WordStatusCountInfo>>();
 
+    
+    if let Err(err) = trans.commit().await {
+        eprintln!("{}", err);
+        return response::user::get_fetch_article_word_data_error();
+    }
+
     HttpResponse::Ok().json(GetArticleListWordCountDataResponse {
         word_status_count_list,
     })
