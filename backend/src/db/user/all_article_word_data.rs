@@ -155,11 +155,11 @@ pub async fn insert_articles(
                 .unwrap()
                 .as_object()
                 .unwrap()
-                .get(
-                    &article_id.to_string(),
-                ).is_some() {
-                    return;
-                };
+                .get(&article_id.to_string())
+                .is_some()
+            {
+                return;
+            };
 
             let mut new_count = 0i64;
             let mut learning_count = 0i64;

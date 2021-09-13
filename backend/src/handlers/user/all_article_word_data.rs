@@ -5,7 +5,7 @@ use crate::models::net::all_article_word_data::*;
 use crate::response;
 use crate::response::get_success;
 
-use actix_web::{get, put, web, HttpResponse, Responder};
+use actix_web::{get, post, put, web, HttpResponse, Responder};
 use deadpool_postgres::{Client, Pool};
 use futures::future;
 
@@ -90,7 +90,7 @@ pub async fn get_user_all_article_word_data(
     HttpResponse::Ok().json(data)
 }
 
-#[get("/user/all_article_word_data/word_status_counts/")]
+#[post("/user/all_article_word_data/word_status_counts/")]
 pub async fn get_article_list_word_status_counts(
     db_pool: web::Data<Pool>,
     json: web::Json<GetArticleListWordCountDataRequest>,
@@ -111,6 +111,18 @@ pub async fn get_article_list_word_status_counts(
             return response::user::get_fetch_article_word_data_error();
         }
     };
+
+    if let Err(err) = db::user::all_article_word_data::insert_articles(
+        &trans,
+        &auth_user.id,
+        &json.article_id_list,
+        &json.lang,
+    )
+    .await
+    {
+        eprintln!("{}", err);
+        return response::user::get_insert_article_word_data_error();
+    }
 
     let GetArticleListWordCountDataRequest {
         article_id_list,
