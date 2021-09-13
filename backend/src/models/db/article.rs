@@ -145,3 +145,10 @@ pub struct UpdateArticleMetadataOpt {
     pub tags: Option<Vec<String>>,
     pub is_private: Option<bool>,
 }
+
+#[derive(Serialize, Deserialize, PostgresMapper, Debug)]
+#[pg_mapper(table = "article")]
+pub struct ArticleWords {
+    pub id: i32,
+    pub unique_words: serde_json::Value,
+}

@@ -9,7 +9,7 @@ use deadpool_postgres::{Client, Pool};
 
 #[get("/user/data/")]
 pub async fn get_user_word_data(db_pool: web::Data<Pool>, auth_user: ClaimsUser) -> impl Responder {
-    let client: Client = match db_pool.get().await {
+    let mut client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
@@ -17,7 +17,20 @@ pub async fn get_user_word_data(db_pool: web::Data<Pool>, auth_user: ClaimsUser)
         }
     };
 
-    let result = db::user::word_data::get_user_word_data(&client, &auth_user.id).await;
+    let trans = match client.transaction().await {
+        Ok(trans) => trans,
+        Err(err) => {
+            eprintln!("{}", err);
+            return response::user::get_update_word_status_error();
+        }
+    };
+
+    let result = db::user::word_data::get_user_word_data(&trans, &auth_user.id).await;
+
+    if let Err(err) = trans.commit().await {
+        eprintln!("{}", err);
+        return response::user::get_update_word_status_error();
+    }
 
     match result {
         Ok(data) => HttpResponse::Ok().json(GetWordDataResponse::new(data)),
@@ -31,7 +44,7 @@ pub async fn update_word_status(
     json: web::Json<UpdateWordStatusRequest>,
     auth_user: ClaimsUser,
 ) -> impl Responder {
-    let client: Client = match db_pool.get().await {
+    let mut client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
@@ -39,14 +52,42 @@ pub async fn update_word_status(
         }
     };
 
+    let trans = match client.transaction().await {
+        Ok(trans) => trans,
+        Err(err) => {
+            eprintln!("{}", err);
+            return response::user::get_update_word_status_error();
+        }
+    };
+
+    let word_list = [&json.word[..]];
+
+    if let Err(err) = db::user::all_article_word_data::change_word_list_status(
+        &trans,
+        &auth_user.id,
+        &word_list,
+        &json.status,
+        &json.lang,
+    )
+    .await
+    {
+        eprintln!("{}", err);
+        return response::user::get_update_word_status_error();
+    }
+
     let result = db::user::word_data::update_word_status(
-        &client,
+        &trans,
         &auth_user.id,
         &json.lang,
         &json.word,
         &json.status,
     )
     .await;
+
+    if let Err(err) = trans.commit().await {
+        eprintln!("{}", err);
+        return response::user::get_update_word_status_error();
+    }
 
     match result {
         Ok(()) => get_success(),
@@ -60,7 +101,7 @@ pub async fn batch_update_word_status(
     json: web::Json<BatchUpdateWordStatusRequest>,
     auth_user: ClaimsUser,
 ) -> impl Responder {
-    let client: Client = match db_pool.get().await {
+    let mut client: Client = match db_pool.get().await {
         Ok(client) => client,
         Err(err) => {
             eprintln!("{}", err);
@@ -68,19 +109,48 @@ pub async fn batch_update_word_status(
         }
     };
 
-    let result = db::user::word_data::batch_update_word_status(
-        &client,
+    let trans = match client.transaction().await {
+        Ok(trans) => trans,
+        Err(err) => {
+            eprintln!("{}", err);
+            return response::user::get_update_word_status_error();
+        }
+    };
+
+    let word_list: Vec<_> = json.words.iter().map(|word| &word[..]).collect();
+
+    if let Err(err) = db::user::all_article_word_data::change_word_list_status(
+        &trans,
+        &auth_user.id,
+        &word_list,
+        &json.status,
+        &json.lang,
+    )
+    .await
+    {
+        eprintln!("{}", err);
+        return response::user::get_update_word_status_error();
+    }
+
+    if let Err(err) = db::user::word_data::batch_update_word_status(
+        &trans,
         &auth_user.id,
         &json.lang,
         &json.words,
         &json.status,
     )
-    .await;
-
-    match result {
-        Ok(()) => get_success(),
-        Err(_) => response::user::get_update_word_status_error(),
+    .await
+    {
+        eprintln!("{}", err);
+        return response::user::get_update_word_status_error();
     }
+
+    if let Err(err) = trans.commit().await {
+        eprintln!("{}", err);
+        return response::user::get_update_word_status_error();
+    }
+
+    get_success()
 }
 
 #[put("/user/data/definition/")]

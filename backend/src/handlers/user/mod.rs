@@ -1,3 +1,4 @@
+pub mod all_article_word_data;
 pub mod data;
 
 use crate::auth::*;

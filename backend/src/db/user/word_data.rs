@@ -7,10 +7,10 @@ use tokio_postgres::{error::SqlState, Error, Statement};
 use types::{ToSql, Type};
 
 pub async fn get_user_word_data(
-    client: &Client,
+    trans: &deadpool_postgres::Transaction<'_>,
     user_id: &i32,
 ) -> Result<UserWordData, &'static str> {
-    let statement = match client
+    let statement = match trans
         .prepare(
             r#"
             SELECT word_status_data, word_definition_data
@@ -27,7 +27,7 @@ pub async fn get_user_word_data(
         }
     };
 
-    match client.query_one(&statement, &[user_id]).await {
+    match trans.query_one(&statement, &[user_id]).await {
         Ok(result) => match UserWordData::from_row_ref(&result) {
             Ok(word_data) => Ok(word_data),
             Err(err) => {
@@ -42,7 +42,10 @@ pub async fn get_user_word_data(
     }
 }
 
-async fn get_word_status_statement(client: &Client, new_status: &str) -> Result<Statement, Error> {
+async fn get_word_status_statement(
+    client: &deadpool_postgres::Transaction<'_>,
+    new_status: &str,
+) -> Result<Statement, Error> {
     match new_status {
         "known" | "learning" => {
             let old_status = if new_status == "known" {
@@ -91,13 +94,13 @@ async fn get_word_status_statement(client: &Client, new_status: &str) -> Result<
 }
 
 pub async fn update_word_status(
-    client: &Client,
+    trans: &deadpool_postgres::Transaction<'_>,
     user_id: &i32,
     lang: &String,
     word: &String,
     new_status: &String,
 ) -> Result<(), &'static str> {
-    let statement_result = get_word_status_statement(client, &new_status[..]).await;
+    let statement_result = get_word_status_statement(trans, &new_status[..]).await;
 
     let statement = match statement_result {
         Ok(statement) => statement,
@@ -107,7 +110,7 @@ pub async fn update_word_status(
         }
     };
 
-    match client.execute(&statement, &[lang, word, user_id]).await {
+    match trans.execute(&statement, &[lang, word, user_id]).await {
         Ok(_) => Ok(()),
         Err(err) => {
             eprintln!("{}", err);
@@ -139,7 +142,7 @@ fn get_batch_update_json_strings(
 }
 
 async fn get_batch_update_statement(
-    client: &Client,
+    trans: &deadpool_postgres::Transaction<'_>,
     new_status: &str,
     json_delete_str: String,
     word_count: usize,
@@ -223,7 +226,7 @@ async fn get_batch_update_statement(
         types.push(Type::TEXT_ARRAY);
     }
 
-    client.prepare_typed(&formatted_string, &types).await
+    trans.prepare_typed(&formatted_string, &types).await
 }
 
 fn build_batch_update_params<'a>(
@@ -257,7 +260,7 @@ fn get_vectored_words(words: &[String]) -> Vec<Vec<&str>> {
 }
 
 pub async fn batch_update_word_status(
-    client: &Client,
+    trans: &deadpool_postgres::Transaction<'_>,
     user_id: &i32,
     lang: &String,
     words: &[String],
@@ -265,16 +268,20 @@ pub async fn batch_update_word_status(
 ) -> Result<(), &'static str> {
     let (insert_json, json_delete_str) = get_batch_update_json_strings(words, &new_status[..]);
 
-    let statement =
-        match get_batch_update_statement(client, &new_status[..], json_delete_str, words.len())
-            .await
-        {
-            Ok(statement) => statement,
-            Err(err) => {
-                eprintln!("{}", err);
-                return Err("Error updating word status");
-            }
-        };
+    let statement = match get_batch_update_statement(
+        trans,
+        &new_status[..],
+        json_delete_str,
+        words.len(),
+    )
+    .await
+    {
+        Ok(statement) => statement,
+        Err(err) => {
+            eprintln!("{}", err);
+            return Err("Error updating word status");
+        }
+    };
 
     let vectored_words = get_vectored_words(words);
 
@@ -286,7 +293,7 @@ pub async fn batch_update_word_status(
         &new_status[..],
     );
 
-    match client.execute(&statement, &params[..]).await {
+    match trans.execute(&statement, &params[..]).await {
         Ok(_) => Ok(()),
         Err(err) => {
             eprintln!("{}", err);

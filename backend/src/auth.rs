@@ -57,7 +57,7 @@ pub fn attempt_user_login(
 
 pub fn get_token(user: &User) -> String {
     let claims = TokenClaims {
-        user: ClaimsUser::from_user(&user),
+        user: ClaimsUser::from_user(user),
         exp: Utc::now()
             .checked_add_signed(*EXPIRATION_DURATION)
             .expect("invalid timestamp")
@@ -67,7 +67,7 @@ pub fn get_token(user: &User) -> String {
 }
 
 pub fn attempt_token_auth(token: &str) -> Result<ClaimsUser, jsonwebtoken::errors::Error> {
-    match decode::<TokenClaims>(&token, &DECODING_KEY, &VALIDATION) {
+    match decode::<TokenClaims>(token, &DECODING_KEY, &VALIDATION) {
         Ok(token_data) => Ok(token_data.claims.user),
         Err(err) => Err(err),
     }
@@ -78,7 +78,7 @@ pub fn check_can_refresh_token(token: &str) -> Result<ClaimsUser, jsonwebtoken::
         Ok(user) => Ok(user),
         Err(err) => match err.kind() {
             jsonwebtoken::errors::ErrorKind::ExpiredSignature => {
-                match dangerous_insecure_decode::<TokenClaims>(&token) {
+                match dangerous_insecure_decode::<TokenClaims>(token) {
                     Ok(token_data) => Ok(token_data.claims.user),
                     Err(err) => Err(err),
                 }

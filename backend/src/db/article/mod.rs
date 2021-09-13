@@ -340,3 +340,116 @@ pub async fn does_own_article(
         }
     }
 }
+
+pub async fn get_visible_article_list_words(
+    trans: &deadpool_postgres::Transaction<'_>,
+    user_id: &i32,
+    article_id_list: &Vec<i32>,
+) -> Result<Vec<ArticleWords>, &'static str> {
+    let in_operand = (2..=article_id_list.len() + 1)
+        .map(|index| String::from("$") + &index.to_string()[..])
+        .collect::<Vec<String>>()
+        .join(", ");
+
+    let statement = match trans
+        .prepare(
+            &format!(
+                r#"
+                SELECT id, unique_words FROM article 
+                WHERE 
+                    id IN ({}) AND 
+                    (NOT is_private OR uploader_id = $1) AND
+                    is_deleted = false
+            "#,
+                in_operand
+            )[..],
+        )
+        .await
+    {
+        Ok(statement) => statement,
+        Err(err) => {
+            eprintln!("{}", err);
+            return Err("Error getting article");
+        }
+    };
+
+    let mut params: Vec<&(dyn ToSql + Sync)> = vec![user_id];
+    article_id_list
+        .iter()
+        .by_ref()
+        .for_each(|id| params.push(id));
+
+    match trans.query(&statement, &params[..]).await {
+        Ok(ref rows) => {
+            let words_list = rows
+                .iter()
+                .map(|row| ArticleWords::from_row_ref(row).unwrap())
+                .collect::<Vec<ArticleWords>>();
+
+            if words_list.len() != article_id_list.len() {
+                eprintln!("at least one article is not visible when getting visible article list words, there are {} ids but got {} rows", article_id_list.len(), words_list.len());
+                return Err("Error getting data");
+            }
+
+            Ok(words_list)
+        }
+        Err(err) => {
+            eprintln!("{}", err);
+            Err("Error getting data")
+        }
+    }
+}
+
+pub async fn check_article_list_visible(
+    trans: &deadpool_postgres::Transaction<'_>,
+    user_id: &i32,
+    article_id_list: &[i32],
+) -> Result<(), &'static str> {
+    let in_operand = (2..=article_id_list.len() + 1)
+        .map(|index| String::from("$") + &index.to_string()[..])
+        .collect::<Vec<String>>()
+        .join(", ");
+
+    let statement = match trans
+        .prepare(
+            &format!(
+                r#"
+                SELECT id FROM article 
+                WHERE 
+                    id IN ({}) AND 
+                    (NOT is_private OR uploader_id = $1) AND
+                    is_deleted = false
+            "#,
+                in_operand
+            )[..],
+        )
+        .await
+    {
+        Ok(statement) => statement,
+        Err(err) => {
+            eprintln!("{}", err);
+            return Err("Error checking article list visibility");
+        }
+    };
+
+    let mut params: Vec<&(dyn ToSql + Sync)> = vec![user_id];
+    article_id_list
+        .iter()
+        .by_ref()
+        .for_each(|id| params.push(id));
+
+    match trans.query(&statement, &params[..]).await {
+        Ok(rows) => {
+            if rows.len() != article_id_list.len() {
+                eprintln!("some articles are not visible");
+                Err("some articles are not visible")
+            } else {
+                Ok(())
+            }
+        }
+        Err(err) => {
+            eprintln!("{}", err);
+            Err("error checking article visibility")
+        }
+    }
+}

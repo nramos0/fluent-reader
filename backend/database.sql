@@ -17,6 +17,7 @@ CREATE EXTENSION pgroonga;
     Table Creation
 */
 
+DROP TABLE IF EXISTS user_all_article_word_data;
 DROP TABLE IF EXISTS read_article_data;
 DROP TABLE IF EXISTS saved_article;
 DROP TABLE IF EXISTS article;
@@ -113,3 +114,11 @@ CREATE TABLE read_article_data (
 
 CREATE INDEX read_article_data_user_index ON read_article_data(fruser_id);
 CREATE INDEX read_article_data_article_index ON read_article_data(article_id);
+
+CREATE TABLE user_all_article_word_data (
+    fruser_id INTEGER NOT NULL,
+    FOREIGN KEY (fruser_id) REFERENCES fruser(id),
+    all_article_word_data JSONB NOT NULL
+);
+
+CREATE INDEX all_article_word_data_user_index ON user_all_article_word_data(fruser_id);

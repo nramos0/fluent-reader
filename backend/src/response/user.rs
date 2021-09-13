@@ -71,3 +71,13 @@ pub fn get_mark_article_error() -> HttpResponse {
 pub fn delete_mark_error() -> HttpResponse {
     get_error("delete_mark_error")
 }
+
+#[inline]
+pub fn get_insert_article_word_data_error() -> HttpResponse {
+    get_error("insert_article_word_data_error")
+}
+
+#[inline]
+pub fn get_fetch_article_word_data_error() -> HttpResponse {
+    get_error("fetch_article_word_data_error")
+}

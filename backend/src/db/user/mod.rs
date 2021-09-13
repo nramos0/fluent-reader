@@ -1,3 +1,4 @@
+pub mod all_article_word_data;
 pub mod word_data;
 
 use crate::db::*;
@@ -163,7 +164,7 @@ pub async fn get_users(client: &Client, offset: &i64) -> Result<Vec<SimpleUser>,
 #[inline]
 async fn prepare_user_creation_statements(
     trans: &deadpool_postgres::Transaction<'_>,
-) -> Result<(Statement, Statement), tokio_postgres::error::Error> {
+) -> Result<(Statement, Statement, Statement), tokio_postgres::error::Error> {
     let insert_user_ft = trans.prepare(
         "INSERT INTO fruser (username, display_name, pass, created_on, study_lang, display_lang, refresh_token)
             VALUES ($1, $2, $3, NOW(), $4, $5, $6) RETURNING id, display_name, study_lang, display_lang",
@@ -182,7 +183,23 @@ async fn prepare_user_creation_statements(
         "#
         );
 
-    future::try_join(insert_user_ft, insert_word_data_ft).await
+    let insert_all_article_word_data_ft = trans.prepare(
+        r#"
+                INSERT INTO user_all_article_word_data (fruser_id, all_article_word_data)
+                VALUES
+                    (
+                        $1,
+                        '{ "en": { "known": {}, "learning": {}, "new": {}, "article_word_counts": {} }, "zh": { "known": {}, "learning": {}, "new": {}, "article_word_counts": {} } }'
+                    )
+            "#,
+    );
+
+    future::try_join3(
+        insert_user_ft,
+        insert_word_data_ft,
+        insert_all_article_word_data_ft,
+    )
+    .await
 }
 
 pub async fn create_user(
@@ -203,13 +220,14 @@ pub async fn create_user(
         }
     };
 
-    let (insert_user, insert_word_data) = match prepare_user_creation_statements(&trans).await {
-        Ok((insert_user, insert_word_data)) => (insert_user, insert_word_data),
-        Err(err) => {
-            eprintln!("{}", err);
-            return user_err;
-        }
-    };
+    let (insert_user, insert_word_data, insert_all_article_word_data) =
+        match prepare_user_creation_statements(&trans).await {
+            Ok(statements) => statements,
+            Err(err) => {
+                eprintln!("{}", err);
+                return user_err;
+            }
+        };
 
     let user: SimpleUser = match trans
         .query_one(
@@ -238,9 +256,17 @@ pub async fn create_user(
         }
     };
 
-    let insert_word_data_result = trans.query_opt(&insert_word_data, &[&user.id]).await;
+    let insert_data_params: [&(dyn ToSql + Sync); 1] = [&user.id];
+    let insert_word_data_fut = trans.query_opt(&insert_word_data, &insert_data_params[..]);
+    let insert_all_article_word_data_fut =
+        trans.query_opt(&insert_all_article_word_data, &insert_data_params[..]);
 
-    if let Err(err) = insert_word_data_result {
+    if let Err(err) = insert_word_data_fut.await {
+        eprintln!("{}", err);
+        return user_err;
+    }
+
+    if let Err(err) = insert_all_article_word_data_fut.await {
         eprintln!("{}", err);
         return user_err;
     }
