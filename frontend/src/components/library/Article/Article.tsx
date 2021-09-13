@@ -8,6 +8,7 @@ import ArticleLength from '../ArticleLength/ArticleLength';
 import ArticleLang from '../ArticleLang/ArticleLang';
 import ArticleTags from '../ArticleTags/ArticleTags';
 import ArticleControls from '../ArticleControls/ArticleControls';
+import ArticleWordStatusInfo from '../ArticleWordStatusInfo';
 
 interface Props {
     article: SimpleArticle;
@@ -64,6 +65,10 @@ const Article: React.FC<Props> = ({ article, onRemoveSuccess, onAdd }) => {
                 <ArticleLang lang={article.lang} />
                 <ArticleLength length={article.unique_word_count} />
             </Flex>
+
+            {article.id > 0 ? (
+                <ArticleWordStatusInfo article_id={article.id} />
+            ) : null}
 
             <ArticleTags tags={article.tags} />
 

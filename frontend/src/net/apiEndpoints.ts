@@ -46,6 +46,10 @@ const getUserDataMarkArticleEndpoint = (inner: string) => {
     return getUserDataEndpoint(`/mark_article${inner}`);
 };
 
+const getUserAllArticleWordDataEndpoint = (inner: string) => {
+    return getUserEndpoint(`/all_article_word_data${inner}`);
+};
+
 // article
 
 const getArticleEndpoint = (inner: string) => {
@@ -81,6 +85,15 @@ export const ENDPOINTS = {
                 _: getUserDataMarkArticleEndpoint('/'),
             },
             definition: getUserDataEndpoint('/definition/'),
+        },
+
+        all_article_word_data: {
+            insert_articles: getUserAllArticleWordDataEndpoint(
+                '/insert_articles/'
+            ),
+            word_status_counts: getUserAllArticleWordDataEndpoint(
+                '/word_status_counts/'
+            ),
         },
     },
 

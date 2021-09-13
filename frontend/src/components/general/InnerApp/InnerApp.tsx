@@ -37,9 +37,9 @@ const InnerApp: React.FC = () => {
             <Route path={AppLocation.AddArticle}>
                 <AddArticle />
             </Route>
-            <Route path={`${AppLocation.EditArticle}/:id`}>
+            {/* <Route path={`${AppLocation.EditArticle}/:id`}>
                 <AddArticle />
-            </Route>
+            </Route> */}
             <Route path={AppLocation.About}>
                 <About />
             </Route>

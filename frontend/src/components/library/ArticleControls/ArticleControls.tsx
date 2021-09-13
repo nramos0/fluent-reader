@@ -152,11 +152,11 @@ const ArticleControls: React.FC<Props> = ({
         setIsLoading(false);
     }, [article.id, loadInfo, onRemoveSuccess, removeMutation, showToast, t]);
 
-    const onEdit = useCallback(async () => {
-        history.push(`/app/edit-article/${article.id}`, {
-            autoEditNavigate: true,
-        });
-    }, [article.id, history]);
+    // const onEdit = useCallback(async () => {
+    //     history.push(`/app/edit-article/${article.id}`, {
+    //         autoEditNavigate: true,
+    //     });
+    // }, [article.id, history]);
 
     const deleteMutation = useDeleteArticle();
     const onDelete = useCallback(async () => {
@@ -221,14 +221,14 @@ const ArticleControls: React.FC<Props> = ({
             )}
             {article.uploader_id === store.getUser().id && (
                 <>
-                    <Button
+                    {/* <Button
                         variant="type2"
                         onClick={onEdit}
                         disabled={isLoading}
                         ml={3}
                     >
                         {t('edit')}
-                    </Button>
+                    </Button> */}
                     <Button
                         variant="type2"
                         onClick={deleteModalOnOpen}

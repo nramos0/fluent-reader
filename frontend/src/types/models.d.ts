@@ -105,3 +105,11 @@ declare interface ArticleReadData {
     }[];
     underlines: Mark[];
 }
+
+declare interface WordStatusCountData {
+    new: number;
+    learning: number;
+    known: number;
+    total: number;
+    article_id: number;
+}

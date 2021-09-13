@@ -37,7 +37,8 @@ export const request = async <ReqProps extends object>(
     url: string,
     dataInput: ReqProps,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-    headers: HeaderData
+    headers: HeaderData,
+    sendDataInParams = false
 ) => {
     const data = getRequestData(dataInput, headers['content-type']);
 
@@ -48,7 +49,8 @@ export const request = async <ReqProps extends object>(
     return axios({
         method: method,
         url: url,
-        data: data,
+        data,
+        params: sendDataInParams ? data : undefined,
         headers: headers,
     });
 };
