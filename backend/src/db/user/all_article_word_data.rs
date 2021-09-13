@@ -149,6 +149,18 @@ pub async fn insert_articles(
             let article_id = article_words.id;
             let unique_words = &article_words.unique_words;
 
+            // don't add article if it already exists in the data
+            if all_article_word_data_lang
+                .get("article_word_counts")
+                .unwrap()
+                .as_object()
+                .unwrap()
+                .get(
+                    &article_id.to_string(),
+                ).is_some() {
+                    return;
+                };
+
             let mut new_count = 0i64;
             let mut learning_count = 0i64;
             let mut known_count = 0i64;
