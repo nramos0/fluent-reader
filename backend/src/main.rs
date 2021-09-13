@@ -69,7 +69,7 @@ async fn main() -> std::io::Result<()> {
             .service(user::data::update_word_status)
             .service(user::data::batch_update_word_status)
             .service(user::data::update_word_definition)
-            .service(article::edit_article)
+            // .service(article::edit_article)
             .service(article::create_article)
             .service(article::system::get_articles)
             .service(article::system::get_full_article)
