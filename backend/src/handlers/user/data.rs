@@ -117,7 +117,9 @@ pub async fn batch_update_word_status(
         }
     };
 
-    let word_list: Vec<_> = json.words.iter().map(|word| &word[..]).collect();
+    let mut word_list: Vec<_> = json.words.iter().map(|word| &word[..]).collect();
+    word_list.sort_unstable();
+    word_list.dedup();
 
     if let Err(err) = db::user::all_article_word_data::change_word_list_status(
         &trans,
