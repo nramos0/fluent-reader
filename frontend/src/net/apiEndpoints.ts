@@ -14,7 +14,7 @@ const config: APIConfig = {
     root:
         process.env.NODE_ENV === 'development' && !forceRemoteAPI
             ? '127.0.0.1'
-            : 'fluentreader.cc:2244',
+            : 'api.fluentreader.cc:2244',
     prefix: '',
 };
 
