@@ -10,6 +10,7 @@ lazy_static! {
 pub struct ServerConfig {
     pub host: String,
     pub port: i32,
+    pub port_ssl: i32,
     pub secret: String,
     pub token_time: i64,
     pub salt: String,

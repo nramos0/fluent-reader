@@ -24,6 +24,8 @@ use env_logger::Env;
 use std::process;
 use tokio_postgres::NoTls;
 
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     if let Err(err) = dotenv() {
@@ -47,10 +49,18 @@ async fn main() -> std::io::Result<()> {
     );
 
     let address: String = config.server.host.clone() + ":" + &config.server.port.to_string();
+    let ssl_address: String =
+        config.server.host.clone() + ":" + &config.server.port_ssl.to_string();
     let pool = config.pg.create_pool(NoTls).expect("Failed to create pool");
 
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     let json_config = web::JsonConfig::default().limit(config.server.json_max_size);
+
+    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
+    builder
+        .set_private_key_file("key.pem", SslFiletype::PEM)
+        .unwrap();
+    builder.set_certificate_chain_file("cert.pem").unwrap();
 
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -101,6 +111,7 @@ async fn main() -> std::io::Result<()> {
             .service(status)
     })
     .bind(address)?
+    .bind_openssl(&ssl_address[..], builder)?
     .run()
     .await
 }
