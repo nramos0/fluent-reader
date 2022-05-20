@@ -5,3 +5,5 @@ node_modules
 .husky
 .DS_Store
 notes.txt
+cert.pem
+key.pem
