@@ -6,8 +6,9 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = "3"
+actix-web = { version = "3", features = ["openssl"] }
 actix-cors = "0.5.4"
+openssl = "0.10.40"
 
 tokio-pg-mapper = "=0.1.8"
 tokio-pg-mapper-derive = "=0.1.5"
