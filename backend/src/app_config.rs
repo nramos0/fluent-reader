@@ -6,7 +6,7 @@ lazy_static! {
     pub static ref CONFIG: AppConfig = AppConfig::from_env().unwrap();
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct ServerConfig {
     pub host: String,
     pub port: i32,
@@ -17,7 +17,7 @@ pub struct ServerConfig {
     pub pass_hash_length: u32,
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct AppConfig {
     pub server: ServerConfig,
     pub pg: deadpool_postgres::Config,

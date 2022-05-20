@@ -10,7 +10,7 @@ mod util;
 extern crate argon2;
 extern crate rand;
 
-use crate::app_config::CONFIG;
+use crate::app_config::AppConfig;
 use crate::handlers::*;
 
 use actix_cors::Cors;
@@ -31,15 +31,26 @@ async fn main() -> std::io::Result<()> {
         process::exit(1);
     }
 
+    let config = AppConfig::from_env();
+    let config = {
+        if config.is_ok() {
+            config.unwrap()
+        } else {
+            eprintln!("Error parsing config: {}", config.unwrap_err());
+            process::exit(0);
+        }
+    };
+
     println!(
         "Starting server at http://{0}:{1}/",
-        CONFIG.server.host, CONFIG.server.port
+        config.server.host, config.server.port
     );
 
-    let address: String = CONFIG.server.host.clone() + ":" + &CONFIG.server.port.to_string();
-    let pool = CONFIG.pg.create_pool(NoTls).unwrap();
+    let address: String = config.server.host.clone() + ":" + &config.server.port.to_string();
+    let pool = config.pg.create_pool(NoTls).expect("Failed to create pool");
+
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
-    let json_config = web::JsonConfig::default().limit(CONFIG.server.json_max_size);
+    let json_config = web::JsonConfig::default().limit(config.server.json_max_size);
 
     HttpServer::new(move || {
         let cors = Cors::default()
