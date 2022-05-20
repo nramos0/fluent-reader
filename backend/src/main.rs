@@ -21,10 +21,9 @@ use actix_web::{
 };
 use dotenv::dotenv;
 use env_logger::Env;
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::process;
 use tokio_postgres::NoTls;
-
-use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
