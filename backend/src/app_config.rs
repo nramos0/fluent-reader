@@ -11,6 +11,7 @@ pub struct ServerConfig {
     pub host: String,
     pub port: i32,
     pub port_ssl: i32,
+    pub enable_ssl: bool,
     pub secret: String,
     pub token_time: i64,
     pub salt: String,
