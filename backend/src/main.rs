@@ -33,14 +33,10 @@ async fn main() -> std::io::Result<()> {
     }
 
     let config = AppConfig::from_env();
-    let config = {
-        if config.is_ok() {
-            config.unwrap()
-        } else {
-            eprintln!("Error parsing config: {}", config.unwrap_err());
-            process::exit(0);
-        }
-    };
+    let config = config.unwrap_or_else(|err| {
+        eprintln!("Error parsing config: {}", err);
+        process::exit(0);
+    });
 
     println!(
         "Starting server at http://{0}:{1}/",
@@ -55,13 +51,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     let json_config = web::JsonConfig::default().limit(config.server.json_max_size);
 
-    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
-    builder
-        .set_private_key_file("key.pem", SslFiletype::PEM)
-        .unwrap();
-    builder.set_certificate_chain_file("cert.pem").unwrap();
-
-    HttpServer::new(move || {
+    let server = HttpServer::new(move || {
         let cors = Cors::default()
             .send_wildcard()
             .allow_any_origin()
@@ -74,7 +64,9 @@ async fn main() -> std::io::Result<()> {
             ]);
 
         App::new()
-            .wrap(NormalizePath::default())
+            .wrap(NormalizePath::new(
+                actix_web::middleware::normalize::TrailingSlash::Always,
+            ))
             .wrap(Logger::default())
             .wrap(cors)
             .app_data(json_config.clone())
@@ -109,8 +101,18 @@ async fn main() -> std::io::Result<()> {
             .service(user::data::delete_mark)
             .service(status)
     })
-    .bind(address)?
-    .bind_openssl(&ssl_address[..], builder)?
-    .run()
-    .await
+    .bind(address)?;
+
+    let server = if config.server.enable_ssl {
+        let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
+        builder
+            .set_private_key_file("key.pem", SslFiletype::PEM)
+            .unwrap();
+        builder.set_certificate_chain_file("cert.pem").unwrap();
+        server.bind_openssl(&ssl_address[..], builder)?
+    } else {
+        server
+    };
+
+    server.run().await
 }
