@@ -27,8 +27,9 @@ pub struct AppConfig {
 
 impl AppConfig {
     pub fn from_env() -> Result<Self, ConfigError> {
-        let mut cfg = config::Config::new();
-        cfg.merge(config::Environment::new())?;
-        cfg.try_into()
+        config::Config::builder()
+            .add_source(config::File::new(".env", config::FileFormat::Ini))
+            .build()
+            .and_then(|config| config.try_deserialize())
     }
 }
