@@ -11,7 +11,6 @@ pub struct ServerConfig {
     pub host: String,
     pub port: i32,
     pub port_ssl: i32,
-    pub enable_ssl: bool,
     pub secret: String,
     pub token_time: i64,
     pub salt: String,
@@ -27,9 +26,8 @@ pub struct AppConfig {
 
 impl AppConfig {
     pub fn from_env() -> Result<Self, ConfigError> {
-        config::Config::builder()
-            .add_source(config::File::new(".env", config::FileFormat::Ini))
-            .build()
-            .and_then(|config| config.try_deserialize())
+        let mut cfg = config::Config::new();
+        cfg.merge(config::Environment::new())?;
+        cfg.try_into()
     }
 }
