@@ -4,7 +4,7 @@ Fluent Reader is a free, open-source web application for assisted reading of art
 
 -   **Technology stack**: The frontend is written in Typescript with React, and the backend is written in Rust with Actix Web.
 -   **Status**: Fluent Reader is currently in a very early Alpha state. It is usable, but contains many limitations and lacks many potential features.
--   Fluent Reader is currently live [https://fluentreader.cc](https://fluentreader.cc). Note that the server is located in China, so you may experience slower load times in places that are farther away.
+-   Fluent Reader was previously live at https://fluentreader.cc, but I have since taken the app down as of March 24, 2023. I leave the code here as an archive but I no longer update or maintain it.
 
 Below is the reader page in the app.
 
